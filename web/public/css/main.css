@@ -1,0 +1,83 @@
+/* 
+    Document   : main
+    Created on : Nov 29, 2010, 1:12:25 PM
+    Author     : sandy
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+
+th,tr{
+    font-size: 13px;
+}
+.td_red{
+    background-color: red;
+}
+.td_green{
+    background-color: #01FF00;
+}
+
+
+h1{
+    font-size: 15px;
+}
+a{
+    text-decoration: none;
+}
+*{
+    font-family: sans-serif;
+   /* font-size: 12px; */
+}
+
+.even {
+    background-color: #F4EFFF;
+}
+
+.warning,.pre-warning,.normal{
+    float: left;
+    padding: 1px;
+    text-align: center;
+    width: 100%;
+}
+.warning{
+    background-color: #FF1F1F;    
+    color:white;
+}
+.pre-warning{
+    background-color:yellow;
+}
+
+.normal{
+    background-color: #3FFF6B;
+}
+.icon-add-button{
+    background-image: url("../images/icons/fam/add.gif") !important;
+}
+.icon-delete-button{
+    background-image: url("../images/icons/fam/delete.gif") !important;
+}
+.icon-report-button{
+    background-image: url("../images/icons/fam/book.png") !important;
+}
+.icon-edit-button{
+    background-image: url("../images/icons/fam/application_edit.png") !important;
+}
+.icon-detail{
+    background-image: url("../images/icons/fam/application_view_detail.png") !important;
+}
+.icon-reload-button{
+    background-image: url("../images/icons/fam/arrow_refresh.png") !important;
+}
+
+
+.icon-list{
+        background-image: url("../images/icons/fam/application_view_list.png") !important;
+}
+
+
+
+
+
+
+
+

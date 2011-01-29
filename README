@@ -1,1 +1,6 @@
-Project Management
+To run this program you have to download these libraries : 
+1.Spring MVC
+2.Spring Security
+3.Hibernate
+4.JasperReports
+5.MySQL-Connector

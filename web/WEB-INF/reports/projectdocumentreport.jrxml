@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report6" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="11"/>
+	<field name="project_bast" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_BAST]]></fieldDescription>
+	</field>
+	<field name="project_change_request" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_CHANGE_REQUEST]]></fieldDescription>
+	</field>
+	<field name="project_cr" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_CR]]></fieldDescription>
+	</field>
+	<field name="project_contract" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_CONTRACT]]></fieldDescription>
+	</field>
+	<field name="project_contract_addendum" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_CONTRACT_ADDENDUM]]></fieldDescription>
+	</field>
+	<field name="project_do" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_DO]]></fieldDescription>
+	</field>
+	<field name="project_htd" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_HTD]]></fieldDescription>
+	</field>
+	<field name="project_implementation_mom" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_IMPLEMENTATION_MOM]]></fieldDescription>
+	</field>
+	<field name="project_jps" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_JPS]]></fieldDescription>
+	</field>
+	<field name="project_kod" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_KOD]]></fieldDescription>
+	</field>
+	<field name="project_mom" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_MOM]]></fieldDescription>
+	</field>
+	<field name="project_me" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_ME]]></fieldDescription>
+	</field>
+	<field name="project_poc" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_POC]]></fieldDescription>
+	</field>
+	<field name="project_mal" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_MAL]]></fieldDescription>
+	</field>
+	<field name="project_psr" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_PSR]]></fieldDescription>
+	</field>
+	<field name="project_rfp" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_RFP]]></fieldDescription>
+	</field>
+	<field name="project_rfp_adendum" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_RFP_ADENDUM]]></fieldDescription>
+	</field>
+	<field name="project_rml" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_RML]]></fieldDescription>
+	</field>
+	<field name="project_spk" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_SPK]]></fieldDescription>
+	</field>
+	<field name="project_taf" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_TAF]]></fieldDescription>
+	</field>
+	<field name="project_tp" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_TP]]></fieldDescription>
+	</field>
+	<field name="project_training" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_TRAINING]]></fieldDescription>
+	</field>
+	<field name="project_uat" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_UAT]]></fieldDescription>
+	</field>
+	<field name="project_bast_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_BAST_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_change_request_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_CHANGE_REQUEST_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_contract_addendum_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_CONTRACT_ADDENDUM_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_contract_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_CONTRACT_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_cr_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_CR_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_do_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_DO_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_htd_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_HTD_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_implementation_mom_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_IMPLEMENTATION_MOM_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_jps_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_JPS_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_kod_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_KOD_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_mal_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_MAL_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_me_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_ME_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_mom_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_MOM_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_poc_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_POC_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_psr_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_PSR_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_rfp_adendum_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_RFP_ADENDUM_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_rfp_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_RFP_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_rml_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_RML_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_spk_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_SPK_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_taf_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_TAF_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_tp_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_TP_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_training_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_TRAINING_NOTE]]></fieldDescription>
+	</field>
+	<field name="project_uat_note" class="java.lang.String">
+		<fieldDescription><![CDATA[PROJECT_UAT_NOTE]]></fieldDescription>
+	</field>
+	<filterExpression><![CDATA[new Boolean(true)]]></filterExpression>
+	<group name="Group1">
+		<groupHeader>
+			<band height="33">
+				<staticText>
+					<reportElement mode="Opaque" x="-20" y="0" width="595" height="32" forecolor="#666666" backcolor="#CCFFCC"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[PreProject Phase
+                    ]]></text>
+				</staticText>
+				<line>
+					<reportElement x="-20" y="32" width="595" height="1" forecolor="#666666"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="Group2">
+		<groupHeader>
+			<band height="117">
+				<staticText>
+					<reportElement x="1" y="0" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[RFP
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="14" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Addendum RFP
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="28" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[MOM
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="42" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Technical Assesment Form
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="56" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Technical Proposal
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="70" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Technical Presentation / POC
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="84" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[PMO Mandays Estimation
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="98" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[PMO Risk Mitigation Letter
+                    ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="230" y="0" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_rfp}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="231" y="28" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_mom}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="14" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_rfp_adendum}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="42" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_taf}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="56" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_tp}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="70" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_poc}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="84" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_me}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="98" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_rml}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="279" y="0" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_rfp_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="279" y="28" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_mom_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="279" y="14" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_rfp_adendum_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="279" y="42" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_taf_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="279" y="56" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_tp_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="279" y="70" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_poc_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="279" y="84" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_me_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="279" y="98" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_rml_note}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="Group3">
+		<groupHeader>
+			<band height="202">
+				<line>
+					<reportElement x="-20" y="32" width="595" height="1" forecolor="#666666"/>
+				</line>
+				<staticText>
+					<reportElement x="1" y="32" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[SPK / PO
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="102" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Kick Off Document / Sign Off
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="46" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Contract / Agreement
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="116" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Project Progress Summary Report (Weekly)
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="74" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Project Management Authorization Letter
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="130" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Delivery Order (Jika ada pengiriman barang)
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="88" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Join Planning Session / DRM / Project Charter
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="60" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Addendum Contract
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="144" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[MOM
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="172" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[UAT
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="186" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Berita Acara / BAST
+                    ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="-20" y="0" width="595" height="32" forecolor="#666666" backcolor="#CCFFCC"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Project Implemetation Phase
+                    ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="230" y="32" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_spk}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="46" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_contract}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="60" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_contract_addendum}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="74" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_mal}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="88" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_jps}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="102" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_kod}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="116" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_psr}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="130" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_do}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="144" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_implementation_mom}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="158" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_change_request}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="172" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_uat}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="230" y="186" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_bast}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="32" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_spk_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="46" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_contract_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="60" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_contract_addendum_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="74" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_mal_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="88" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_jps_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="102" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_kod_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="116" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_psr_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="130" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_do_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="158" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_change_request_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="144" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_implementation_mom_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="172" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_uat_note}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="280" y="186" width="200" height="15"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_bast_note}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="1" y="158" width="230" height="15" forecolor="#666666"/>
+					<textElement>
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Change Request
+                    ]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="Group4">
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="25">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-22" width="595" height="47" backcolor="#006699"/>
+				<staticText>
+					<reportElement x="21" y="4" width="322" height="43" forecolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font size="24" isBold="true"/>
+					</textElement>
+					<text><![CDATA[PT.Asaba Computer Centre
+                    ]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band height="86">
+			<staticText>
+				<reportElement mode="Opaque" x="-20" y="0" width="595" height="32" forecolor="#666666" backcolor="#CCFFCC"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Post Implementation Phase
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="31" width="230" height="15" forecolor="#666666"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Project Closing report
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="59" width="230" height="15" forecolor="#666666"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Handover to Maintenance Document
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="45" width="230" height="15" forecolor="#666666"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Training / Knowledge Transfer
+                ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="230" y="31" width="50" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{project_cr}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="45" width="50" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{project_training}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="59" width="50" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{project_htd}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="31" width="200" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{project_cr_note}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="45" width="200" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{project_training_note}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="59" width="200" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{project_htd_note}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="2" width="515" height="13" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="2" width="40" height="13" backcolor="#E6E6E6"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

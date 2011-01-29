@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report2" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="Title" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT * FROM project ORDER BY project_id ASC]]>
+	</queryString>
+	<field name="project_id" class="java.lang.Long">
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<field name="project_name" class="java.lang.String">
+		<fieldDescription><![CDATA[name]]></fieldDescription>
+	</field>
+	<field name="project_customer" class="java.lang.String">
+		<fieldDescription><![CDATA[projectCustomer]]></fieldDescription>
+	</field>
+	<field name="project_number" class="java.lang.Long">
+		<fieldDescription><![CDATA[projectNumber]]></fieldDescription>
+	</field>
+	<field name="project_contract" class="java.lang.String">
+		<fieldDescription><![CDATA[projectContract]]></fieldDescription>
+	</field>
+	<field name="project_end_date" class="java.util.Date">
+		<fieldDescription><![CDATA[projectEndDate]]></fieldDescription>
+	</field>
+	<field name="project_financial" class="java.lang.String">
+		<fieldDescription><![CDATA[projectFinancial]]></fieldDescription>
+	</field>
+	<field name="project_schedule" class="java.lang.String">
+		<fieldDescription><![CDATA[projectSchedule]]></fieldDescription>
+	</field>
+	<field name="project_technical" class="java.lang.String">
+		<fieldDescription><![CDATA[projectTechnical]]></fieldDescription>
+	</field>
+	<field name="project_start_date" class="java.util.Date">
+		<fieldDescription><![CDATA[projectStartDate]]></fieldDescription>
+	</field>
+	<field name="project_resource" class="java.lang.String">
+		<fieldDescription><![CDATA[projectResource]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="115" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="95" width="553" height="20" forecolor="#000000" backcolor="#9999FF"/>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement x="405" y="4" width="144" height="16" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial Narrow" size="10"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+			<textField>
+				<reportElement x="2" y="0" width="553" height="95"/>
+				<textElement>
+					<font fontName="Arial Narrow"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{Title}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="7" width="25" height="18" forecolor="#000000" backcolor="#3333FF"/>
+				<textElement>
+					<font fontName="Calibri" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="7" width="132" height="18" forecolor="#000000" backcolor="#3333FF"/>
+				<textElement>
+					<font fontName="Calibri" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Project Name
+                ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="156" y="7" width="52" height="18" forecolor="#000000" backcolor="#3333FF"/>
+				<textElement>
+					<font fontName="Calibri" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Start Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="208" y="7" width="52" height="18" forecolor="#000000" backcolor="#3333FF"/>
+				<textElement>
+					<font fontName="Calibri" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[End Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="7" width="52" height="18" forecolor="#000000" backcolor="#3333FF"/>
+				<textElement>
+					<font fontName="Calibri" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Financial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="7" width="52" height="18" forecolor="#000000" backcolor="#3333FF"/>
+				<textElement>
+					<font fontName="Calibri" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Schedule]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="7" width="52" height="18" forecolor="#000000" backcolor="#3333FF"/>
+				<textElement>
+					<font fontName="Calibri" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Technical]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="7" width="52" height="18" forecolor="#000000" backcolor="#3333FF"/>
+				<textElement>
+					<font fontName="Calibri" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Recource]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="463" y="7" width="72" height="18" forecolor="#000000" backcolor="#3333FF"/>
+				<textElement>
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contract/Legal]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="18"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="0" y="0" width="25" height="18"/>
+					<textElement>
+						<font fontName="Calibri" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{project_id}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="25" y="0" width="131" height="18"/>
+					<textElement>
+						<font fontName="Calibri" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="156" y="0" width="52" height="18"/>
+					<textElement>
+						<font fontName="Calibri" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{project_start_date}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="208" y="0" width="52" height="18"/>
+					<textElement>
+						<font fontName="Calibri" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{project_end_date}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="259" y="0" width="52" height="18"/>
+					<textElement>
+						<font fontName="Calibri" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_financial}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="310" y="0" width="52" height="18"/>
+					<textElement>
+						<font fontName="Calibri" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_schedule}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="362" y="0" width="52" height="18"/>
+					<textElement>
+						<font fontName="Calibri" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_technical}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="414" y="0" width="52" height="18"/>
+					<textElement>
+						<font fontName="Calibri" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_resource}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="466" y="0" width="69" height="18"/>
+					<textElement>
+						<font fontName="Calibri" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{project_contract}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="7" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#CCCCFF"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial Narrow" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial Narrow" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="2" y="1" width="197" height="20" forecolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial Narrow" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

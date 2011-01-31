@@ -25,6 +25,8 @@
                 <value>model.ProjectLegal</value>
                 <value>model.ProjectResource</value>
                 <value>model.ProjectSchedule</value>
+                <value>model.ProjectResourceName</value>
+
             </list>
         </property>
         <property name="hibernateProperties">

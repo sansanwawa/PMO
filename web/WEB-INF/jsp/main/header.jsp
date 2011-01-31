@@ -14,14 +14,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>PMO</title>
-        <!--
-
-                <link rel="stylesheet" href="<spring:url value="../static/public/css/datePicker.css" htmlEscape="true" />" type="text/css"/>
-                <script type="text/javascript" src="<spring:url value="../static/public/js/jquery-1.4.4.js" htmlEscape="true" />"></script>
-                <script type="text/javascript" src="<spring:url value="../static/public/js/date.js" htmlEscape="true" />"></script>
-                <script type="text/javascript" src="<spring:url value="../static/public/js/jquery.datePicker.js" htmlEscape="true" />"></script>
-                
-        -->
+     
         <link rel="stylesheet" href="<spring:url value="../static/public/css/main.css" htmlEscape="true" />" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="<spring:url value="../static/public/extjs/resources/css/ext-all.css" htmlEscape="true" />" />
 

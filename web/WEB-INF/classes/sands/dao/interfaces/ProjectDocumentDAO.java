@@ -19,9 +19,9 @@ public interface ProjectDocumentDAO {
 
     public ArrayList<ProjectDocument> list(int offset);
 
-    public void OrderByDesc(String field);
+    public void orderByDesc(String field);
 
-    public void OrderByAsc(String field);
+    public void orderByAsc(String field);
 
     public void setMaxResults(int i);
 

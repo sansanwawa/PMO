@@ -8,9 +8,12 @@ import helper.json.JSONException;
 import helper.json.JSONObject;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import model.ProjectResource;
+import model.ProjectResourceName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import sands.dao.interfaces.ProjectResourceDAO;
 
@@ -36,37 +40,68 @@ public class ProjectResourceController {
         this.projectResourceDAO = projectResourceDAO;
     }
 
-    @RequestMapping(value = "/add/{id}", method = RequestMethod.GET)
-    public void add(@PathVariable("id") long project_resource_id, HttpServletResponse response) throws JSONException, IOException {
+    @RequestMapping(value = "/json", method = RequestMethod.POST)
+    public void json(@RequestParam("limit") int limit,
+            @RequestParam("start") int start,
+            @RequestParam("sort") String sort,
+            @RequestParam("dir") String dir,
+            @ModelAttribute("ProjectResourceName") ProjectResourceName projectresourcename,
+            BindingResult result, HttpServletResponse response) throws JSONException, IOException {
+
         HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
 
-        System.out.println("project_resource_id : " + project_resource_id);
-        ProjectResource projectResource = projectResourceDAO.getById(project_resource_id);
+        List countProject = (List) projectResourceDAO.list(0).get(1);
+        Integer count = (Integer) countProject.get(0);
+
+        //set the limit
+        projectResourceDAO.setMaxResults(limit);
+
+        //set order by
+        projectResourceDAO.orderBy(sort, dir);
+        List listProject = (List) projectResourceDAO.list(start).get(0);
+
+        JSONObject json = new JSONObject();
+        json.put("total", count);
+        json.put("success", true);
+        Iterator iterator = listProject.iterator();
+
+        while (iterator.hasNext()) {
+            ProjectResourceName p = (ProjectResourceName) iterator.next();
+            JSONObject map = new JSONObject();
+            map.put("id", p.getId());
+            map.put("name", p.getName());
+            json.append("data", map);
+        }
+        json.write(responseWrapper.getWriter());
+
+    }
+
+
+
+
+
+
+    @RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
+    public void addname(@PathVariable("id") long project_resource_name_id, HttpServletResponse response) throws JSONException, IOException {
+        HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
+
+        ProjectResourceName projectResource = projectResourceDAO.getById(project_resource_name_id);
 
         JSONObject json = new JSONObject();
         json.put("total", 1);
         json.put("success", true);
         JSONObject map = new JSONObject();
         map.put("id", projectResource.getId());
-        map.put("man_first", projectResource.getProjectManFirst());
-        map.put("man_second", projectResource.getProjectManSecond());
-        map.put("man_third", projectResource.getProjectManThird());
-        map.put("man_fourth", projectResource.getProjectManFourth());
-        map.put("cons_first_1", projectResource.getProjectConsFirst1());
-        map.put("cons_first_2", projectResource.getProjectConsFirst2());
-        map.put("cons_first_3", projectResource.getProjectConsFirst3());
-        map.put("cons_first_4", projectResource.getProjectConsFirst4());
-        map.put("cons_second_1", projectResource.getProjectConsSecond1());
-        map.put("cons_second_2", projectResource.getProjectConsSecond2());
-        map.put("cons_second_3", projectResource.getProjectConsSecond3());
-        map.put("cons_second_4", projectResource.getProjectConsSecond4());
-        map.put("cons_third_1", projectResource.getProjectConsThird1());
-        map.put("cons_third_2", projectResource.getProjectConsThird2());
-        map.put("cons_third_3", projectResource.getProjectConsThird3());
-        map.put("cons_third_4", projectResource.getProjectConsThird4());
+        map.put("name", projectResource.getName());        
         json.append("data", map);
         json.write(responseWrapper.getWriter());
     }
+
+
+
+
+
+
 
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
     public void addProcess(@ModelAttribute("ProjectResource") ProjectResource projectresource, BindingResult result, HttpServletResponse response) throws Exception {
@@ -76,12 +111,26 @@ public class ProjectResourceController {
         out.write("{success:true}");
     }
 
+    @RequestMapping(value = "/addNameProcess", method = RequestMethod.POST)
+    public void addNameProcess(@ModelAttribute("ProjectResourceName") ProjectResourceName projectresourcename,
+                            @RequestParam("id") String project_resource_id,
+                            BindingResult result, HttpServletResponse response) throws Exception {
+
+        Writer out = response.getWriter();
+
+        //if there is an Id then update it..otherwise just save it!
+        if (project_resource_id != null && project_resource_id.isEmpty() == false){
+            Long id = Long.parseLong(project_resource_id);
+            projectresourcename.setId(id);
+            projectResourceDAO.updateName(projectresourcename);
+        }
+        else
+            projectResourceDAO.saveName(projectresourcename);
+        out.write("{success:true}");
+    }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ModelAndView list() throws Exception {
         return new ModelAndView("project/projectResourceList");
     }
-
-
-
 }

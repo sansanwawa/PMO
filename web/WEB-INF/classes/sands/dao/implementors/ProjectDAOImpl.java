@@ -1,5 +1,11 @@
+/**
+ *
+ * @author sandy
+ */
+
 package sands.dao.implementors;
 
+import helper.database.Crud;
 import sands.dao.interfaces.ProjectDAO;
 import model.Project;
 import java.util.ArrayList;
@@ -11,8 +17,6 @@ import model.ProjectFinancial;
 import model.ProjectLegal;
 import model.ProjectResource;
 import model.ProjectSchedule;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,30 +24,18 @@ import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
-/**
- *
- * @author sandy
- */
-public class ProjectDAOImpl implements ProjectDAO {
+
+public class ProjectDAOImpl extends Crud implements ProjectDAO {
 
     private HibernateTemplate hibernateTemplate;
-    private String orderByType = "ASC";
-    private String orderByField = "id";
-    private int maxResult = 10;
-    protected final Log logger = LogFactory.getLog(getClass());
+    
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.hibernateTemplate = new HibernateTemplate(sessionFactory);
     }
 
-    public static User getPrincipal() {
-        return (User) ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication().getPrincipal();
-    }
-
+  
     public void save(Project project) {
 
         ProjectDocument projectdocument = new ProjectDocument();
@@ -89,6 +81,7 @@ public class ProjectDAOImpl implements ProjectDAO {
         Session session = hibernateTemplate.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(Project.class).add(Expression.eq("active", true));
 
+        
         if (this.orderByType.equals("ASC")) {
             criteria.addOrder(Order.asc(this.orderByField));
         } else {
@@ -118,28 +111,7 @@ public class ProjectDAOImpl implements ProjectDAO {
 
     }
 
-    public void orderByDesc(String field) {
-        this.orderByType = "DESC";
-        if (field != null) {
-            this.orderByField = field;
-        }
-    }
 
-    public void orderByAsc(String field) {
-        this.orderByType = "ASC";
-        if (field != null) {
-            this.orderByField = field;
-        }
-    }
-
-    public void orderBy(String field, String type) {
-        this.orderByType = type;
-        this.orderByField = field;
-    }
-
-    public void setMaxResults(int maxResults) {
-        this.maxResult = maxResults;
-    }
 
     public Project getById(long id) {
         Session session = this.hibernateTemplate.getSessionFactory().openSession();

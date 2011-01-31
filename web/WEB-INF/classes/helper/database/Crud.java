@@ -1,6 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author sandy
+ * CRUD HELPER!
  */
 package helper.database;
 
@@ -10,23 +11,20 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
-/**
- *
- * @author sandy
- * CRUD HELPER!
- */
+
 public class Crud {
 
     /**
      * Order By Type
      * ASC/DESC
      */
-    protected String orderByType;
+ 
+    protected String orderByType = "ASC";
     /**
      * Order By Field
      * 
      */
-    protected String orderByField;
+    protected String orderByField = "id";
     /**
      * Max Result / Limit
      */
@@ -36,6 +34,9 @@ public class Crud {
      */
     protected final Log logger = LogFactory.getLog(getClass());
 
+
+
+    
     public void orderByDesc(String field) {
         this.orderByType = "DESC";
         if (field != null) {

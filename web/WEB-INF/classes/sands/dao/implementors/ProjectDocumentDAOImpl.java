@@ -1,5 +1,10 @@
+/**
+ *
+ * @author sandy
+ */
 package sands.dao.implementors;
 
+import helper.database.Crud;
 import sands.dao.interfaces.ProjectDocumentDAO;
 import model.ProjectDocument;
 import java.util.ArrayList;
@@ -14,17 +19,11 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
-/**
- *
- * @author sandy
- */
-public class ProjectDocumentDAOImpl implements ProjectDocumentDAO {
+
+public class ProjectDocumentDAOImpl extends Crud implements ProjectDocumentDAO {
 
     private HibernateTemplate hibernateTemplate;
-    private String orderByType = "ASC";
-    private String orderByField = "id";
-    private int maxResult = 10;
-    protected final Log logger = LogFactory.getLog(getClass());
+   
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.hibernateTemplate = new HibernateTemplate(sessionFactory);
@@ -79,23 +78,8 @@ public class ProjectDocumentDAOImpl implements ProjectDocumentDAO {
 
     }
 
-    public void OrderByDesc(String field) {
-        this.orderByType = "DESC";
-        if (field != null) {
-            this.orderByField = field;
-        }
-    }
 
-    public void OrderByAsc(String field) {
-        this.orderByType = "ASC";
-        if (field != null) {
-            this.orderByField = field;
-        }
-    }
 
-    public void setMaxResults(int maxResults) {
-        this.maxResult = maxResults;
-    }
 
     public ProjectDocument getById(long id) {
         Session session = this.hibernateTemplate.getSessionFactory().openSession();

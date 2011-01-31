@@ -1,5 +1,10 @@
+/**
+ *
+ * @author sandy
+ */
 package sands.dao.implementors;
 
+import helper.database.Crud;
 import sands.dao.interfaces.UserDAO;
 import java.util.List;
 import org.hibernate.SessionFactory;
@@ -11,18 +16,12 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Projections;
 
-public class UserDAOImpl implements UserDAO {
+public class UserDAOImpl extends Crud implements UserDAO {
 
     private HibernateTemplate hibernateTemplate;
-    private String orderByType = "ASC";
-    private String orderByField = "id";
-    private int maxResult = 10;
-    protected final Log logger = LogFactory.getLog(getClass());
-
+  
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.hibernateTemplate = new HibernateTemplate(sessionFactory);
     }
@@ -39,28 +38,8 @@ public class UserDAOImpl implements UserDAO {
         hibernateTemplate.saveOrUpdate(userObj);
     }
 
-    public void OrderByDesc(String field) {
-        this.orderByType = "DESC";
-        if (field != null) {
-            this.orderByField = field;
-        }
-    }
 
-    public void OrderByAsc(String field) {
-        this.orderByType = "ASC";
-        if (field != null) {
-            this.orderByField = field;
-        }
-    }
 
-    public void orderBy(String field, String type) {
-        this.orderByType = type;
-        this.orderByField = field;
-    }
-
-    public void setMaxResults(int maxResults) {
-        this.maxResult = maxResults;
-    }
 
     @Override
     @SuppressWarnings("unchecked")

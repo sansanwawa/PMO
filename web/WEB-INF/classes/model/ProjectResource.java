@@ -20,7 +20,7 @@ import javax.persistence.Table;
  * @author sandy
  */
 @Entity
-@Table(name = "PROJECT_Resource")
+@Table(name = "PROJECT_RESOURCE")
 public class ProjectResource {
 
 

@@ -19,7 +19,6 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 public class ProjectFinancialDAOImpl implements ProjectFinancialDAO {
 
     private HibernateTemplate hibernateTemplate;
-    protected final Log logger = LogFactory.getLog(getClass());
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.hibernateTemplate = new HibernateTemplate(sessionFactory);

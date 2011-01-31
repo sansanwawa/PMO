@@ -72,8 +72,11 @@ public class ProjectController {
 
         //limit
         projectDAO.setMaxResults(limit);
+
         //order by
         projectDAO.orderBy(sort, dir);
+
+        //list
         List listProject = (List) projectDAO.list(start).get(0);
 
         JSONObject json = new JSONObject();
@@ -150,14 +153,14 @@ public class ProjectController {
             project.setId(id);
             projectDAO.update(project);
 
- 
+            /*
             Email email = new Email();
             email.setFrom("sandyharyono@yahoo.com");
             email.setMessage("test");
             email.setRecipients(new String[] {"sandyharyono@gmail.com"});
             email.setSubject("test");
             email.send();
-
+            */ 
         } else {
             projectDAO.save(project);
         }

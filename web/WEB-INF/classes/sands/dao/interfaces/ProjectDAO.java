@@ -21,7 +21,7 @@ public interface ProjectDAO {
 
     public ArrayList<Project> list(int offset);
 
-    public void orderBy( String field, String Type );
+    public void orderBy( String field, String type );
     
     public void orderByDesc(String field);
 

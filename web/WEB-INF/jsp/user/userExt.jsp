@@ -22,24 +22,22 @@
             allowChildren :true,
             children: [{
                     text: 'Project',
-
-                    url: '../project/list',
-                    leaf: true,
-                    children: [{
-                            text: 'Project',
-                            url: '../project/list' ,
-                            leaf: true
-                        }]
-                },{
-                    text: 'User',
-                    url: '../user/list' ,
-                    leaf: true
-                }
-                ,{
-                    text: 'Logout',
-                    href: '../j_spring_security_logout' ,
-                    leaf: true
-                }
+                    leaf: false,
+                    expanded: true,
+                    allowChildren :true,
+                    children: [{ text: 'Project', url: '../project/list' , leaf: true },
+                               { text: 'Project Resource', url: '../projectresource/list' , leaf: true }
+                           ]
+                    },{
+                        text: 'User',
+                        url: '../user/list' ,
+                        leaf: true
+                    }
+                    ,{
+                        text: 'Logout',
+                        href: '../j_spring_security_logout' ,
+                        leaf: true
+                    }
 
 
             ]

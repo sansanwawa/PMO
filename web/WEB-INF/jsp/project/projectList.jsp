@@ -302,28 +302,16 @@
                     items:[
                         { width:200, layout: 'form',
                             items: [ { xtype:'hidden', name: 'id'},
-                                { xtype:'textfield',fieldLabel: '<b>Project Manager</b> - Bulan 1', name: 'projectManFirst',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: '<b>Consultant Name 1</b> - Bulan 1', name: 'projectConsFirst1',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: '<b>Consultant Name 2</b> - Bulan 1', name: 'projectConsSecond1',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: '<b>Consultant Name 3</b> - Bulan 1', name: 'projectConsThird1',anchor:'95%' }]
+                                     { xtype:'textfield',fieldLabel: '<b>Project Manager</b> - Bulan 1', name: 'projectManFirst',anchor:'95%' } ]
                         },
                         { width:200, layout: 'form',
-                            items: [{ xtype:'textfield', fieldLabel: 'Bulan 2', name: 'projectManSecond',anchor:'95%' } ,
-                                { xtype:'textfield', fieldLabel: 'Bulan 2', name: 'projectConsFirst2',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: 'Bulan 2', name: 'projectConsSecond2',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: 'Bulan 2', name: 'projectConsThird2',anchor:'95%' }]
+                            items: [{ xtype:'textfield', fieldLabel: 'Bulan 2', name: 'projectManSecond',anchor:'95%' }]
                         },
                         { width:200, layout: 'form',
-                            items: [{ xtype:'textfield', fieldLabel: 'Bulan 3', name: 'projectManThird',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: 'Bulan 3', name: 'projectConsFirst3',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: 'Bulan 3', name: 'projectConsSecond3',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: 'Bulan 3', name: 'projectConsThird3',anchor:'95%' } ]
+                            items: [{ xtype:'textfield', fieldLabel: 'Bulan 3', name: 'projectManThird',anchor:'95%' }]
                         },
                         { width:200, layout: 'form',
-                            items: [{ xtype:'textfield', fieldLabel: 'Bulan 4', name: 'projectManFourth',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: 'Bulan 4', name: 'projectConsFirst4',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: 'Bulan 4', name: 'projectConsSecond4',anchor:'95%' },
-                                { xtype:'textfield', fieldLabel: 'Bulan 4', name: 'projectConsThird4',anchor:'95%' } ]
+                            items: [{ xtype:'textfield', fieldLabel: 'Bulan 4', name: 'projectManFourth',anchor:'95%' }]
                         }]
                 }
             ]

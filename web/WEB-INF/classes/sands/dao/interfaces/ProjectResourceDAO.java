@@ -28,6 +28,20 @@ public interface ProjectResourceDAO {
      *  Update ProjectResourceName
      */
     public void updateName(ProjectResourceName projectresourcename);
+    
+    /**
+     *
+     * Delete ProjectResource
+     */
+    public void delete(ProjectResource projectresource);
+
+    /**
+     *
+     * Delete ProjectresourceName
+     * 
+     */
+    public void deleteName(ProjectResourceName projectresourcename);
+
 
 
     /**

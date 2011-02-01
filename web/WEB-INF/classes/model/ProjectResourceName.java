@@ -1,9 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author sandy
  */
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,19 +13,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
-/**
- *
- * @author sandy
- */
+
+
 @Entity
 @Table(name = "PROJECT_RESOURCE_NAME")
-public class ProjectResourceName {
+public class ProjectResourceName implements Serializable {
 
     @Id
     @GeneratedValue
     @Column(name = "project_resource_name_id")
     private long id;
 
+    
     @Column(name = "project_resource_name")
     private String name;
 
@@ -67,7 +67,7 @@ public class ProjectResourceName {
     }
 
     public void setName(String name) {
-        this.name = name;
+           this.name = name;
     }
 
     public Date getProjectCreatedDate() {

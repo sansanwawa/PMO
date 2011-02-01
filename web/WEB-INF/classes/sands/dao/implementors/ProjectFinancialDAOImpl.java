@@ -1,5 +1,6 @@
 package sands.dao.implementors;
 
+import helper.database.Crud;
 import sands.dao.interfaces.ProjectFinancialDAO;
 import java.util.List;
 
@@ -16,20 +17,15 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  *
  * @author sandy
  */
-public class ProjectFinancialDAOImpl implements ProjectFinancialDAO {
+public class ProjectFinancialDAOImpl extends Crud implements ProjectFinancialDAO {
 
-    private HibernateTemplate hibernateTemplate;
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.hibernateTemplate = new HibernateTemplate(sessionFactory);
-    }
 
     public void save(ProjectFinancial projectFinancial) {
-        hibernateTemplate.saveOrUpdate(projectFinancial);
+        this.saveOrUpdate(projectFinancial);
     }
 
     public void delete(ProjectFinancial projectFinancial) {
-        Session session = this.hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         session.createQuery("UPDATE ProjectFinancial SET active=:active WHERE id=:project_financial_id").
                 setLong("project_financial_id", projectFinancial.getPROJECT_FINANCIAL_ID()).
                 setBoolean("active", false).
@@ -37,7 +33,7 @@ public class ProjectFinancialDAOImpl implements ProjectFinancialDAO {
     }
 
     public List getById(long id) {
-        Session session = this.hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectFinancial.class).add(Expression.eq("project.id", id));
         return criteria.list();
     }

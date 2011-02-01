@@ -1,35 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package sands.dao.implementors;
-
-import model.ProjectSchedule;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Expression;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import sands.dao.interfaces.ProjectScheduleDAO;
-
 /**
  *
  * @author sandy
  */
-public class ProjectScheduleDAOImpl implements ProjectScheduleDAO {
+package sands.dao.implementors;
 
-    private HibernateTemplate hibernateTemplate;
+import helper.database.Crud;
+import model.ProjectSchedule;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Expression;
+import sands.dao.interfaces.ProjectScheduleDAO;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.hibernateTemplate = new HibernateTemplate(sessionFactory);
-    }
+public class ProjectScheduleDAOImpl extends Crud implements ProjectScheduleDAO {
 
     public void save(ProjectSchedule projectSchedule) {
-        this.hibernateTemplate.saveOrUpdate(projectSchedule);
+        this.saveOrUpdate(projectSchedule);
     }
 
     public ProjectSchedule getById(long id) {
-        Session session = this.hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectSchedule.class).add(Expression.eq("project.id", id));
         ProjectSchedule p = (ProjectSchedule) criteria.list().get(0);
         return p;

@@ -9,32 +9,23 @@ import sands.dao.interfaces.ProjectDocumentDAO;
 import model.ProjectDocument;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 
 
 public class ProjectDocumentDAOImpl extends Crud implements ProjectDocumentDAO {
 
-    private HibernateTemplate hibernateTemplate;
-   
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.hibernateTemplate = new HibernateTemplate(sessionFactory);
-    }
 
     public void save(ProjectDocument projectdocument) {
-        hibernateTemplate.saveOrUpdate(projectdocument);
+        this.saveOrUpdate(projectdocument);
     }
 
     public void delete(ProjectDocument projectdocument) {
-        Session session = this.hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         session.createQuery("UPDATE ProjectDocument SET active=:active WHERE id=:project_management_id").
                 setLong("project_management_id", projectdocument.getPROJECT_MANAGEMENT_ID()).
                 setBoolean("active", false).
@@ -43,7 +34,7 @@ public class ProjectDocumentDAOImpl extends Crud implements ProjectDocumentDAO {
 
     public ArrayList<ProjectDocument> list(int offset) {
         
-        Session session = hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectDocument.class).add(Expression.eq("active", true));
 
         if (this.orderByType.equals("ASC")) {
@@ -73,16 +64,14 @@ public class ProjectDocumentDAOImpl extends Crud implements ProjectDocumentDAO {
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
-        hibernateTemplate.getSessionFactory().close();
+        this.getHibernatetemplate().getSessionFactory().close();
         return array;
 
     }
 
 
-
-
     public ProjectDocument getById(long id) {
-        Session session = this.hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         ProjectDocument project = new ProjectDocument();
         project.setPROJECT_MANAGEMENT_ID(id);
         ProjectDocument p = (ProjectDocument) session.load(ProjectDocument.class, project.getPROJECT_MANAGEMENT_ID());

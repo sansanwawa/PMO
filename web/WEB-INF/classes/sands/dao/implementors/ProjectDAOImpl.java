@@ -19,23 +19,14 @@ import model.ProjectResource;
 import model.ProjectSchedule;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 
 
 public class ProjectDAOImpl extends Crud implements ProjectDAO {
 
-    private HibernateTemplate hibernateTemplate;
     
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.hibernateTemplate = new HibernateTemplate(sessionFactory);
-    }
-
-  
     public void save(Project project) {
 
         ProjectDocument projectdocument = new ProjectDocument();
@@ -54,17 +45,16 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
         projectdocument.setProject(project);
         projectresource.setProject(project);
         projectschedule.setProject(project);
-        hibernateTemplate.save(project);
-
+        super.save(project);
     }
 
     public void update(Project project) {
         project.setUpdateBy(this.getPrincipal().getUsername());
-        hibernateTemplate.update(project);
+        super.update(project);
     }
 
     public void delete(Project project) {
-        Session session = this.hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Project p = (Project) session.load(Project.class, project.getId());
         session.createQuery("UPDATE Project SET active=:active WHERE id=:project_id").
                 setLong("project_id", project.getId()).
@@ -78,7 +68,7 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
 
     public ArrayList<Project> list(int offset) {
 
-        Session session = hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(Project.class).add(Expression.eq("active", true));
 
         
@@ -106,7 +96,7 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
 
-        hibernateTemplate.getSessionFactory().close();
+        this.getHibernatetemplate().getSessionFactory().close();
         return array;
 
     }
@@ -114,7 +104,7 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
 
 
     public Project getById(long id) {
-        Session session = this.hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Project project = new Project();
         project.setId(id);
         Project p = (Project) session.load(Project.class, project.getId());

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import model.ProjectResource;
@@ -76,12 +77,7 @@ public class ProjectResourceController {
 
     }
 
-
-
-
-
-
-    @RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/add/{id}", method = RequestMethod.GET)
     public void addname(@PathVariable("id") long project_resource_name_id, HttpServletResponse response) throws JSONException, IOException {
         HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
 
@@ -92,16 +88,10 @@ public class ProjectResourceController {
         json.put("success", true);
         JSONObject map = new JSONObject();
         map.put("id", projectResource.getId());
-        map.put("name", projectResource.getName());        
+        map.put("name", projectResource.getName());
         json.append("data", map);
         json.write(responseWrapper.getWriter());
     }
-
-
-
-
-
-
 
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
     public void addProcess(@ModelAttribute("ProjectResource") ProjectResource projectresource, BindingResult result, HttpServletResponse response) throws Exception {
@@ -113,24 +103,42 @@ public class ProjectResourceController {
 
     @RequestMapping(value = "/addNameProcess", method = RequestMethod.POST)
     public void addNameProcess(@ModelAttribute("ProjectResourceName") ProjectResourceName projectresourcename,
-                            @RequestParam("id") String project_resource_id,
-                            BindingResult result, HttpServletResponse response) throws Exception {
+            BindingResult result,
+            @RequestParam("id") String project_resource_id,
+            HttpServletResponse response) throws Exception {
 
         Writer out = response.getWriter();
 
         //if there is an Id then update it..otherwise just save it!
-        if (project_resource_id != null && project_resource_id.isEmpty() == false){
+        if (project_resource_id != null && project_resource_id.isEmpty() == false) {
             Long id = Long.parseLong(project_resource_id);
             projectresourcename.setId(id);
             projectResourceDAO.updateName(projectresourcename);
-        }
-        else
+        } else {
             projectResourceDAO.saveName(projectresourcename);
+        }
+
         out.write("{success:true}");
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ModelAndView list() throws Exception {
         return new ModelAndView("project/projectResourceList");
+    }
+
+    @RequestMapping(value = "/deleteName")
+    public void deleteName(@ModelAttribute("ProjectResourceName") ProjectResourceName projectresourcename,
+             BindingResult result,
+             HttpServletResponse response, HttpServletRequest request) throws Exception {
+
+        
+        String[] project_resource_id = request.getParameterValues("id");
+
+        for (int i = 0; i < project_resource_id.length; i++) {
+            projectresourcename.setId(Long.parseLong(project_resource_id[i]));
+            projectResourceDAO.deleteName(projectresourcename);
+        }
+        Writer out = response.getWriter();
+        out.write("{success:true,data:" + project_resource_id.length + "}");
     }
 }

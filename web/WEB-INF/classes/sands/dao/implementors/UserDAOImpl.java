@@ -7,8 +7,6 @@ package sands.dao.implementors;
 import helper.database.Crud;
 import sands.dao.interfaces.UserDAO;
 import java.util.List;
-import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import model.User;
 import java.util.ArrayList;
 import org.hibernate.Criteria;
@@ -20,22 +18,16 @@ import org.hibernate.criterion.Projections;
 
 public class UserDAOImpl extends Crud implements UserDAO {
 
-    private HibernateTemplate hibernateTemplate;
-  
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.hibernateTemplate = new HibernateTemplate(sessionFactory);
-    }
-
     @Override
     public void save(User user) {
-        hibernateTemplate.saveOrUpdate(user);
+        this.saveOrUpdate(user);
     }
 
     public void delete(User user) {
-        Session session = hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         User userObj = (User) session.get(User.class, user.getId());
         userObj.setActive(Boolean.FALSE);
-        hibernateTemplate.saveOrUpdate(userObj);
+        this.getHibernatetemplate().saveOrUpdate(userObj);
     }
 
 
@@ -45,7 +37,7 @@ public class UserDAOImpl extends Crud implements UserDAO {
     @SuppressWarnings("unchecked")
     public ArrayList<User> list(int offset) {
 
-        Session session = hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(User.class).add(Expression.eq("active", true));
 
         if (this.orderByType.equals("ASC")) {
@@ -83,12 +75,12 @@ public class UserDAOImpl extends Crud implements UserDAO {
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
-        hibernateTemplate.getSessionFactory().close();
+        this.getHibernatetemplate().getSessionFactory().close();
         return array;
     }
 
     public User getById(long id) {
-        Session sf = hibernateTemplate.getSessionFactory().openSession();
+        Session sf = this.getHibernatetemplate().getSessionFactory().openSession();
         User user = new User();
         user.setId(id);
         User resultUserObj = (User) sf.load(User.class, user.getId());

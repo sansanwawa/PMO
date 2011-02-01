@@ -283,26 +283,21 @@
                     { name: 'projectManFirst', mapping: 'man_first'},
                     { name: 'projectManSecond', mapping: 'man_second'},
                     { name: 'projectManThird', mapping: 'man_third'},
-                    { name: 'projectManFourth', mapping: 'man_fourth'},
-                    { name: 'projectConsFirst1', mapping: 'cons_first_1'},
-                    { name: 'projectConsFirst2', mapping: 'cons_first_2'},
-                    { name: 'projectConsFirst3', mapping: 'cons_first_3'},
-                    { name: 'projectConsFirst4', mapping: 'cons_first_4'},
-                    { name: 'projectConsSecond1', mapping: 'cons_second_1'},
-                    { name: 'projectConsSecond2', mapping: 'cons_second_2'},
-                    { name: 'projectConsSecond3', mapping: 'cons_second_3'},
-                    { name: 'projectConsSecond4', mapping: 'cons_second_4'},
-                    { name: 'projectConsThird1', mapping: 'cons_third_1'},
-                    { name: 'projectConsThird2', mapping: 'cons_third_2'},
-                    { name: 'projectConsThird3', mapping: 'cons_third_3'},
-                    { name: 'projectConsThird4', mapping: 'cons_third_4'}
+                    { name: 'projectManFourth', mapping: 'man_fourth'}
                 ]
             }, items: [{
                     layout:'column',
                     items:[
                         { width:200, layout: 'form',
                             items: [ { xtype:'hidden', name: 'id'},
-                                     { xtype:'textfield',fieldLabel: '<b>Project Manager</b> - Bulan 1', name: 'projectManFirst',anchor:'95%' } ]
+                                     { xtype:'combo',
+                                         store: new Ext.data.ArrayStore({
+                                                id: 0,lazyRender:true,typeAhead: true,
+                                                triggerAction: 'all',mode: 'local',
+                                                fields: [ 'myId', 'displayText' ],
+                                                data: [[1, 'item1'], [2, 'item2']]
+                                                }),
+                                         fieldLabel: '<b>Resource</b>', name: 'projectManFirst',anchor:'95%' } ]
                         },
                         { width:200, layout: 'form',
                             items: [{ xtype:'textfield', fieldLabel: 'Bulan 2', name: 'projectManSecond',anchor:'95%' }]

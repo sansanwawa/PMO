@@ -5,10 +5,6 @@
 package sands.dao;
 
 import helper.json.JSONException;
-import helper.json.JSONObject;
-import java.util.Iterator;
-import java.util.List;
-import model.ProjectFinancial;
 import model.ProjectLegal;
 import model.SuperTest;
 import sands.dao.implementors.ProjectLegalDAOImpl;

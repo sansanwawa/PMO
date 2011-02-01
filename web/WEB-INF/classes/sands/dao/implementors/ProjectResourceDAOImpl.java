@@ -2,7 +2,6 @@
  *
  * @author sandy
  */
-
 package sands.dao.implementors;
 
 import helper.database.Crud;
@@ -11,50 +10,53 @@ import java.util.List;
 import model.ProjectResource;
 import model.ProjectResourceName;
 import org.hibernate.Criteria;
-import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import sands.dao.interfaces.ProjectResourceDAO;
 
 public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
 
-    private HibernateTemplate hibernateTemplate;
-  
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.hibernateTemplate = new HibernateTemplate(sessionFactory);
-    }
-
     public void save(ProjectResource projectResource) {
-        this.hibernateTemplate.saveOrUpdate(projectResource);
+        super.saveOrUpdate(projectResource);
     }
 
     public void saveName(ProjectResourceName projectresourcename) {
         projectresourcename.setCreatedBy(this.getPrincipal().getUsername());
         projectresourcename.setUpdateBy(this.getPrincipal().getUsername());
-        this.hibernateTemplate.save(projectresourcename);
+        this.save(projectresourcename);
     }
+
     public void updateName(ProjectResourceName projectresourcename) {
         projectresourcename.setUpdateBy(this.getPrincipal().getUsername());
-        this.hibernateTemplate.save(projectresourcename);
+        super.update(projectresourcename);
     }
 
-    
+    public void deleteName(ProjectResourceName projectresourcename) {
+
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        session.createQuery("UPDATE ProjectResourceName SET active=:active WHERE id=:id").
+                setLong("id", projectresourcename.getId()).
+                setBoolean("active", false).
+                executeUpdate();
+    }
+
+    //under development
+    public void delete(ProjectResource projectresource) {
+        this.delete(projectresource);
+    }
 
     public ProjectResourceName getById(long id) {
-        Session session = this.hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectResourceName.class).add(Expression.eq("id", id));
         ProjectResourceName p = (ProjectResourceName) criteria.list().get(0);
         return p;
     }
 
-    
-
     public ArrayList<ProjectResourceName> list(int offset) {
 
-        Session session = hibernateTemplate.getSessionFactory().openSession();
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectResourceName.class).add(Expression.eq("active", true));
 
         if (this.orderByType.equals("ASC")) {
@@ -80,7 +82,7 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
-        hibernateTemplate.getSessionFactory().close();
+        this.getHibernatetemplate().getSessionFactory().close();
         return array;
 
     }

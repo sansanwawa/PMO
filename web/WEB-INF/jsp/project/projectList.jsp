@@ -291,13 +291,38 @@
                         { width:200, layout: 'form',
                             items: [ { xtype:'hidden', name: 'id'},
                                      { xtype:'combo',
-                                         store: new Ext.data.ArrayStore({
-                                                id: 0,lazyRender:true,typeAhead: true,
-                                                triggerAction: 'all',mode: 'local',
-                                                fields: [ 'myId', 'displayText' ],
-                                                data: [[1, 'item1'], [2, 'item2']]
-                                                }),
-                                         fieldLabel: '<b>Resource</b>', name: 'projectManFirst',anchor:'95%' } ]
+                                                name : 'projectManFirst',
+                                                hiddenName:'projectManFirst',
+                                                displayField:'name',
+                                                valueField:'id',
+                                                lazyRender:true,
+                                                typeAhead: true,
+                                                triggerAction: 'all',
+                                                mode: 'remote',
+                                                fieldLabel: '<b>Resource</b>',
+                                                anchor:'95%',
+                                                emptyText : '-----Select Resource Name-----',
+                                                store: new Ext.data.Store({
+                                                                proxy: new Ext.data.HttpProxy({
+                                                                    method:'POST',
+                                                                    url: '../projectresource/jsonName'
+                                                                }),
+                                                                autoLoad :false,
+                                                                remoteSort :true,
+                                                                baseParams : { start:0, limit:10 },
+                                                                sortInfo: { field: 'id', direction: 'DESC' },
+                                                                reader: new Ext.data.JsonReader({
+                                                                    root: 'data',
+                                                                    id: 'sidiasd',
+                                                                    totalRecords: 'total',
+                                                                    fields : [
+                                                                        {name: 'id', mapping: 'id'},
+                                                                        {name: 'name', mapping: 'name'}
+
+                                                                    ]
+                                                                } )
+                                                            })
+                                          } ]
                         },
                         { width:200, layout: 'form',
                             items: [{ xtype:'textfield', fieldLabel: 'Bulan 2', name: 'projectManSecond',anchor:'95%' }]

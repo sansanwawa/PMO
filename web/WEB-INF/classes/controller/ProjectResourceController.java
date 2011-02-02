@@ -77,6 +77,46 @@ public class ProjectResourceController {
 
     }
 
+
+    @RequestMapping(value = "/jsonName", method = RequestMethod.POST)
+    public void jsonName(@RequestParam("limit") int limit,
+            @RequestParam("start") int start,
+            @RequestParam("sort") String sort,
+            @RequestParam("dir") String dir,
+            @ModelAttribute("ProjectResourceName") ProjectResourceName projectresourcename,
+            BindingResult result, HttpServletResponse response) throws JSONException, IOException {
+
+        HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
+
+        List countProject = (List) projectResourceDAO.list(0).get(1);
+        Integer count = (Integer) countProject.get(0);
+
+        //set the limit
+        projectResourceDAO.setMaxResults(limit);
+
+        //set order by
+        projectResourceDAO.orderBy(sort, dir);
+        List listProject = (List) projectResourceDAO.list(start).get(0);
+
+        JSONObject json = new JSONObject();
+        json.put("total", count);
+        json.put("success", true);
+        Iterator iterator = listProject.iterator();
+
+        while (iterator.hasNext()) {
+            ProjectResourceName p = (ProjectResourceName) iterator.next();
+            JSONObject map = new JSONObject();
+            map.put("id", p.getId());
+            map.put("name", p.getName());
+            json.append("data", map);
+        }
+        json.write(responseWrapper.getWriter());
+
+    }
+
+
+
+
     @RequestMapping(value = "/add/{id}", method = RequestMethod.GET)
     public void addname(@PathVariable("id") long project_resource_name_id, HttpServletResponse response) throws JSONException, IOException {
         HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);

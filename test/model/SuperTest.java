@@ -22,6 +22,9 @@ public class SuperTest extends TestCase  {
         configuration.addAnnotatedClass(ProjectDocument.class);
         configuration.addAnnotatedClass(ProjectFinancial.class);
         configuration.addAnnotatedClass(ProjectLegal.class);
+        configuration.addAnnotatedClass(ProjectResource.class);
+        configuration.addAnnotatedClass(ProjectSchedule.class);
+        configuration.addAnnotatedClass(ProjectResourceName.class);
         AnnotationConfiguration conf = configuration.configure("hibernateTest.cfg.xml");
         sessionFactory = conf.buildSessionFactory();
     }

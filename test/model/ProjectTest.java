@@ -1,6 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author sandy
  */
 package model;
 
@@ -8,15 +8,8 @@ import helper.json.JSONException;
 import java.util.List;
 import helper.json.JSONObject;
 import java.util.Iterator;
-
-
-
 import sands.dao.implementors.ProjectDAOImpl;
 
-/**
- *
- * @author sandy
- */
 public class ProjectTest extends SuperTest {
 
     protected ProjectDAOImpl projectDAO = new ProjectDAOImpl();
@@ -35,13 +28,13 @@ public class ProjectTest extends SuperTest {
     public void testSave() {
         Project project = new Project();
         project.setName("Test JUnit");
-        //this.projectDAO.save(project);
+        this.projectDAO.save(project);
     }
 
     public void testCountRow() {
         projectDAO.setMaxResults(0);
         List listUser = (List) projectDAO.list(0).get(0);
-        this.assertEquals(4, listUser.size());
+        this.assertEquals(0, listUser.size());
     }
 
     public void testListJson() throws JSONException {
@@ -64,6 +57,4 @@ public class ProjectTest extends SuperTest {
 
 
     }
-
-    
 }

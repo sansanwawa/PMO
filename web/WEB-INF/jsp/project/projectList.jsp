@@ -14,6 +14,9 @@
                 
         //selection Model
         var selectionModel = new Ext.grid.CheckboxSelectionModel();
+        var selectionResourceModel = new Ext.grid.CheckboxSelectionModel();
+
+
         // create the Data Store
         
         var store = new Ext.data.Store({
@@ -21,7 +24,7 @@
                 method:'POST',
                 url: '../project/json'
             }),
-            autoLoad :true,
+            autoLoad :false,
             remoteSort :true,
             baseParams : { 
                 start:0,
@@ -54,7 +57,6 @@
             })
         });
 
-        
 
          var columnModel = new Ext.grid.ColumnModel({
             columns : [selectionModel,
@@ -114,7 +116,40 @@
             ]
         });
 
- 
+ var storeResources = new Ext.data.Store({
+            storeId  : 'storeResource',
+            proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectresource/json' }),
+            remoteSort : true,
+            baseParams : { start:0, limit:10 },
+            sortInfo: { field: 'id', direction: 'DESC' },
+            reader: new Ext.data.JsonReader({
+                root: 'data',
+                id: 'resourcedata',
+                totalRecords: 'total',
+                fields : [
+                    {name: 'id', mapping: 'id' ,id:'nya'},
+                    {name: 'projectresourcename', mapping: 'projectresourcename'},
+                    {name: 'mandays', mapping: 'mandays'},
+                    {name: 'month', mapping: 'month'}
+                ]
+            })
+        }); 
+
+
+        
+        var columnModelResource = new Ext.grid.ColumnModel({
+           columns : [new Ext.grid.RowNumberer(),
+                selectionResourceModel,
+                {header: "Id", dataIndex: 'id', hidden:true},                
+                {header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
+                {header: "Month", width: 100, dataIndex: 'month'},
+                {header: "Mandays", width: 100,dataIndex: 'mandays' }
+                 
+             ]
+        });
+
+          
+            
 
 
 
@@ -267,42 +302,42 @@
         var parameterFormResource ={
             id : 'fpRes',
             labelAlign: 'top',
-            // layout:'column',
             url :'../projectresource/addProcess',
             buttons: [{
                     text: 'Save',
                     handler : function(a){
-                        fpRes.getForm().submit({
+                      fpRes.getForm().submit({
+                            params: { project_id : selectionModel.getSelected().data.id },
+                            success:function(){
+                                storeResources.reload();
+                                fpRes.getForm().reset();
+                            },
                             waitMsg:'Please wait...'
                         });
-
                     }
                 }],
-            reader : { id : 'myFormData', root : 'data', totalRecords : 'total',
-                fields : [{ name: 'id', mapping: 'id'},
-                    { name: 'projectManFirst', mapping: 'man_first'},
-                    { name: 'projectManSecond', mapping: 'man_second'},
-                    { name: 'projectManThird', mapping: 'man_third'},
-                    { name: 'projectManFourth', mapping: 'man_fourth'}
-                ]
-            }, items: [{
+            reader : {},
+            items: [{
                     layout:'column',
                     items:[
                         { width:200, layout: 'form',
-                            items: [ { xtype:'hidden', name: 'id'},
+                            items: [ 
                                      { xtype:'combo',
-                                                name : 'projectManFirst',
-                                                hiddenName:'projectManFirst',
-                                                displayField:'name',
-                                                valueField:'id',
-                                                lazyRender:true,
-                                                typeAhead: true,
-                                                triggerAction: 'all',
-                                                mode: 'remote',
-                                                fieldLabel: '<b>Resource</b>',
-                                                anchor:'95%',
-                                                emptyText : '-----Select Resource Name-----',
-                                                store: new Ext.data.Store({
+                                       allowBlank:false,
+                                       name : 'projectresourcename',
+                                       hiddenName:'projectresourcename',
+                                       displayField:'name',
+                                       valueField:'id',
+                                       lazyRender:true,
+                                       typeAhead: true,
+                                       queryParam : '',
+                                       triggerAction: 'all',
+                                       mode: 'remote',
+                                       fieldLabel: 'Resource',
+                                       anchor:'95%',
+                                       editable : false,
+                                       emptyText : '-----Select Resource Name-----',
+                                       store: new Ext.data.Store({
                                                                 proxy: new Ext.data.HttpProxy({
                                                                     method:'POST',
                                                                     url: '../projectresource/jsonName'
@@ -318,21 +353,75 @@
                                                                     fields : [
                                                                         {name: 'id', mapping: 'id'},
                                                                         {name: 'name', mapping: 'name'}
-
                                                                     ]
                                                                 } )
                                                             })
                                           } ]
                         },
-                        { width:200, layout: 'form',
-                            items: [{ xtype:'textfield', fieldLabel: 'Bulan 2', name: 'projectManSecond',anchor:'95%' }]
+                        {   width:100,
+                            layout: 'form',
+                            items: [
+                                    { xtype:'combo',
+                                      allowBlank:false,
+                                      fieldLabel: 'Month',
+                                      name: 'month',
+                                      triggerAction: 'all',
+                                      hiddenName:'month',
+                                      editable : false,
+                                      typeAhead: true,
+                                      anchor:'95%',
+                                      mode: 'local',
+                                      valueField: 'monthVal',
+                                      displayField: 'monthName',
+                                      emptyText : '--------',
+                                      store: new Ext.data.ArrayStore({
+                                                    id: 1121,
+                                                    fields: [ 'monthVal', 'monthName' ],
+                                                    data: [ [1, 'January'], [2, 'February'] , [3, 'March'] , [4, 'April'] , [5, 'May'] , [6, 'June'],
+                                                            [7, 'July'],[8, 'August'],[9, 'September'] ,[10, 'October'],
+                                                            [11, 'November'],[12, 'December']
+                                                            ]
+                                                })
+                                            }
+                                ]
                         },
                         { width:200, layout: 'form',
-                            items: [{ xtype:'textfield', fieldLabel: 'Bulan 3', name: 'projectManThird',anchor:'95%' }]
-                        },
-                        { width:200, layout: 'form',
-                            items: [{ xtype:'textfield', fieldLabel: 'Bulan 4', name: 'projectManFourth',anchor:'95%' }]
-                        }]
+                            items: [{ xtype:'textfield', fieldLabel: 'Mandays', name: 'mandays',anchor:'95%',vtype : 'numeric', allowBlank:false }]
+                        } ]
+                },{
+                     xtype:'grid',
+                     id :'resourceGrid',
+                     store : storeResources,
+                     sm: selectionResourceModel,
+                     title : 'Resources',
+                     height : 180,
+                     iconCls: 'icon-list',
+                     colModel : columnModelResource,
+                      tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
+                                    handler  : function(){
+                                        var selection = selectionResourceModel.getSelections();
+                                        var ids = [];
+                                        for(var i = 0;i<selection.length;i++)  ids.push(selection[i].data.id);
+                                        console.log(ids);
+                                      storeResources.reload();
+                                        /*
+                                        Ext.Ajax.request({
+                                            url: '../projectresource/delete',
+                                            success:function(response){
+                                                var status = Ext.util.JSON.decode(response.responseText).success;
+                                                if(status==false){
+                                                    Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                                                }
+                                                storeResources.reload();
+                                            },
+                                            failure:function(){
+                                                Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                                            },
+                                            params: { id : ids } });
+                                            */
+
+                    }
+                }], bbar:  { pageSize: 10, store: store, displayInfo: true, displayMsg: 'Displaying Records {0} - {1} of {2}', emptyMsg: "No Records to display" }
                 }
             ]
         }
@@ -816,49 +905,9 @@
                                     url: '../projectfinancial/add/' + id,
                                     success: function(response){
 
-                                       /*
-                        var defaultComponent =  [
-                            { html: 'Name', colspan: 1,width:150 },
-                            { html: 'Payment Status', colspan: 1,width:150 },
-                            { html: 'Date Of Payment', colspan: 1,width:150  },
-                            { html: 'Remarks', colspan: 2,width:150  },
-                            { html: "&nbsp", colspan: 2,width:150  },
-                            { xtype : 'textfield',name:'paymentName1' },
-                            { xtype : 'radiogroup',cls : 'RdGroup',
-                                items : [
-                                    { boxLabel : 'Paid', name: 'payment1', checked : true, inputValue : 'Paid' },
-                                    { boxLabel : 'Pending', name: 'payment1', inputValue : 'Pending' }
-                                ]},
-                            { xtype : 'datefield' ,name:'paymentDate1',format : 'Y-m-d'},
-                            { xtype : 'textfield', name:'paymentNote1' },
-                            { xtype : 'radiogroup', width:150,
-                                items : [
-                                    { xtype : 'button', text:'Add Row', handler:function(){
-                                            var classLinks = Ext.query('.RdGroup');
-                                            var index = classLinks.length + 1;
-                                            var k = Ext.get(Ext.query('input[name=totalField]')[0]);
-                                            k.dom.value = index;
-                                            var component = [
-                                                { html: '&nbsp', colspan: 1,width:150, bodyStyle:'border:none;' },
-                                                { xtype : 'textfield',name:'paymentName'+ index },
-                                                { xtype : 'radiogroup',cls : 'RdGroup',
-                                                    items : [{ boxLabel : 'Paid', name: 'payment' + index, checked : true, inputValue : 'Paid' },
-                                                        { boxLabel : 'Pending', name: 'payment'+ index , inputValue : 'Pending' } ]},
-                                                { xtype : 'datefield' ,name:'paymentDate'+ index,format : 'Y-m-d' },
-                                                { xtype : 'textfield', name:'paymentNote'+ index }
-                                                
-                                            ]
-                                            fpfin.add(component);
-                                            fpfin.doLayout();
-                                        } },
-                                    { xtype : 'hidden', name:'totalField',value : 1   }
-                                ]}];
-                                */
-
                                var defaultComponent = [];
                                    defaultComponent.push({ html: 'Name', colspan: 1,width:150 });
                                    defaultComponent.push({ html: 'Payment Status', colspan: 1,width:150 });
-
                                    defaultComponent.push({ html: 'Date Of Payment', colspan: 1,width:150  });
                                    defaultComponent.push( { html: 'Remarks', colspan: 2,width:150  });
                                    defaultComponent.push({ html: "&nbsp", colspan: 2,width:150  });
@@ -910,7 +959,6 @@
                                                 
                                                 Ext.each(datas,function(data,i){
                                                     //console.log(i);
-                                                  
                                             var component = [];
                                                 component.push( { html: '&nbsp', colspan: 1,width:150, bodyStyle:'border:none;' });
                                                 component.push( { xtype : 'textfield',name:'paymentName'+ index, value : data.name });
@@ -938,8 +986,8 @@
                         items:[fpleg]
                     },
                     {title : 'Resource',listeners: {activate: function(){
-                                fpRes.getForm().load({method :'GET', url: '../projectresource/add/' + id , waitMsg:'Please wait...'});
-                            }},
+                                storeResources.load( { params : {  project_id : id } });
+                        }},
                         items:[fpRes] },
                     {title : 'Schedule',listeners: {activate: function(){
                                 fpSch.getForm().load({ method:'GET', url: '../projectschedule/add/' + id , waitMsg:'Please wait...'});

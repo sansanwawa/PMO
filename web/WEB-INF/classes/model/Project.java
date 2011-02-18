@@ -83,9 +83,6 @@ public class Project {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
     private ProjectLegal projectlegal;
 
-    /*FK*/
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
-    private ProjectResource projectresourceObj;
 
     /*FK*/
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
@@ -123,16 +120,8 @@ public class Project {
     public void setProjectscheduleObj(ProjectSchedule projectscheduleObj) {
         this.projectscheduleObj = projectscheduleObj;
     }
-
- 
+  
     
-    public ProjectResource getProjectresourceObj() {
-        return projectresourceObj;
-    }
-
-    public void setProjectresourceObj(ProjectResource projectresourceObj) {
-        this.projectresourceObj = projectresourceObj;
-    }
 
     public ProjectDocument getProjectdocument() {
         return projectdocument;

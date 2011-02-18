@@ -19,7 +19,7 @@
         var store = new Ext.data.Store({
             proxy: new Ext.data.HttpProxy({
                 method:'POST',
-                url: '../projectresource/json'
+                url: '../projectresource/jsonName'
             }),
             autoLoad :true,
             remoteSort :true,
@@ -139,14 +139,10 @@
                         var selection = selectionModel.getSelections();
                         //var ids = "";
                         var ids = [];
-                        for(var i = 0;i<selection.length;i++){
-                        //    ids +=  selection[i].data.id + ",";
-                            ids[i] = selection[i].data.id;
-                        }
-                        //ids = ids.substr(0, ids.length -1);
+                        for(var i = 0;i<selection.length;i++)
+                              ids[i] = selection[i].data.id;
 
-
-                        Ext.Ajax.request({
+                    Ext.Ajax.request({
                             url: '../projectresource/deleteName',
                             success:function(response){
                                 var status = Ext.util.JSON.decode(response.responseText).success;

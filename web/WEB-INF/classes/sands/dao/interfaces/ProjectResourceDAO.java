@@ -4,7 +4,7 @@
  */
 package sands.dao.interfaces;
 
-import java.util.ArrayList;
+import java.util.List;
 import model.ProjectResource;
 import model.ProjectResourceName;
 
@@ -13,6 +13,12 @@ import model.ProjectResourceName;
  * @author sandy
  */
 public interface ProjectResourceDAO {
+
+    /**
+     * set Project Id for another purposes
+     * @param project_id
+     */
+    public void setProjectId(Long project_id);
 
     /*
      * Save ProjectResource
@@ -28,7 +34,7 @@ public interface ProjectResourceDAO {
      *  Update ProjectResourceName
      */
     public void updateName(ProjectResourceName projectresourcename);
-    
+
     /**
      *
      * Delete ProjectResource
@@ -42,8 +48,6 @@ public interface ProjectResourceDAO {
      */
     public void deleteName(ProjectResourceName projectresourcename);
 
-
-
     /**
      * Get Information By Id
      * @param id
@@ -53,11 +57,17 @@ public interface ProjectResourceDAO {
 
     /**
      *
-     * @param offset
-     * @return ArrayList
+     * @param int offset
+     * @param long project_id
+     * @return List
      */
-    public ArrayList list(int offset);
+    public List list(int offset);
 
+    /**
+     * 
+     * @param int offset
+     * @return List
+     */
     /**
      *
      * @param int max result

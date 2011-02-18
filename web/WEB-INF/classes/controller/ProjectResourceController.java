@@ -13,6 +13,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import model.Project;
 import model.ProjectResource;
 import model.ProjectResourceName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +47,13 @@ public class ProjectResourceController {
             @RequestParam("start") int start,
             @RequestParam("sort") String sort,
             @RequestParam("dir") String dir,
+            @RequestParam("project_id") String project_id,
             @ModelAttribute("ProjectResourceName") ProjectResourceName projectresourcename,
             BindingResult result, HttpServletResponse response) throws JSONException, IOException {
 
         HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
 
+        projectResourceDAO.setProjectId(Long.parseLong(project_id));
         List countProject = (List) projectResourceDAO.list(0).get(1);
         Integer count = (Integer) countProject.get(0);
 
@@ -59,18 +62,20 @@ public class ProjectResourceController {
 
         //set order by
         projectResourceDAO.orderBy(sort, dir);
-        List listProject = (List) projectResourceDAO.list(start).get(0);
+        List projectResource = (List) projectResourceDAO.list(start).get(0);
 
         JSONObject json = new JSONObject();
         json.put("total", count);
         json.put("success", true);
-        Iterator iterator = listProject.iterator();
+        Iterator iterator = projectResource.iterator();
 
         while (iterator.hasNext()) {
-            ProjectResourceName p = (ProjectResourceName) iterator.next();
+            ProjectResource p = (ProjectResource) iterator.next();
             JSONObject map = new JSONObject();
             map.put("id", p.getId());
-            map.put("name", p.getName());
+            map.put("projectresourcename",p.getProjectResourceName().getName());
+            map.put("month", p.getMonth());
+            map.put("mandays", p.getMandays());
             json.append("data", map);
         }
         json.write(responseWrapper.getWriter());
@@ -87,6 +92,9 @@ public class ProjectResourceController {
             BindingResult result, HttpServletResponse response) throws JSONException, IOException {
 
         HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
+
+        //setting up for ResourceName Only
+        projectResourceDAO.setProjectId(null);
 
         List countProject = (List) projectResourceDAO.list(0).get(1);
         Integer count = (Integer) countProject.get(0);
@@ -134,9 +142,28 @@ public class ProjectResourceController {
     }
 
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
-    public void addProcess(@ModelAttribute("ProjectResource") ProjectResource projectresource, BindingResult result, HttpServletResponse response) throws Exception {
-
+    public void addProcess(@ModelAttribute("ProjectResource") ProjectResource projectresource,
+             HttpServletRequest request,
+             HttpServletResponse response) throws Exception {
         Writer out = response.getWriter();
+        String project_id                 = request.getParameter("project_id");
+        String mandays                    = request.getParameter("mandays");
+        String month                      = request.getParameter("month");
+        String projectResourceName        = request.getParameter("projectresourcename");
+
+        //declare Project
+        Project project = new Project();
+        project.setId(Long.parseLong(project_id));
+        
+        //declare ProjectResourceName
+        ProjectResourceName projectresourcename = new ProjectResourceName();
+        projectresourcename.setId(Long.parseLong(projectResourceName));
+        
+       
+        projectresource.setMandays(Integer.parseInt(mandays));
+        projectresource.setMonth(month);
+        projectresource.setProject(project);
+        projectresource.setProjectResourceName(projectresourcename);
         projectResourceDAO.save(projectresource);
         out.write("{success:true}");
     }
@@ -181,4 +208,22 @@ public class ProjectResourceController {
         Writer out = response.getWriter();
         out.write("{success:true,data:" + project_resource_id.length + "}");
     }
+
+    @RequestMapping(value = "/delete")
+    public void delete(@ModelAttribute("ProjectResource") ProjectResource projectresource,
+             BindingResult result,
+             HttpServletResponse response, HttpServletRequest request) throws Exception {
+
+        String[] project_resource_id = request.getParameterValues("id");
+
+        for (int i = 0; i < project_resource_id.length; i++) {
+            projectresource.setId(Long.parseLong(project_resource_id[i]));
+            projectResourceDAO.delete(projectresource);
+        }
+        Writer out = response.getWriter();
+        out.write("{success:true}");
+    }
+
+
+
 }

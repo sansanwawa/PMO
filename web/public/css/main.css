@@ -74,10 +74,20 @@ a{
         background-image: url("../images/icons/fam/application_view_list.png") !important;
 }
 
+/*
+refer to :
+//plase refer to : http://www.sencha.com/forum/showthread.php?29961-1.0-Grid-RowActions-Plugin
+.ux-grid3-row-action-cell .x-grid3-cell-inner {
+    padding: 1px 0 0 0;
+}
+.ux-grid3-row-action-cell .x-grid3-cell-inner div {
+    background-repeat:no-repeat;
+    width:16px;
+    height:16px;
+    cursor:pointer;
+}
 
-
-
-
+*/
 
 
 

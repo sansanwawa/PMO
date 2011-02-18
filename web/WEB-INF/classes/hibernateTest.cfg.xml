@@ -6,13 +6,13 @@
     <session-factory>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLMyISAMDialect</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/SpringExample17</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/pmo</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password"></property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.cache.use_query_cache">false</property>
-        <property name="hibernate.format_sql">false</property>
+        <property name="hibernate.format_sql">true</property>
         <property name="hibernate.use_sql_comments">false</property>
   </session-factory>
     

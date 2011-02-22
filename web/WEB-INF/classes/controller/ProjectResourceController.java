@@ -75,7 +75,8 @@ public class ProjectResourceController {
             map.put("id", p.getId());
             map.put("projectresourcename",p.getProjectResourceName().getName());
             map.put("month", p.getMonth());
-            map.put("mandays", p.getMandays());
+            map.put("mandaysUsage", p.getMandaysUsage() );
+            map.put("mandaysAllocation", p.getMandaysAllocation());
             json.append("data", map);
         }
         json.write(responseWrapper.getWriter());
@@ -147,7 +148,8 @@ public class ProjectResourceController {
              HttpServletResponse response) throws Exception {
         Writer out = response.getWriter();
         String project_id                 = request.getParameter("project_id");
-        String mandays                    = request.getParameter("mandays");
+        String mandaysUsage               = request.getParameter("mandaysUsage");
+        String mandaysAllocation          = request.getParameter("mandaysAllocation");
         String month                      = request.getParameter("month");
         String projectResourceName        = request.getParameter("projectresourcename");
 
@@ -160,7 +162,8 @@ public class ProjectResourceController {
         projectresourcename.setId(Long.parseLong(projectResourceName));
         
        
-        projectresource.setMandays(Integer.parseInt(mandays));
+        projectresource.setMandaysUsage(Integer.parseInt(mandaysUsage));
+        projectresource.setMandaysAllocation(Integer.parseInt(mandaysAllocation));
         projectresource.setMonth(month);
         projectresource.setProject(project);
         projectresource.setProjectResourceName(projectresourcename);

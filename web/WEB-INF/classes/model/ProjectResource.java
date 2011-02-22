@@ -25,8 +25,15 @@ public class ProjectResource implements Serializable {
     @Column(name = "project_resource_month")
     private String month;
 
-    @Column(name = "project_resource_mandays")
-    private int mandays;
+    @Column(name = "project_resource_mandays_allocation")
+    private int mandaysAllocation;
+
+    @Column(name = "project_resource_mandays_usage")
+    private int mandaysUsage;
+
+
+
+
 
     @ManyToOne
     @JoinColumn(name = "project_id")
@@ -62,13 +69,7 @@ public class ProjectResource implements Serializable {
         this.project = project;
     }
 
-    public int getMandays() {
-        return mandays;
-    }
 
-    public void setMandays(int mandays) {
-        this.mandays = mandays;
-    }
 
     public String getMonth() {
         return month;
@@ -112,6 +113,23 @@ public class ProjectResource implements Serializable {
     public void setProjectResourceName(ProjectResourceName projectresourcename) {
         this.projectresourcename = projectresourcename;
     }
+
+    public int getMandaysAllocation() {
+        return mandaysAllocation;
+    }
+
+    public void setMandaysAllocation(int mandaysAllocation) {
+        this.mandaysAllocation = mandaysAllocation;
+    }
+
+    public int getMandaysUsage() {
+        return mandaysUsage;
+    }
+
+    public void setMandaysUsage(int mandaysUsage) {
+        this.mandaysUsage = mandaysUsage;
+    }
+
 
     
 }

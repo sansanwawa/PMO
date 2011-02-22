@@ -129,7 +129,8 @@
                 fields : [
                     {name: 'id', mapping: 'id' ,id:'nya'},
                     {name: 'projectresourcename', mapping: 'projectresourcename'},
-                    {name: 'mandays', mapping: 'mandays'},
+                    {name: 'mandaysAllocation', mapping: 'mandaysAllocation'},
+                    {name: 'mandaysUsage', mapping: 'mandaysUsage'},
                     {name: 'month', mapping: 'month'}
                 ]
             })
@@ -143,8 +144,8 @@
                 {header: "Id", dataIndex: 'id', hidden:true},                
                 {header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
                 {header: "Month", width: 100, dataIndex: 'month'},
-                {header: "Mandays", width: 100,dataIndex: 'mandays' }
-                 
+                {header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
+                {header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage' }                 
              ]
         });
 
@@ -386,8 +387,12 @@
                                 ]
                         },
                         { width:200, layout: 'form',
-                            items: [{ xtype:'textfield', fieldLabel: 'Mandays', name: 'mandays',anchor:'95%',vtype : 'numeric', allowBlank:false }]
-                        } ]
+                            items: [{ xtype:'textfield', fieldLabel: 'Mandays Alocation', name: 'mandaysAllocation',anchor:'95%',vtype : 'numeric', allowBlank:false }]
+                        },
+                        { width:200, layout: 'form',
+                            items: [{ xtype:'textfield', fieldLabel: 'Mandays Usage', name: 'mandaysUsage',anchor:'95%',vtype : 'numeric', allowBlank:false }]
+                        }
+                        ]
                 },{
                      xtype:'grid',
                      id :'resourceGrid',
@@ -402,9 +407,18 @@
                                         var selection = selectionResourceModel.getSelections();
                                         var ids = [];
                                         for(var i = 0;i<selection.length;i++)  ids.push(selection[i].data.id);
-                                        console.log(ids);
-                                      storeResources.reload();
+
                                         /*
+                                        var record = new Ext.data.Record(
+                                        {name: 'id', mapping: 'id' ,id:'nya'},
+                                        {name: 'projectresourcename', mapping: 'projectresourcename'},
+                                        {name: 'mandays', mapping: 'mandays'},
+                                        {name: 'month', mapping: 'month'});
+                                        storeResources.remove(record);
+                                        */
+                                        
+                                        //storeResources.reload();
+                                        
                                         Ext.Ajax.request({
                                             url: '../projectresource/delete',
                                             success:function(response){
@@ -418,7 +432,7 @@
                                                 Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
                                             },
                                             params: { id : ids } });
-                                            */
+                                            
 
                     }
                 }], bbar:  { pageSize: 10, store: store, displayInfo: true, displayMsg: 'Displaying Records {0} - {1} of {2}', emptyMsg: "No Records to display" }
@@ -605,8 +619,8 @@
                 },{
                     text : 'Report',
                     handler : function(){
-                        var id = fpdoc.getForm().findField('PROJECT_MANAGEMENT_ID').getValue();
-                        document.location.href='../projectdocument/report?id=' + id;
+                        var project_document_id = fpdoc.getForm().findField('PROJECT_MANAGEMENT_ID').getValue();
+                        document.location.href='../projectdocument/report?id=' + project_document_id;
                     }
                 }],
             items : [{ xtype:'hidden', fieldLabel: 'Project Document Id', name: 'PROJECT_MANAGEMENT_ID', inputValue :null },
@@ -870,7 +884,6 @@
 
 
         /*Show windows*/
-
         function showWindow(){
 
             win.add(fp);
@@ -954,11 +967,9 @@
                                             var k = Ext.get(Ext.query('input[name=totalField]')[0]);
                                             k.dom.value = index;
                                           
-                                            //var index = 1
                                             if(datas.length > 1){
                                                 
                                                 Ext.each(datas,function(data,i){
-                                                    //console.log(i);
                                             var component = [];
                                                 component.push( { html: '&nbsp', colspan: 1,width:150, bodyStyle:'border:none;' });
                                                 component.push( { xtype : 'textfield',name:'paymentName'+ index, value : data.name });
@@ -1007,6 +1018,17 @@
             });
             win7.setTitle("Project Detail");
             win7.show();
+
+            win7.on('maximize',function(){
+            //set height to current window
+            tabpannel.setHeight(document.body.clientHeight-30);
+            });
+            win7.on('restore',function(){
+            //set height to current setting
+            tabpannel.setHeight(300);
+            });
+
+
         }
 
         var win = new Ext.Window({
@@ -1019,7 +1041,17 @@
   
         //autorefresh 60 seconds
         Ext.TaskMgr.start({ run: function(){ store.reload(); }, interval: 60000 });
-    });
+       //
+
+      /*
+         Ext.TaskMgr.start({ run:
+                function(){
+                //alert(selectionModel.getSelected());
+                store.reload();
+            }, interval: 10000 });
+        *
+        */
+     });
 
     
 </script>

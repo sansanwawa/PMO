@@ -16,6 +16,13 @@
         var selectionModel = new Ext.grid.CheckboxSelectionModel();
         var selectionResourceModel = new Ext.grid.CheckboxSelectionModel();
 
+     // define a custom summary function
+        Ext.ux.grid.GroupSummary.Calculations['totalCost'] = function(v, record, field){
+            return v + (record.data.estimate * record.data.rate);
+        };
+
+
+
 
         // create the Data Store
         
@@ -116,8 +123,9 @@
             ]
         });
 
- var storeResources = new Ext.data.Store({
+ var storeResources = new Ext.data.GroupingStore({
             storeId  : 'storeResource',
+            groupField :'projectresourcename',
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectresource/json' }),
             remoteSort : true,
             baseParams : { start:0, limit:10 },
@@ -127,26 +135,71 @@
                 id: 'resourcedata',
                 totalRecords: 'total',
                 fields : [
-                    {name: 'id', mapping: 'id' ,id:'nya'},
-                    {name: 'projectresourcename', mapping: 'projectresourcename'},
-                    {name: 'mandaysAllocation', mapping: 'mandaysAllocation'},
-                    {name: 'mandaysUsage', mapping: 'mandaysUsage'},
-                    {name: 'month', mapping: 'month'}
+                    {name: 'id', mapping: 'id',type:'int'},
+                    {name: 'projectresourcename', mapping: 'projectresourcename', type:'string'},
+                    {name: 'mandaysAllocation', mapping: 'mandaysAllocation',type:'int'},
+                    {name: 'mandaysUsage', mapping: 'mandaysUsage',type:'int'},
+                    {name: 'projectresourceid', mapping: 'projectresourceid',type:'int'},
+                    {name: 'projectid', mapping: 'projectid',type:'int'},
+                    {name: 'month', mapping: 'month',type:'int'}
                 ]
             })
         }); 
 
 
-        
+  /**
+*
+*
+*
         var columnModelResource = new Ext.grid.ColumnModel({
-           columns : [new Ext.grid.RowNumberer(),
+           columns : [ new Ext.grid.RowNumberer({width: 30}),
                 selectionResourceModel,
-                {header: "Id", dataIndex: 'id', hidden:true},                
-                {header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
-                {header: "Month", width: 100, dataIndex: 'month'},
-                {header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
-                {header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage' }                 
+                { header: "Id", dataIndex: 'id', hidden:true},
+                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
+                { header: "Project Id", dataIndex: 'projectid', hidden:true},
+                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
+                { header: "Month", width: 100, dataIndex: 'month' },
+                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
+                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',editor :new Ext.form.TextField({vtype:'numeric'}) }
              ]
+        });
+*/
+
+      var columnModelResource = new Ext.grid.ColumnModel({
+           columns : [ new Ext.grid.RowNumberer({width: 30}),
+                selectionResourceModel,
+                { header: "Id", dataIndex: 'id', hidden:true},
+                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
+                { header: "Project Id", dataIndex: 'projectid', hidden:true},
+                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
+                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryRenderer: function(v, params, data){
+                    return ((v === 0 || v > 1) ? '(' + v +' Datas)' : '(1 Data)');
+                }},
+                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
+                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) }
+             ]
+        });
+
+
+
+        storeResources.on('update',function(store,record,operation){
+                Ext.Ajax.request({
+                    url: '../projectresource/addProcess',
+                    success:function(response){
+                        var status = Ext.util.JSON.decode(response.responseText).success;
+                        if(status==false)
+                        Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                        },
+                        failure:function(){
+                        Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                        },
+                        params: {   id : record.data.id,
+                                    project_id : record.data.projectid,
+                                    mandaysAllocation : record.data.mandaysAllocation,
+                                    mandaysUsage : record.data.mandaysUsage,
+                                    month :record.data.month,
+                                    projectresourcename : record.data.projectresourceid
+                    } } );
         });
 
           
@@ -227,12 +280,8 @@
             layout:'table',
             reader : {},
             url :'../projectfinancial/addProcess',
-            defaults: {
-                bodyStyle:'padding:10px 10px 10px 0px;'
-            },
-            layoutConfig: {
-                columns: 6
-            },
+            defaults: {  bodyStyle:'padding:10px 10px 10px 0px;' },
+            layoutConfig: { columns: 6 },
             buttons:[{
                     text : 'Save', handler:function(){
                         fpfin.getForm().submit({
@@ -394,12 +443,22 @@
                         }
                         ]
                 },{
-                     xtype:'grid',
+                     xtype:'editorgrid',
                      id :'resourceGrid',
                      store : storeResources,
                      sm: selectionResourceModel,
+                     clicksToEdit : 1,
                      title : 'Resources',
-                     height : 180,
+                     height : 280,
+                     view: new Ext.grid.GroupingView({
+                         forceFit:true,
+                         showGroupName: false,
+                         enableNoGroups: false,
+			 enableGroupingMenu: true,
+                         hideGroupedColumn: true                         
+                         //groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Datas" : "Data"]})'
+                     }),
+                     plugins: new Ext.ux.grid.GroupSummary(),
                      iconCls: 'icon-list',
                      colModel : columnModelResource,
                       tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
@@ -417,8 +476,10 @@
                                         storeResources.remove(record);
                                         */
                                         
-                                        //storeResources.reload();
-                                        
+                                        storeResources.reload();
+
+
+                                        /*
                                         Ext.Ajax.request({
                                             url: '../projectresource/delete',
                                             success:function(response){
@@ -432,10 +493,11 @@
                                                 Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
                                             },
                                             params: { id : ids } });
-                                            
+                                            */
 
                     }
-                }], bbar:  { pageSize: 10, store: store, displayInfo: true, displayMsg: 'Displaying Records {0} - {1} of {2}', emptyMsg: "No Records to display" }
+                }]
+               // , bbar:  { pageSize: 10, store: store, displayInfo: true, displayMsg: 'Displaying Records {0} - {1} of {2}', emptyMsg: "No Records to display" }
                 }
             ]
         }

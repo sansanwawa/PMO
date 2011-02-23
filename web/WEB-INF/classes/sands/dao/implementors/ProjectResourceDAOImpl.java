@@ -77,6 +77,7 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
                                     .add(Expression.eq("active", true))
                                     .add(Expression.eq("project.id", project_id));
 
+       
         if (this.orderByType.equals("ASC")) {
             criteria.addOrder(Order.asc(this.orderByField));
         } else {

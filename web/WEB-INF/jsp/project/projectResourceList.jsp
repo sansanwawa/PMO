@@ -121,7 +121,8 @@
                            
                             showWindow();
                             fp.getForm().load({
-                                url: '../projectresource/add/' + id,
+                                method : 'GET',
+                                url: '../projectresource/addname/' + id,
                                 waitMsg:'Please wait...'
                             });
                         }

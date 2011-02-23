@@ -75,3 +75,9 @@ Ext.apply(Ext.form.VTypes,{
 
 //Item deleter
 //plase refer to : http://www.sencha.com/forum/showthread.php?29961-1.0-Grid-RowActions-Plugin
+
+
+
+
+
+

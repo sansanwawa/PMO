@@ -22,6 +22,7 @@
         <script type="text/javascript" src="<spring:url value="../static/public/extjs/adapter/ext/ext-base.js" htmlEscape="true" />"></script>
         <script type="text/javascript" src="<spring:url value="../static/public/extjs/ext-all.js" htmlEscape="true" />"></script>
         <!-- END LIBS-->
+        <script type="text/javascript" src="<spring:url value="../static/public/js/gridSummary.js" htmlEscape="true" />"></script>
         <script type="text/javascript" src="<spring:url value="../static/public/js/custom.js" htmlEscape="true" />"></script>
 
     </head>

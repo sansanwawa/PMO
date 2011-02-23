@@ -19,7 +19,7 @@
         var store = new Ext.data.Store({
             proxy: new Ext.data.HttpProxy({
                 method:'POST',
-                url: '../projectresource/jsonName'
+                url: '../projectresourcename/json'
             }),
             autoLoad :true,
             remoteSort :true,
@@ -60,7 +60,7 @@
 
         var parameterFormPanel = {
             id : 'fp',
-            url :'../projectresource/addNameProcess',
+            url :'../projectresourcename/addProcess',
             buttons: [{
                     text: 'Save',
                     handler : function(a){
@@ -122,7 +122,7 @@
                             showWindow();
                             fp.getForm().load({
                                 method : 'GET',
-                                url: '../projectresource/addname/' + id,
+                                url: '../projectresourcename/add/' + id,
                                 waitMsg:'Please wait...'
                             });
                         }
@@ -144,7 +144,7 @@
                               ids[i] = selection[i].data.id;
 
                     Ext.Ajax.request({
-                            url: '../projectresource/deleteName',
+                            url: '../projectresourcename/delete',
                             success:function(response){
                                 var status = Ext.util.JSON.decode(response.responseText).success;
                                 if(status==false){

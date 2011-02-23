@@ -1,28 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package sands.dao.interfaces;
-
-import java.util.List;
-import model.ProjectResource;
-
 /**
  *
  * @author sandy
  */
-public interface ProjectResourceDAO {
+package sands.dao.interfaces;
 
-    /**
-     * set Project Id for another purposes
-     * @param project_id
-     */
-    public void setProjectId(Long project_id);
+import java.util.List;
+import model.ProjectResourceName;
+
+public interface ProjectResourceNameDAO {
+
+
 
     /*
-     * Save ProjectResource
+     * Save ProjectResourceName
      */
-    public void save(ProjectResource projectResource);
+    public void save(ProjectResourceName projectResourceName);
 
 
 
@@ -30,8 +22,14 @@ public interface ProjectResourceDAO {
      *
      * Delete ProjectResource
      */
-    public void delete(ProjectResource projectresource);
-
+    public void delete(ProjectResourceName projectresourcename);
+ 
+    /**
+     * Get Information By Id
+     * @param id
+     * @return ProjectResourceName
+     */
+    public ProjectResourceName getById(long id);
 
     /**
      *
@@ -42,7 +40,7 @@ public interface ProjectResourceDAO {
     public List list(int offset);
 
     /**
-     * 
+     *
      * @param int offset
      * @return List
      */
@@ -66,8 +64,14 @@ public interface ProjectResourceDAO {
     public void orderByDesc(String field);
 
     /**
-     * 
+     *
      * @param String field
      */
     public void orderByAsc(String field);
+
+    /**
+     *
+     * @param ProjectResourceName Object
+     */
+     public void update(ProjectResourceName projectresourcename);
 }

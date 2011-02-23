@@ -390,7 +390,7 @@
                                        store: new Ext.data.Store({
                                                                 proxy: new Ext.data.HttpProxy({
                                                                     method:'POST',
-                                                                    url: '../projectresource/jsonName'
+                                                                    url: '../projectresourcename/json'
                                                                 }),
                                                                 autoLoad :false,
                                                                 remoteSort :true,

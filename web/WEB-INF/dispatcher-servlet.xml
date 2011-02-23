@@ -93,6 +93,12 @@
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
+    <bean id="myProjectResourceNameDAO" class="sands.dao.implementors.ProjectResourceNameDAOImpl">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
+
+
+
     <!-- Project Schedule-->
     
     <bean id="myProjectScheduleDAO" class="sands.dao.implementors.ProjectScheduleDAOImpl">

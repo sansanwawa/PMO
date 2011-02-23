@@ -30,31 +30,12 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
         super.saveOrUpdate(projectResource);
     }
 
-    public void saveName(ProjectResourceName projectresourcename) {
-        projectresourcename.setCreatedBy(this.getPrincipal().getUsername());
-        projectresourcename.setUpdateBy(this.getPrincipal().getUsername());
-        this.save(projectresourcename);
-    }
-
-    public void updateName(ProjectResourceName projectresourcename) {
-        projectresourcename.setUpdateBy(this.getPrincipal().getUsername());
-        super.update(projectresourcename);
-    }
-
-    public void deleteName(ProjectResourceName projectresourcename) {
-
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        session.createQuery("UPDATE ProjectResourceName SET active=:active WHERE id=:id").
-                setLong("id", projectresourcename.getId()).
-                setBoolean("active", false).
-                executeUpdate();
-    }
-
     //under development
     public void delete(ProjectResource projectresource) {
         super.delete(projectresource);
     }
 
+    //will use this method later on!
     public ProjectResourceName getById(long id) {
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectResourceName.class).add(Expression.eq("id", id));
@@ -63,21 +44,10 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
     }
 
     public List list(int offset) {
-        if (this.project_id == null) {
-            return this.listResourceName(offset);
-        } else {
-            return this.listResource(offset, this.project_id);
-        }
-    }
-
-    private List listResource(int offset, long project_id) {
-
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(ProjectResource.class)
-                                    .add(Expression.eq("active", true))
-                                    .add(Expression.eq("project.id", project_id));
+        Criteria criteria = session.createCriteria(ProjectResource.class).add(Expression.eq("active", true)).add(Expression.eq("project.id", project_id));
 
-       
+
         if (this.orderByType.equals("ASC")) {
             criteria.addOrder(Order.asc(this.orderByField));
         } else {
@@ -91,37 +61,6 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
 
         //count rows
         Criteria c = session.createCriteria(ProjectResource.class).setFirstResult(0).add(Expression.eq("active", true)).setProjection(Projections.rowCount());
-        List countRow = c.list();
-
-        float maxPage = countRow.get(0).hashCode() / Integer.valueOf(this.maxResult).floatValue();
-        Double maxPageResults = Math.ceil(maxPage);
-
-        ArrayList array = new ArrayList();
-        array.add(0, results);
-        array.add(1, countRow);
-        array.add(2, maxPageResults.intValue());
-        this.getHibernatetemplate().getSessionFactory().close();
-        return array;
-    }
-
-    private List listResourceName(int offset) {
-
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(ProjectResourceName.class).add(Expression.eq("active", true));
-
-        if (this.orderByType.equals("ASC")) {
-            criteria.addOrder(Order.asc(this.orderByField));
-        } else {
-            criteria.addOrder(Order.desc(this.orderByField));
-        }
-
-        criteria.setMaxResults(this.maxResult);
-        criteria.setFirstResult(offset);
-
-        List results = criteria.list();
-
-        //count rows
-        Criteria c = session.createCriteria(ProjectResourceName.class).setFirstResult(0).add(Expression.eq("active", true)).setProjection(Projections.rowCount());
         List countRow = c.list();
 
         float maxPage = countRow.get(0).hashCode() / Integer.valueOf(this.maxResult).floatValue();

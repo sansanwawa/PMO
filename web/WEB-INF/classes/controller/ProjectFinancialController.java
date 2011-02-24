@@ -4,6 +4,7 @@
  */
 package controller;
 
+import helper.general.BinderHelper;
 import helper.json.JSONException;
 import helper.json.JSONObject;
 import java.io.IOException;
@@ -21,7 +22,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +35,7 @@ import sands.dao.interfaces.ProjectFinancialDAO;
  */
 @Controller
 @RequestMapping(value = "/projectfinancial")
-public class ProjectFinancialController {
+public class ProjectFinancialController extends BinderHelper {
 
     private ProjectFinancialDAO projectFinancialDAO;
     protected final Log logger = LogFactory.getLog(getClass());
@@ -44,61 +46,64 @@ public class ProjectFinancialController {
 
     }
 
-    @RequestMapping(value = "/add/{id}", method = RequestMethod.GET)
-    public void add(@PathVariable("id") long project_financial_id, HttpServletResponse response) throws JSONException, IOException {
-        HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
-        logger.info("project_financial_id : " + project_financial_id);
+    @RequestMapping(value = "/json", method = RequestMethod.POST)
+    public void json(@RequestParam("limit") int limit,
+            @RequestParam("start") int start,
+            @RequestParam("sort") String sort,
+            @RequestParam("dir") String dir,
+            @RequestParam("project_id") String project_id,
+            @ModelAttribute("ProjectFinancial") ProjectFinancial projectfinancial,
+            BindingResult result, HttpServletResponse response) throws JSONException, IOException {
 
-        List projectFinancial = projectFinancialDAO.getById(project_financial_id);
-        Iterator iterator = projectFinancial.iterator();
+        HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
+
+        projectFinancialDAO.setProjectId(Long.parseLong(project_id));
+        List countProject = (List) projectFinancialDAO.list(0).get(1);
+        Integer count = (Integer) countProject.get(0);
+
+        //set the limit
+        projectFinancialDAO.setMaxResults(limit);
+
+        //set order by
+        projectFinancialDAO.orderBy(sort, dir);
+        List projectResource = (List) projectFinancialDAO.list(start).get(0);
+
         JSONObject json = new JSONObject();
+        json.put("total", count);
         json.put("success", true);
-        json.put("total", projectFinancial.size());
+        Iterator iterator = projectResource.iterator();
 
         while (iterator.hasNext()) {
-            ProjectFinancial pf = (ProjectFinancial) iterator.next();
+            ProjectFinancial p = (ProjectFinancial) iterator.next();
             JSONObject map = new JSONObject();
-            map.put("id", pf.getPROJECT_FINANCIAL_ID());
-            map.put("name", pf.getPROJECT_FIN_NAME());
-            map.put("note", pf.getPROJECT_FIN_NOTE());
-            map.put("value", pf.getPROJECT_FIN_VALUE());
-            map.put("date",pf.getPROJECT_FIN_DATE() );
+            map.put("id", p.getId());
+            map.put("name", p.getProjectFinName());
+            map.put("date", p.getProjectFinDate());
+            map.put("status", p.getProjectFinStatus());
+            map.put("note", p.getProjectFinNote());
+            map.put("project_id", p.getProject().getId());
             json.append("data", map);
         }
-        json.write(responseWrapper.getWriter());
+        Writer w = json.write(responseWrapper.getWriter());
+        w.flush();
+        w.close();
+
     }
 
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
-    public void addProcess(@RequestParam("totalField") int totalField, @RequestParam("project_id") long project_id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void addProcess(@ModelAttribute("ProjectFinancial") ProjectFinancial projectfinancial,
+            @RequestParam("project_id") long project_id,
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
 
-        for (int i = 1; i <= totalField; i++) {
-            String paymentName = request.getParameter("paymentName" + i);
-            String paymentStatus = request.getParameter("payment" + i);
-            String paymentRemark = request.getParameter("paymentNote" + i);
-            String paymentDate = request.getParameter("paymentDate" + i);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date paymentDateConvert = simpleDateFormat.parse(paymentDate);
-            ProjectFinancial pf = new ProjectFinancial();
-            Project p = new Project();
-            p.setId(project_id);
-            pf.setPROJECT_FIN_NAME(paymentName);
-            pf.setPROJECT_FIN_VALUE(paymentStatus);
-            pf.setPROJECT_FIN_NOTE(paymentRemark);
-            pf.setPROJECT_FIN_DATE(paymentDateConvert);
-            pf.setProject(p);
-            projectFinancialDAO.save(pf);
-
-        }
+        Project p = new Project();
+        p.setId(project_id);
+        projectfinancial.setProject(p);
+        projectFinancialDAO.save(projectfinancial);
 
         Writer out = response.getWriter();
-
         out.write("{success:true}");
-
-
-        // projectFinancialDAO.save(projectfinancial);
-        //request.getParameter(null);
-
-        // out.write("{success:true}");
-
+        out.flush();
+        out.close();
     }
 }

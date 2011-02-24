@@ -171,10 +171,12 @@ summaryRenderer: function(v, params, data){
             return;
         }
         var gs = this.view.getGroups(),
+          
             len = gs.length,
             i = 0,
             s,
             display = hidden ? 'none' : '';
+              
         for(; i < len; i++){
             s = gs[i].childNodes[2];
             s.style.width = tw;

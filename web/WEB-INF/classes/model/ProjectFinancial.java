@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,21 +22,23 @@ import javax.persistence.Temporal;
  */
 @Entity
 @Table(name = "PROJECT_FINANCIAL")
-public class ProjectFinancial {
+public class ProjectFinancial implements Serializable {
 
     @Id
     @GeneratedValue
     @Column(name = "project_financial_id")
-    private long PROJECT_FINANCIAL_ID;
+    private long id;
     @Column(name = "project_fin_name")
-    private String PROJECT_FIN_NAME;
+    private String projectFinName;
     @Column(name = "project_fin_value")
-    private String PROJECT_FIN_VALUE;
+    private String projectFinValue;
     @Column(name = "project_fin_note")
-    private String PROJECT_FIN_NOTE;
+    private String projectFinNote;
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(name = "project_fin_date")
-    private Date PROJECT_FIN_DATE;
+    private Date projectFinDate;
+    @Column(name = "project_fin_status")
+    private String projectFinStatus;
     @Column(name = "active")
     private boolean active = true;
     @JoinColumn(name = "project_id")
@@ -43,18 +46,6 @@ public class ProjectFinancial {
     private Project project;
 
     public ProjectFinancial() {
-    }
-
-    public ProjectFinancial(String name) {
-        this.PROJECT_FIN_NAME = name;
-    }
-
-    public Date getPROJECT_FIN_DATE() {
-        return PROJECT_FIN_DATE;
-    }
-
-    public void setPROJECT_FIN_DATE(Date PROJECT_FIN_DATE) {
-        this.PROJECT_FIN_DATE = PROJECT_FIN_DATE;
     }
 
     public boolean isActive() {
@@ -65,6 +56,14 @@ public class ProjectFinancial {
         this.active = active;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public Project getProject() {
         return project;
     }
@@ -73,35 +72,44 @@ public class ProjectFinancial {
         this.project = project;
     }
 
-    public long getPROJECT_FINANCIAL_ID() {
-        return PROJECT_FINANCIAL_ID;
+    public Date getProjectFinDate() {
+        return projectFinDate;
     }
 
-    public void setPROJECT_FINANCIAL_ID(long PROJECT_FINANCIAL_ID) {
-        this.PROJECT_FINANCIAL_ID = PROJECT_FINANCIAL_ID;
+    public void setProjectFinDate(Date projectFinDate) {
+        this.projectFinDate = projectFinDate;
     }
 
-    public String getPROJECT_FIN_NAME() {
-        return PROJECT_FIN_NAME;
+    public String getProjectFinName() {
+        return projectFinName;
     }
 
-    public void setPROJECT_FIN_NAME(String PROJECT_FIN_NAME) {
-        this.PROJECT_FIN_NAME = PROJECT_FIN_NAME;
+    public void setProjectFinName(String projectFinName) {
+        this.projectFinName = projectFinName;
     }
 
-    public String getPROJECT_FIN_NOTE() {
-        return PROJECT_FIN_NOTE;
+    public String getProjectFinNote() {
+        return projectFinNote;
     }
 
-    public void setPROJECT_FIN_NOTE(String PROJECT_FIN_NOTE) {
-        this.PROJECT_FIN_NOTE = PROJECT_FIN_NOTE;
+    public void setProjectFinNote(String projectFinNote) {
+        this.projectFinNote = projectFinNote;
     }
 
-    public String getPROJECT_FIN_VALUE() {
-        return PROJECT_FIN_VALUE;
+    public String getProjectFinValue() {
+        return projectFinValue;
     }
 
-    public void setPROJECT_FIN_VALUE(String PROJECT_FIN_VALUE) {
-        this.PROJECT_FIN_VALUE = PROJECT_FIN_VALUE;
+    public void setProjectFinValue(String projectFinValue) {
+        this.projectFinValue = projectFinValue;
     }
+
+    public String getProjectFinStatus() {
+        return projectFinStatus;
+    }
+
+    public void setProjectFinStatus(String projectFinStatus) {
+        this.projectFinStatus = projectFinStatus;
+    }
+    
 }

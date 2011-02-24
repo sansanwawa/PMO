@@ -15,6 +15,9 @@
         //selection Model
         var selectionModel = new Ext.grid.CheckboxSelectionModel();
         var selectionResourceModel = new Ext.grid.CheckboxSelectionModel();
+        var selectionFinancialModel = new Ext.grid.CheckboxSelectionModel();
+
+
 
      // define a custom summary function
         Ext.ux.grid.GroupSummary.Calculations['totalCost'] = function(v, record, field){
@@ -127,43 +130,33 @@
             storeId  : 'storeResource',
             groupField :'projectresourcename',
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectresource/json' }),
-            remoteSort : true,
             baseParams : { start:0, limit:10 },
             sortInfo: { field: 'id', direction: 'DESC' },
+            //remoteGroup:true,
+            remoteSort: true,
             reader: new Ext.data.JsonReader({
-                root: 'data',
-                id: 'resourcedata',
-                totalRecords: 'total',
-                fields : [
-                    {name: 'id', mapping: 'id',type:'int'},
-                    {name: 'projectresourcename', mapping: 'projectresourcename', type:'string'},
-                    {name: 'mandaysAllocation', mapping: 'mandaysAllocation',type:'int'},
-                    {name: 'mandaysUsage', mapping: 'mandaysUsage',type:'int'},
-                    {name: 'projectresourceid', mapping: 'projectresourceid',type:'int'},
-                    {name: 'projectid', mapping: 'projectid',type:'int'},
-                    {name: 'month', mapping: 'month',type:'int'}
-                ]
-            })
+                            root: 'data',
+                            id: 'resourcedatajson',
+                            totalRecords: 'total',
+                            fields : [
+                                {name: 'id', mapping: 'id',type:'int'},
+                                {name: 'projectresourcename', mapping: 'projectresourcename', type:'string'},
+                                {name: 'mandaysAllocation', mapping: 'mandaysAllocation',type:'int'},
+                                {name: 'mandaysUsage', mapping: 'mandaysUsage',type:'int'},
+                                {name: 'projectresourceid', mapping: 'projectresourceid',type:'int'},
+                                {name: 'projectid', mapping: 'projectid',type:'int'},
+                                {name: 'month', mapping: 'month',type:'int'}
+                            ]
+                })
         }); 
 
 
-  /**
-*
-*
-*
-        var columnModelResource = new Ext.grid.ColumnModel({
-           columns : [ new Ext.grid.RowNumberer({width: 30}),
-                selectionResourceModel,
-                { header: "Id", dataIndex: 'id', hidden:true},
-                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
-                { header: "Project Id", dataIndex: 'projectid', hidden:true},
-                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
-                { header: "Month", width: 100, dataIndex: 'month' },
-                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
-                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',editor :new Ext.form.TextField({vtype:'numeric'}) }
-             ]
-        });
-*/
+
+    //custom calculation
+    Ext.ux.grid.GroupSummary.Calculations['customCount'] = function(v, record, field,data){
+        var value = data[field+'count'] ? ++data[field+'count'] : (data[field+'count'] = 1);
+        return  value  + (value > 1 ? ' Datas' : ' Data') ;
+    };
 
       var columnModelResource = new Ext.grid.ColumnModel({
            columns : [ new Ext.grid.RowNumberer({width: 30}),
@@ -172,9 +165,7 @@
                 { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
                 { header: "Project Id", dataIndex: 'projectid', hidden:true},
                 { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
-                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryRenderer: function(v, params, data){
-                    return ((v === 0 || v > 1) ? '(' + v +' Datas)' : '(1 Data)');
-                }},
+                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'customCount' },
                 { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
                 { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) }
              ]
@@ -203,7 +194,71 @@
         });
 
           
-            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       var storeFinancial = new Ext.data.GroupingStore({
+            storeId  : 'storeFinancial',
+            groupField :'projectfinancial',
+            proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectfinancial/json' }),
+            baseParams : { start:0, limit:10 },
+            sortInfo: { field: 'id', direction: 'DESC' },
+            //remoteGroup:true,
+            remoteSort: true,
+            reader: new Ext.data.JsonReader({
+                            root: 'data',
+                            id: 'financialdatajson',
+                            totalRecords: 'total',
+                            fields : [
+                                {name: 'id', mapping: 'id',type:'int'}
+                            ]
+                })
+        });
+
+         var columnModelFinancial = new Ext.grid.ColumnModel({
+           columns : [ new Ext.grid.RowNumberer({width: 30}),
+                       selectionFinancialModel,
+                { header: "Id", dataIndex: 'id', hidden:true},
+                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
+                { header: "Project Id", dataIndex: 'projectid', hidden:true},
+                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
+                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'customCount' },
+                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
+                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) }
+             ]
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -276,23 +331,103 @@
     
 
         var parameterFormFinancial = {
-            title: 'Financial',
-            layout:'table',
-            reader : {},
+            id : 'fpFin',
+            labelAlign: 'top',
             url :'../projectfinancial/addProcess',
-            defaults: {  bodyStyle:'padding:10px 10px 10px 0px;' },
-            layoutConfig: { columns: 6 },
-            buttons:[{
-                    text : 'Save', handler:function(){
-                        fpfin.getForm().submit({
-                            params: { project_id: selectionModel.getSelected().data.id },
-                            success:function(){},
+            buttons: [{
+                    text: 'Save',
+                    handler : function(a){
+                      fpfin.getForm().submit({
+                            params: { project_id : selectionModel.getSelected().data.id },
+                            success:function(){
+                                storeFinancial.reload();
+                                fpfin.getForm().reset();
+                            },
                             waitMsg:'Please wait...'
                         });
                     }
                 }],
-            items: null //let it blank
-        };
+            reader : {},
+            items: [{
+                    layout:'column',
+                    items:[
+                        
+                        { width:200, layout: 'form',
+                            items: [{ xtype:'textfield', fieldLabel: 'Name', name: 'projectFinName',anchor:'95%', allowBlank:false }]
+                        },
+                        { width:150, layout: 'form',
+                           items: [{ xtype:'radiogroup', fieldLabel: 'Payment Status', anchor:'90%',
+                                            items:[{ boxLabel :'Paid', checked : true ,name: 'projectFinStatus', inputValue :'Paid' },
+                                                   { boxLabel  :'Pending' , name: 'projectFinStatus',inputValue :'Pending' }]
+                                        }]
+                        },
+                        { width:100, layout: 'form',
+                            items: [{ xtype:'datefield', fieldLabel: 'Payment Status', name: 'projectFinDate',anchor:'95%', allowBlank:false,format : 'Y-m-d' }]
+                        },
+                        { width:100, layout: 'form',
+                            items: [{ xtype:'textfield', fieldLabel: 'Note', name: 'projectFinNote',anchor:'95%', allowBlank:false }]
+                        }
+                        ]
+                },{
+                     xtype:'editorgrid',
+                     id :'resourceGrid',
+                     store : storeResources,
+                     sm: selectionResourceModel,
+                     clicksToEdit : 1,
+                     title : 'Resources',
+                     height : 580,
+                     view: new Ext.grid.GroupingView({
+                         forceFit:true,
+                         showGroupName: false,
+                         enableNoGroups: true,
+			 enableGroupingMenu: true,
+                         hideGroupedColumn: true,
+                         ignoreAdd:true
+                         //groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Datas" : "Data"]})'
+                     }),
+                     plugins: new Ext.ux.grid.GroupSummary(),
+                     iconCls: 'icon-list',
+                     colModel : columnModelResource,
+                      tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
+                                    handler  : function(){
+                                        var selection = selectionResourceModel.getSelections();
+                                        var ids = [];
+                                        for(var i = 0;i<selection.length;i++)  ids.push(selection[i].data.id);
+
+                                        /*
+                                        var record = new Ext.data.Record(
+                                        {name: 'id', mapping: 'id' ,id:'nya'},
+                                        {name: 'projectresourcename', mapping: 'projectresourcename'},
+                                        {name: 'mandays', mapping: 'mandays'},
+                                        {name: 'month', mapping: 'month'});
+                                        storeResources.remove(record);
+                                        */
+
+                                        storeResources.reload();
+
+
+                                        /*
+                                        Ext.Ajax.request({
+                                            url: '../projectresource/delete',
+                                            success:function(response){
+                                                var status = Ext.util.JSON.decode(response.responseText).success;
+                                                if(status==false){
+                                                    Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                                                }
+                                                storeResources.reload();
+                                            },
+                                            failure:function(){
+                                                Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                                            },
+                                            params: { id : ids } });
+                                            */
+
+                    }
+                }]
+               // , bbar:  { pageSize: 10, store: store, displayInfo: true, displayMsg: 'Displaying Records {0} - {1} of {2}', emptyMsg: "No Records to display" }
+                }
+            ]
+        }
  
 
 
@@ -449,13 +584,14 @@
                      sm: selectionResourceModel,
                      clicksToEdit : 1,
                      title : 'Resources',
-                     height : 280,
+                     height : 580,
                      view: new Ext.grid.GroupingView({
                          forceFit:true,
                          showGroupName: false,
-                         enableNoGroups: false,
+                         enableNoGroups: true,
 			 enableGroupingMenu: true,
-                         hideGroupedColumn: true                         
+                         hideGroupedColumn: true,
+                         ignoreAdd:true
                          //groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Datas" : "Data"]})'
                      }),
                      plugins: new Ext.ux.grid.GroupSummary(),
@@ -975,97 +1111,22 @@
                 defaults:{autoScroll: true},
                 height: 300,             
                 items :[{title : 'Document', items:[fpdoc]},
-                    {title : 'Financial',listeners: { activate: function(){
-                                Ext.Ajax.request({
-                                    url: '../projectfinancial/add/' + id,
-                                    success: function(response){
-
-                               var defaultComponent = [];
-                                   defaultComponent.push({ html: 'Name', colspan: 1,width:150 });
-                                   defaultComponent.push({ html: 'Payment Status', colspan: 1,width:150 });
-                                   defaultComponent.push({ html: 'Date Of Payment', colspan: 1,width:150  });
-                                   defaultComponent.push( { html: 'Remarks', colspan: 2,width:150  });
-                                   defaultComponent.push({ html: "&nbsp", colspan: 2,width:150  });
-                                   defaultComponent.push({ xtype : 'textfield',name:'paymentName1' });
-                                   defaultComponent.push({ xtype : 'radiogroup',cls : 'RdGroup',
-                                                            items : [{ boxLabel : 'Paid', name: 'payment1', checked : true, inputValue : 'Paid' },
-                                                                     { boxLabel : 'Pending', name: 'payment1', inputValue : 'Pending' } ]});
-                                   defaultComponent.push({ xtype : 'datefield' ,name:'paymentDate1',format : 'Y-m-d'});
-                                   defaultComponent.push({ xtype : 'radiogroup', width:150,
-                                                            items : [
-                                                                { xtype : 'button', text:'Add Row', handler:function(){
-                                                                        var classLinks = Ext.query('.RdGroup');
-                                                                        var index = classLinks.length + 1;
-                                                                        var k = Ext.get(Ext.query('input[name=totalField]')[0]);
-                                                                        k.dom.value = index;
-                                                                        var component = [
-                                                                            { html: '&nbsp', colspan: 1,width:150, bodyStyle:'border:none;' },
-                                                                            { xtype : 'textfield',name:'paymentName'+ index },
-                                                                            { xtype : 'radiogroup',cls : 'RdGroup',
-                                                                                items : [{ boxLabel : 'Paid', name: 'payment' + index, checked : true, inputValue : 'Paid' },
-                                                                                    { boxLabel : 'Pending', name: 'payment'+ index , inputValue : 'Pending' } ]},
-                                                                            { xtype : 'datefield' ,name:'paymentDate'+ index,format : 'Y-m-d' },
-                                                                            { xtype : 'textfield', name:'paymentNote'+ index }
-
-                                                                        ]
-                                                                        fpfin.add(component);
-                                                                        fpfin.doLayout();
-                                                                    } },
-                                                                { xtype : 'hidden', name:'totalField',value : 1   }
-                                                            ]});
-                                            defaultComponent.push({ xtype : 'hidden', name:'totalField',value : 1   });
-                                   
-
-                                            //clear the layout first
-                                            fpfin.removeAll(true);
-                                            fpfin.doLayout();
-                                            fpfin.add(defaultComponent);
-                                            fpfin.doLayout();
-
-                                            //grab the data
-                                            var datas = Ext.util.JSON.decode(response.responseText).data
-                                            var classLinks = Ext.query('.RdGroup');
-                                            var index = classLinks.length + 1;
-                                            var k = Ext.get(Ext.query('input[name=totalField]')[0]);
-                                            k.dom.value = index;
-                                          
-                                            if(datas.length > 1){
-                                                
-                                                Ext.each(datas,function(data,i){
-                                            var component = [];
-                                                component.push( { html: '&nbsp', colspan: 1,width:150, bodyStyle:'border:none;' });
-                                                component.push( { xtype : 'textfield',name:'paymentName'+ index, value : data.name });
-                                                component.push( { xtype : 'radiogroup',cls : 'RdGroup',
-                                                                 items : [{ boxLabel : 'Paid', name: 'payment' + index, checked : true, inputValue : 'Paid' },
-                                                                          { boxLabel : 'Pending', name: 'payment'+ index , inputValue : 'Pending' } ]});
-                                                component.push({ xtype : 'datefield' ,name:'paymentDate'+ index,format : 'Y-m-d',value : data.date });
-                                                component.push({ xtype : 'textfield', name:'paymentNote'+ index ,value : data.note });
-                                                component.push({ html: null});
-                                                fpfin.add(component);
-                                                fpfin.doLayout();
-                                                });
-
-                                            }
-
-
-
-                                    }
-                                });
-
-                            }}, items:[fpfin]},
-                    {title : 'Legal/Contract',listeners: { activate: function(){
-                                fpleg.getForm().load({ method:'GET', url: '../projectlegal/add/' + id , waitMsg:'Please wait...'});
+                        {title : 'Financial',listeners: { activate: function(){
+                                  storeFinancial.load( { params : {  project_id : id } });
+                                }}, items:[fpfin]},
+                        {title : 'Legal/Contract',listeners: { activate: function(){
+                                    fpleg.getForm().load({ method:'GET', url: '../projectlegal/add/' + id , waitMsg:'Please wait...'});
+                                }},
+                            items:[fpleg]
+                        },
+                        {title : 'Resource',listeners: {activate: function(){
+                                    storeResources.load( { params : {  project_id : id } });
                             }},
-                        items:[fpleg]
-                    },
-                    {title : 'Resource',listeners: {activate: function(){
-                                storeResources.load( { params : {  project_id : id } });
-                        }},
-                        items:[fpRes] },
-                    {title : 'Schedule',listeners: {activate: function(){
-                                fpSch.getForm().load({ method:'GET', url: '../projectschedule/add/' + id , waitMsg:'Please wait...'});
-                            }},
-                        items:[fpSch]}
+                            items:[fpRes] },
+                        {title : 'Schedule',listeners: {activate: function(){
+                                    fpSch.getForm().load({ method:'GET', url: '../projectschedule/add/' + id , waitMsg:'Please wait...'});
+                                }},
+                            items:[fpSch]}
                 ]
             });
 

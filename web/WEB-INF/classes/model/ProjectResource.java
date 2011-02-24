@@ -32,9 +32,6 @@ public class ProjectResource implements Serializable {
     private int mandaysUsage;
 
 
-
-
-
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;

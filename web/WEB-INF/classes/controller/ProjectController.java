@@ -5,6 +5,7 @@
 package controller;
 
 import helper.email.Email;
+import helper.general.BinderHelper;
 import helper.json.JSONException;
 import java.io.Writer;
 import sands.dao.interfaces.ProjectDAO;
@@ -49,7 +50,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping(value = "/project")
-public class ProjectController {
+public class ProjectController extends BinderHelper {
 
     private ProjectDAO projectDAO;
     public static String TITLE = "Title";
@@ -136,11 +137,6 @@ public class ProjectController {
 
     }
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
-    }
 
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
     public void addProcess(@ModelAttribute("Project") Project project,

@@ -1,16 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author sandy
  */
 package sands.dao.interfaces;
 
 import java.util.List;
 import model.ProjectResource;
 
-/**
- *
- * @author sandy
- */
+
 public interface ProjectResourceDAO {
 
     /**
@@ -41,11 +38,7 @@ public interface ProjectResourceDAO {
      */
     public List list(int offset);
 
-    /**
-     * 
-     * @param int offset
-     * @return List
-     */
+  
     /**
      *
      * @param int max result

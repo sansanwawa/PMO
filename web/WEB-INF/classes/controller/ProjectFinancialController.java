@@ -80,6 +80,7 @@ public class ProjectFinancialController extends BinderHelper {
             map.put("name", p.getProjectFinName());
             map.put("date", p.getProjectFinDate());
             map.put("status", p.getProjectFinStatus());
+            map.put("value", p.getProjectFinValue());
             map.put("note", p.getProjectFinNote());
             map.put("project_id", p.getProject().getId());
             json.append("data", map);
@@ -101,6 +102,23 @@ public class ProjectFinancialController extends BinderHelper {
         projectfinancial.setProject(p);
         projectFinancialDAO.save(projectfinancial);
 
+        Writer out = response.getWriter();
+        out.write("{success:true}");
+        out.flush();
+        out.close();
+    }
+
+    @RequestMapping(value = "/delete")
+    public void delete(@ModelAttribute("ProjectResource") ProjectFinancial projectfinancial,
+            BindingResult result,
+            HttpServletResponse response, HttpServletRequest request) throws Exception {
+
+        String[] project_financial_id = request.getParameterValues("id");
+
+        for (int i = 0; i < project_financial_id.length; i++) {
+            projectfinancial.setId(Long.parseLong(project_financial_id[i]));
+            projectFinancialDAO.delete(projectfinancial);
+        }
         Writer out = response.getWriter();
         out.write("{success:true}");
         out.flush();

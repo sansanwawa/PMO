@@ -1,6 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+
+/**
+ *
+ * @author sandy
  */
 package controller;
 
@@ -38,10 +39,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- *
- * @author sandy
- */
 @Controller
 @RequestMapping(value = "/project")
 public class ProjectController extends BinderHelper {

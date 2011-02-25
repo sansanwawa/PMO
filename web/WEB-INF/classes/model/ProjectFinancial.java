@@ -20,7 +20,7 @@ import javax.persistence.Temporal;
  * @author sandy
  */
 @Entity
-@Table(name = "PROJECT_FINANCIAL")
+@Table(name = "project_financial")
 public class ProjectFinancial implements Serializable {
 
     @Id

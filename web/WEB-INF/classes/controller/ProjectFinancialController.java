@@ -1,6 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author sandy
  */
 package controller;
 
@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import sands.dao.interfaces.ProjectFinancialDAO;
 
-/**
- *
- * @author sandy
- */
+
 @Controller
 @RequestMapping(value = "/projectfinancial")
 public class ProjectFinancialController extends BinderHelper {

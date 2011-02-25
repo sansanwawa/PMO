@@ -26,7 +26,7 @@
                     expanded: true,
                     allowChildren :true,
                     children: [{ text: 'Project', url: '../project/list' , leaf: true },
-                               { text: 'Project Resource', url: '../projectresource/list' , leaf: true }
+                               { text: 'Project Resource', url: '../projectresourcename/list' , leaf: true }
                            ]
                     },{
                         text: 'User',

@@ -21,6 +21,8 @@
         <intercept-url pattern="/projectfinancial/**" access="hasRole('PROJECT_ADMIN')" />
         <intercept-url pattern="/projectlegal/**" access="hasRole('PROJECT_ADMIN')" />
         <intercept-url pattern="/projectresource/**" access="hasRole('PROJECT_ADMIN')" />
+        <intercept-url pattern="/projectresourcename/**" access="hasRole('PROJECT_ADMIN')" />
+
 
 
 

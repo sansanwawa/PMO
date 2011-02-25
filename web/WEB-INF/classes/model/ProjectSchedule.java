@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,8 +21,8 @@ import javax.persistence.Temporal;
  * @author sandy
  */
 @Entity
-@Table(name = "PROJECT_SCHEDULE")
-public class ProjectSchedule {
+@Table(name = "project_schedule")
+public class ProjectSchedule implements Serializable {
 
     @Id
     @GeneratedValue

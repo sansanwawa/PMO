@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import sands.dao.interfaces.ProjectResourceNameDAO;
 
 @Controller
@@ -31,7 +32,7 @@ public class ProjectResourceNameController {
     private ProjectResourceNameDAO projectResourceNameDAO;
 
     @Autowired
-    public void setProjectResourceDAO(ProjectResourceNameDAO projectResourceNameDAO) {
+    public void setProjectResourceNameDAO(ProjectResourceNameDAO projectResourceNameDAO) {
         this.projectResourceNameDAO = projectResourceNameDAO;
     }
 
@@ -110,11 +111,15 @@ public class ProjectResourceNameController {
         out.write("{success:true}");
     }
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return new ModelAndView("project/projectResourceList");
+    }
+
     @RequestMapping(value = "/delete")
     public void delete(@ModelAttribute("ProjectResourceName") ProjectResourceName projectresourcename,
             BindingResult result,
             HttpServletResponse response, HttpServletRequest request) throws Exception {
-
 
         String[] project_resource_id = request.getParameterValues("id");
 

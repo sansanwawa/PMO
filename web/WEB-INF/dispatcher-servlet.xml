@@ -13,7 +13,7 @@
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
   
-     <context:property-placeholder location="/WEB-INF/classes/hibernate.properties"/>
+    <context:property-placeholder location="/WEB-INF/classes/hibernate.properties"/>
 
     <bean id="mySessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" >
         <property name="annotatedClasses">
@@ -23,10 +23,10 @@
                 <value>model.ProjectDocument</value>
                 <value>model.ProjectFinancial</value>
                 <value>model.ProjectLegal</value>
-                <value>model.ProjectResource</value>
                 <value>model.ProjectSchedule</value>
+                <value>model.ProjectResource</value>
                 <value>model.ProjectResourceName</value>
-
+                <value>model.ProjectInternalCost</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -48,7 +48,7 @@
     
 
     <context:annotation-config />
-    <context:component-scan base-package="controller/"/> 
+    <context:component-scan base-package="controller/"/>
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" p:basename="messages" />
 
    <!-- User -->
@@ -56,58 +56,50 @@
 
     <bean id="myUserDAO" class="sands.dao.implementors.UserDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
-    </bean>   
+    </bean>
    
 
 
-    <!-- Project -->
-
-
-    
+    <!-- Project -->    
     <bean id="myProjectDAO" class="sands.dao.implementors.ProjectDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
     <!-- Project Document-->
-
     <bean id="myProjectDocumentDAO" class="sands.dao.implementors.ProjectDocumentDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
     <!-- Project Financial-->
-
     <bean id="myProjectFinancialDAO" class="sands.dao.implementors.ProjectFinancialDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
 
    <!-- Project Legal-->
-
     <bean id="myProjectLegalDAO" class="sands.dao.implementors.ProjectLegalDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
     <!-- Project Resource-->
-
     <bean id="myProjectResourceDAO" class="sands.dao.implementors.ProjectResourceDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
+    <!-- Project Resource Name-->
     <bean id="myProjectResourceNameDAO" class="sands.dao.implementors.ProjectResourceNameDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
 
 
-    <!-- Project Schedule-->
-    
+    <!-- Project Schedule-->    
     <bean id="myProjectScheduleDAO" class="sands.dao.implementors.ProjectScheduleDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
 
   <!-- Project Internal Cost-->
-
     <bean id="myProjectInternalCostDAO" class="sands.dao.implementors.ProjectInternalCostDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>

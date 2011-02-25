@@ -16,7 +16,7 @@ import javax.persistence.Temporal;
 
 
 @Entity
-@Table(name = "PROJECT_RESOURCE_NAME")
+@Table(name = "project_resource_name")
 public class ProjectResourceName implements Serializable {
 
     @Id

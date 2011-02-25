@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +26,8 @@ import javax.persistence.Temporal;
  * @author sandy
  */
 @Entity
-@Table(name = "PROJECT")
-public class Project {
+@Table(name = "project")
+public class Project implements Serializable {
 
     @Id
     @GeneratedValue

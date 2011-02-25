@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PROJECT_RESOURCE")
+@Table(name = "project_resource")
 public class ProjectResource implements Serializable {
 
     @Id

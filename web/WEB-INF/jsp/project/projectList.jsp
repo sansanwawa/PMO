@@ -16,12 +16,12 @@
         var selectionModel = new Ext.grid.CheckboxSelectionModel();
         var selectionResourceModel = new Ext.grid.CheckboxSelectionModel();
         var selectionFinancialModel = new Ext.grid.CheckboxSelectionModel();
+        var selectionInternalCostModel = new Ext.grid.CheckboxSelectionModel();
 
-
-
-     // define a custom summary function
-        Ext.ux.grid.GroupSummary.Calculations['totalCost'] = function(v, record, field){
-            return v + (record.data.estimate * record.data.rate);
+     //custom calculation
+        Ext.ux.grid.GroupSummary.Calculations['customCount'] = function(v, record, field,data){
+            var value = data[field+'count'] ? ++data[field+'count'] : (data[field+'count'] = 1);
+            return  value  + (value > 1 ? ' Datas' : ' Data') ;
         };
 
 
@@ -152,11 +152,6 @@
 
 
 
-    //custom calculation
-    Ext.ux.grid.GroupSummary.Calculations['customCount'] = function(v, record, field,data){
-        var value = data[field+'count'] ? ++data[field+'count'] : (data[field+'count'] = 1);
-        return  value  + (value > 1 ? ' Datas' : ' Data') ;
-    };
 
       var columnModelResource = new Ext.grid.ColumnModel({
            columns : [ new Ext.grid.RowNumberer({width: 30}),
@@ -265,6 +260,92 @@
                                 } } );
         });
  
+
+
+
+
+var storeInternalCost = new Ext.data.GroupingStore({
+            storeId  : 'storeInternalCost',
+            groupField :'projectresourcename',
+            proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectinternalcost/json' }),
+            baseParams : { start:0, limit:10 },
+            sortInfo: { field: 'id', direction: 'DESC' },
+            //remoteGroup:true,
+            remoteSort: true,
+            reader: new Ext.data.JsonReader({
+                            root: 'data',
+                            id: 'internalcostdatajson',
+                            totalRecords: 'total',
+                            fields : [
+                                {name: 'id', mapping: 'id',type:'int'},
+                                {name: 'projectresourcename', mapping: 'projectresourcename', type:'string'},
+                                {name: 'mandaysAllocation', mapping: 'mandaysAllocation',type:'int'},
+                                {name: 'mandaysUsage', mapping: 'mandaysUsage',type:'int'},
+                                {name: 'projectresourceid', mapping: 'projectresourceid',type:'int'},
+                                {name: 'projectid', mapping: 'projectid',type:'int'},
+                                {name: 'month', mapping: 'month',type:'string'}
+                            ]
+                })
+        });
+
+
+
+     
+      var columnModelInternalCost = new Ext.grid.ColumnModel({
+           columns : [ new Ext.grid.RowNumberer({width: 30}),
+                selectionInternalCostModel,
+                { header: "Id", dataIndex: 'id', hidden:true},
+                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
+                { header: "Project Id", dataIndex: 'projectid', hidden:true},
+                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
+                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'customCount' },
+                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
+                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) }
+             ]
+        });
+
+
+
+        storeInternalCost.on('update',function(store,record,operation){
+                Ext.Ajax.request({
+                    url: '../projectinternalcost/addProcess',
+                    success:function(response){
+                        var status = Ext.util.JSON.decode(response.responseText).success;
+                        if(status==false)
+                        Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                        },
+                        failure:function(){
+                        Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                        },
+                        params: {   id : record.data.id,
+                                    project_id : record.data.projectid,
+                                    mandaysAllocation : record.data.mandaysAllocation,
+                                    mandaysUsage : record.data.mandaysUsage,
+                                    month :record.data.month,
+                                    projectresourcename : record.data.projectresourceid
+                    } } );
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -592,6 +673,158 @@
             ]
         }
  
+
+
+
+   var parameterFormInternalCost = {
+      id : 'fpRes',
+            labelAlign: 'top',
+            url :'../projectinternalcost/addProcess',
+            buttons: [{
+                    text: 'Save',
+                    handler : function(a){
+                      fpInt.getForm().submit({
+                            params: { project_id : selectionModel.getSelected().data.id },
+                            success:function(){
+                                storeInternalCost.reload();
+                                fpInt.getForm().reset();
+                            },
+                            waitMsg:'Please wait...'
+                        });
+                    }
+                }],
+            reader : {},
+            items: [{
+                    layout:'column',
+                    items:[
+                        { width:200, layout: 'form',
+                            items: [
+                                     { xtype:'combo',
+                                       allowBlank:false,
+                                       name : 'projectresourcename',
+                                       hiddenName:'projectresourcename',
+                                       displayField:'name',
+                                       valueField:'id',
+                                       lazyRender:true,
+                                       typeAhead: true,
+                                       queryParam : '',
+                                       triggerAction: 'all',
+                                       mode: 'remote',
+                                       fieldLabel: 'Resource',
+                                       anchor:'95%',
+                                       editable : false,
+                                       emptyText : '-----Select Resource Name-----',
+                                       store: new Ext.data.Store({
+                                                                proxy: new Ext.data.HttpProxy({
+                                                                    method:'POST',
+                                                                    url: '../projectresourcename/json'
+                                                                }),
+                                                                autoLoad :false,
+                                                                remoteSort :true,
+                                                                baseParams : { start:0, limit:10 },
+                                                                sortInfo: { field: 'id', direction: 'DESC' },
+                                                                reader: new Ext.data.JsonReader({
+                                                                    root: 'data',
+                                                                    id: 'sidiasd',
+                                                                    totalRecords: 'total',
+                                                                    fields : [
+                                                                        {name: 'id', mapping: 'id'},
+                                                                        {name: 'name', mapping: 'name'}
+                                                                    ]
+                                                                } )
+                                                            })
+                                          } ]
+                        },
+                        { width:200, layout: 'form',
+                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'month',anchor:'95%',allowBlank:false }]
+                        },
+                        { width:200, layout: 'form',
+                            items: [{ xtype:'textfield', fieldLabel: 'Mandays Alocation', name: 'mandaysAllocation',anchor:'95%',vtype : 'numeric', allowBlank:false }]
+                        },
+                        { width:200, layout: 'form',
+                            items: [{ xtype:'textfield', fieldLabel: 'Mandays Usage', name: 'mandaysUsage',anchor:'95%',vtype : 'numeric', allowBlank:false }]
+                        }
+                        ]
+                },{
+                     xtype:'editorgrid',
+                     id :'resourceGrid',
+                     store : storeInternalCost,
+                     sm: selectionInternalCostModel,
+                     clicksToEdit : 1,
+                     title : 'Resources',
+                     height : 580,
+                     view: new Ext.grid.GroupingView({
+                         forceFit:true,
+                         showGroupName: false,
+                         enableNoGroups: true,
+			 enableGroupingMenu: true,
+                         hideGroupedColumn: true,
+                         ignoreAdd:true
+                         //groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Datas" : "Data"]})'
+                     }),
+                     plugins: new Ext.ux.grid.GroupSummary(),
+                     iconCls: 'icon-list',
+                     colModel : columnModelInternalCost,
+                      tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
+                                    handler  : function(){
+                                        var selection = selectionResourceModel.getSelections();
+                                        var ids = [];
+                                        for(var i = 0;i<selection.length;i++)  ids.push(selection[i].data.id);
+
+                                         Ext.Ajax.request({
+                                            url: '../projectinternalcost/delete',
+                                            success:function(response){
+                                                var status = Ext.util.JSON.decode(response.responseText).success;
+                                                if(status==false){
+                                                    Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                                                }
+                                                storeInternalCost.reload();
+                                            },
+                                            failure:function(){
+                                                Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                                            },
+                                            params: { id : ids } });
+
+                    }
+                }]
+          
+                }
+            ]
+
+
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         var parameterFormSchedule = {
@@ -1032,6 +1265,10 @@
         var fpleg = formPanel(parameterFormLegal);
         var fpRes = formPanel(parameterFormResource);
         var fpSch = formPanel(parameterFormSchedule);
+        var fpInt = formPanel(parameterFormInternalCost);
+
+
+
 
 
 
@@ -1082,12 +1319,9 @@
                                 }},
                             items:[fpSch]},
                         {title : 'Internal Cost',listeners: {activate: function(){
-                          
+                          storeInternalCost.load( { params : {  project_id : id } });
                                 }},
-                            items:[]},
-                        {title : 'Internal Cost',listeners: {activate: function(){
-                                 }},
-                            items:[]}
+                            items:[fpInt]}
                 ]
             });
 

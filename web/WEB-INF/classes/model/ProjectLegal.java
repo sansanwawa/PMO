@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,8 +20,8 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "PROJECT_LEGAL")
-public class ProjectLegal {
+@Table(name = "project_legal")
+public class ProjectLegal implements Serializable {
 
     
     @Id

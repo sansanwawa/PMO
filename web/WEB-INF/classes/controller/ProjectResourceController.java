@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import sands.dao.interfaces.ProjectResourceDAO;
 
 @Controller
@@ -109,13 +108,11 @@ public class ProjectResourceController {
         projectresource.setProjectResourceName(projectresourcename);
         projectResourceDAO.save(projectresource);
         out.write("{success:true}");
+        out.flush();
+        out.close();
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView list() throws Exception {
-        return new ModelAndView("project/projectResourceList");
-    }
-
+    
     @RequestMapping(value = "/delete")
     public void delete(@ModelAttribute("ProjectResource") ProjectResource projectresource,
             BindingResult result,
@@ -129,5 +126,7 @@ public class ProjectResourceController {
         }
         Writer out = response.getWriter();
         out.write("{success:true}");
+        out.flush();
+        out.close();
     }
 }

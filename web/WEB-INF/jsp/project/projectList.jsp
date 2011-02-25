@@ -145,7 +145,7 @@
                                 {name: 'mandaysUsage', mapping: 'mandaysUsage',type:'int'},
                                 {name: 'projectresourceid', mapping: 'projectresourceid',type:'int'},
                                 {name: 'projectid', mapping: 'projectid',type:'int'},
-                                {name: 'month', mapping: 'month',type:'int'}
+                                {name: 'month', mapping: 'month',type:'string'}
                             ]
                 })
         }); 
@@ -202,20 +202,12 @@
 
 
 
-
-
-
-
-
-
-
-
-
+ 
 
 
        var storeFinancial = new Ext.data.GroupingStore({
             storeId  : 'storeFinancial',
-            groupField :'projectfinancial',
+            //groupField :'projectfinancial',
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectfinancial/json' }),
             baseParams : { start:0, limit:10 },
             sortInfo: { field: 'id', direction: 'DESC' },
@@ -226,39 +218,53 @@
                             id: 'financialdatajson',
                             totalRecords: 'total',
                             fields : [
-                                {name: 'id', mapping: 'id',type:'int'}
+                                {name: 'id', mapping: 'id',type:'int'},
+                                {name: 'name', mapping: 'name',type:'string'},
+                                {name: 'status', mapping: 'status',type:'string'},
+                                {name: 'project_id', mapping: 'project_id',type:'int'},
+                                {name: 'date', mapping: 'date',type:'string' },
+                                {name: 'value', mapping: 'value',type:'int'},
+                                {name: 'note', mapping: 'note',type:'string'}
                             ]
                 })
         });
+
+
+
 
          var columnModelFinancial = new Ext.grid.ColumnModel({
            columns : [ new Ext.grid.RowNumberer({width: 30}),
                        selectionFinancialModel,
                 { header: "Id", dataIndex: 'id', hidden:true},
-                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
-                { header: "Project Id", dataIndex: 'projectid', hidden:true},
-                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
-                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'customCount' },
-                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
-                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) }
+                { header: "Name", dataIndex: 'name'},
+                { header: "Status", dataIndex: 'status'},
+                { header: "Date", dataIndex: 'date',width: 100},
+                { header: "Value", width: 100,dataIndex: 'value', renderer:function(value){return 'Rp.' + value },editor :new Ext.form.TextField({vtype:'numeric'}) }
              ]
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        storeFinancial.on('update',function(store,record,operation){
+        
+                Ext.Ajax.request({
+                    url: '../projectfinancial/addProcess',
+                    success:function(response){
+                        var status = Ext.util.JSON.decode(response.responseText).success;
+                        if(status==false)
+                        Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                        },
+                        failure:function(){
+                        Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                        },
+                        params: {   id : record.data.id,
+                                    projectFinName : record.data.name,
+                                    projectFinDate : record.data.date,
+                                    projectFinNote : record.data.note,
+                                    project_id : record.data.project_id,
+                                    projectFinStatus : record.data.status,
+                                    projectFinValue : record.data.value
+                                } } );
+        });
+ 
 
 
 
@@ -285,25 +291,15 @@
                 { xtype:'textfield',fieldLabel: 'Customer', name: 'projectCustomer', allowBlank:false },
                 { xtype:'textfield',fieldLabel: 'Account Manager', name: 'accountManager'  },
                 { xtype:'textfield',fieldLabel: 'Project Manager', name: 'projectManager'  },
-                { xtype: 'datefield', fieldLabel: 'Project Start Date', name: 'projectStartDate', allowBlank:false,editable :false, format : 'Y-m-d' },
-                { xtype: 'datefield', fieldLabel: 'Project End Date', name: 'projectEndDate', allowBlank:false,editable :false, format : 'Y-m-d' },
-                { fieldLabel: 'Financial', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'On Budget', name: 'projectFinancial', checked : true, inputValue : 'On Budget' },
-                        { boxLabel : 'Potentially Over Budget', name: 'projectFinancial', inputValue : 'Potentially Over Budget' },
-                        { boxLabel : 'Over Budget', name: 'projectFinancial', inputValue : 'Over Budget' }] },
-                { fieldLabel: 'Schedule', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'On Schedule', name: 'projectSchedule', checked : true, inputValue : 'On Schedule' },
-                        { boxLabel : 'Potentially Over Schedule', name: 'projectSchedule', inputValue : 'Potentially Over Schedule' },
-                        { boxLabel : 'Over Schedule', name: 'projectSchedule', inputValue : 'Over Schedule' }
-                    ] },
+                { xtype:'datefield',fieldLabel: 'Project Start Date', name: 'projectStartDate', allowBlank:false,editable :false, format : 'Y-m-d' },
+                { xtype:'datefield',fieldLabel: 'Project End Date', name: 'projectEndDate', allowBlank:false,editable :false, format : 'Y-m-d' },
+                { xtype:'textfield',fieldLabel: 'Project Value', name: 'projectValue' ,vtype:'numeric'},
+                
                 { fieldLabel: 'Technical', xtype : 'radiogroup',
                     items : [{ boxLabel : 'No Problem', name: 'projectTechnical', checked : true, inputValue : 'No Problem' },
                         { boxLabel : 'Potentially Problem', name: 'projectTechnical', inputValue : 'Potentially Problem' },
                         { boxLabel : 'Problem', name: 'projectTechnical', inputValue : 'Problem' }] },
-                { fieldLabel: 'Resource', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Available', name: 'projectResource', checked : true, inputValue : 'Available' },
-                        { boxLabel : 'Potentially Problem', name: 'projectResource', inputValue : 'Potentially Problem' },
-                        { boxLabel : 'Not Available', name: 'projectResource', inputValue : 'Not Available' }] },
+
                 { fieldLabel: 'Contract/Legal', xtype : 'radiogroup',
                     items : [{ boxLabel : 'Done', name: 'projectContract', checked : true, inputValue : 'Done' },
                         { boxLabel : 'Warning', name: 'projectContract', inputValue : 'Warning' },
@@ -324,7 +320,9 @@
                     { name: 'projectCustomer', mapping: 'project_customer' },
                     { name: 'projectSchedule', mapping: 'project_schedule' },
                     { name: 'accountManager', mapping: 'account_manager' },
-                    { name: 'projectManager', mapping: 'project_manager' }
+                    { name: 'projectManager', mapping: 'project_manager' },
+                    { name: 'projectValue', mapping: 'project_value' }
+
                 ]
             }
         };
@@ -362,65 +360,45 @@
                                         }]
                         },
                         { width:100, layout: 'form',
-                            items: [{ xtype:'datefield', fieldLabel: 'Payment Status', name: 'projectFinDate',anchor:'95%', allowBlank:false,format : 'Y-m-d' }]
+                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'projectFinDate',anchor:'95%', allowBlank:false,format : 'Y-m-d' }]
                         },
                         { width:100, layout: 'form',
+                            items: [{ xtype:'textfield', fieldLabel: 'Value', name: 'projectFinValue',anchor:'95%', allowBlank:false,vtype : 'numeric' }]
+                        },
+                        { width:200, layout: 'form',
                             items: [{ xtype:'textfield', fieldLabel: 'Note', name: 'projectFinNote',anchor:'95%', allowBlank:false }]
                         }
                         ]
                 },{
                      xtype:'editorgrid',
-                     id :'resourceGrid',
-                     store : storeResources,
-                     sm: selectionResourceModel,
+                     id :'financialGrid',
+                     store : storeFinancial,
+                     sm: selectionFinancialModel,
                      clicksToEdit : 1,
                      title : 'Resources',
                      height : 580,
-                     view: new Ext.grid.GroupingView({
-                         forceFit:true,
-                         showGroupName: false,
-                         enableNoGroups: true,
-			 enableGroupingMenu: true,
-                         hideGroupedColumn: true,
-                         ignoreAdd:true
-                         //groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Datas" : "Data"]})'
-                     }),
-                     plugins: new Ext.ux.grid.GroupSummary(),
                      iconCls: 'icon-list',
-                     colModel : columnModelResource,
-                      tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
+                     colModel : columnModelFinancial,
+                     tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
                                     handler  : function(){
-                                        var selection = selectionResourceModel.getSelections();
+                                        var selection = selectionFinancialModel.getSelections();
                                         var ids = [];
                                         for(var i = 0;i<selection.length;i++)  ids.push(selection[i].data.id);
-
-                                        /*
-                                        var record = new Ext.data.Record(
-                                        {name: 'id', mapping: 'id' ,id:'nya'},
-                                        {name: 'projectresourcename', mapping: 'projectresourcename'},
-                                        {name: 'mandays', mapping: 'mandays'},
-                                        {name: 'month', mapping: 'month'});
-                                        storeResources.remove(record);
-                                        */
-
-                                        storeResources.reload();
-
-
-                                        /*
-                                        Ext.Ajax.request({
-                                            url: '../projectresource/delete',
+                                         Ext.Ajax.request({
+                                            url: '../projectfinancial/delete',
                                             success:function(response){
                                                 var status = Ext.util.JSON.decode(response.responseText).success;
                                                 if(status==false){
                                                     Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
                                                 }
-                                                storeResources.reload();
+                                                 
+                                                storeFinancial.reload();
                                             },
                                             failure:function(){
                                                 Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
                                             },
                                             params: { id : ids } });
-                                            */
+
 
                     }
                 }]
@@ -543,32 +521,8 @@
                                                             })
                                           } ]
                         },
-                        {   width:100,
-                            layout: 'form',
-                            items: [
-                                    { xtype:'combo',
-                                      allowBlank:false,
-                                      fieldLabel: 'Month',
-                                      name: 'month',
-                                      triggerAction: 'all',
-                                      hiddenName:'month',
-                                      editable : false,
-                                      typeAhead: true,
-                                      anchor:'95%',
-                                      mode: 'local',
-                                      valueField: 'monthVal',
-                                      displayField: 'monthName',
-                                      emptyText : '--------',
-                                      store: new Ext.data.ArrayStore({
-                                                    id: 1121,
-                                                    fields: [ 'monthVal', 'monthName' ],
-                                                    data: [ [1, 'January'], [2, 'February'] , [3, 'March'] , [4, 'April'] , [5, 'May'] , [6, 'June'],
-                                                            [7, 'July'],[8, 'August'],[9, 'September'] ,[10, 'October'],
-                                                            [11, 'November'],[12, 'December']
-                                                            ]
-                                                })
-                                            }
-                                ]
+                        { width:200, layout: 'form',
+                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'month',anchor:'95%',allowBlank:false }]
                         },
                         { width:200, layout: 'form',
                             items: [{ xtype:'textfield', fieldLabel: 'Mandays Alocation', name: 'mandaysAllocation',anchor:'95%',vtype : 'numeric', allowBlank:false }]
@@ -1126,7 +1080,14 @@
                         {title : 'Schedule',listeners: {activate: function(){
                                     fpSch.getForm().load({ method:'GET', url: '../projectschedule/add/' + id , waitMsg:'Please wait...'});
                                 }},
-                            items:[fpSch]}
+                            items:[fpSch]},
+                        {title : 'Internal Cost',listeners: {activate: function(){
+                          
+                                }},
+                            items:[]},
+                        {title : 'Internal Cost',listeners: {activate: function(){
+                                 }},
+                            items:[]}
                 ]
             });
 

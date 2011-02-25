@@ -4,7 +4,6 @@
  */
 package controller;
 
-import helper.email.Email;
 import helper.general.BinderHelper;
 import helper.json.JSONException;
 import java.io.Writer;
@@ -18,8 +17,6 @@ import helper.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -33,11 +30,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,6 +94,7 @@ public class ProjectController extends BinderHelper {
             map.put("project_schedule", p.getProjectSchedule());
             map.put("account_manager", p.getAccountManager());
             map.put("project_manager", p.getProjectManager());
+            map.put("project_value", p.getProjectValue());
             json.append("data", map);
         }
         json.write(responseWrapper.getWriter());
@@ -132,11 +127,11 @@ public class ProjectController extends BinderHelper {
         map.put("project_schedule", project.getProjectSchedule());
         map.put("account_manager", project.getAccountManager());
         map.put("project_manager", project.getProjectManager());
+        map.put("project_value", project.getProjectValue());
         json.append("data", map);
         json.write(responseWrapper.getWriter());
 
     }
-
 
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
     public void addProcess(@ModelAttribute("Project") Project project,
@@ -156,7 +151,7 @@ public class ProjectController extends BinderHelper {
             email.setRecipients(new String[] {"sandyharyono@gmail.com"});
             email.setSubject("test");
             email.send();
-            */ 
+             */
         } else {
             projectDAO.save(project);
         }
@@ -226,5 +221,4 @@ public class ProjectController extends BinderHelper {
         return "project/projectReport";
 
     }
-    
 }

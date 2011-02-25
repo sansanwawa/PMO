@@ -73,6 +73,9 @@ public class Project {
     @Column(name = "project_project_manager")
     private String projectManager;
 
+    @Column(name = "project_value")
+    private double projectValue;
+
 
 
     /*FK*/
@@ -269,8 +272,17 @@ public class Project {
         return updateBy;
     }
 
-    public void setUpdateBy(String updateBy) {
-     
+    public void setUpdateBy(String updateBy) {     
         this.updateBy = updateBy;
     }
+
+    public double getProjectValue() {
+        return projectValue;
+    }
+
+    public void setProjectValue(double projectValue) {
+        this.projectValue = projectValue;
+    }
+
+    
 }

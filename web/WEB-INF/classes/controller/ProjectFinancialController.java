@@ -9,8 +9,6 @@ import helper.json.JSONException;
 import helper.json.JSONObject;
 import java.io.IOException;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;

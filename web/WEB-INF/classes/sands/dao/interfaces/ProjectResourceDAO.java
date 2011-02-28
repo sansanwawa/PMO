@@ -6,6 +6,7 @@ package sands.dao.interfaces;
 
 import java.util.List;
 import model.ProjectResource;
+import org.hibernate.criterion.SimpleExpression;
 
 
 public interface ProjectResourceDAO {
@@ -63,4 +64,14 @@ public interface ProjectResourceDAO {
      * @param String field
      */
     public void orderByAsc(String field);
+
+
+    /**
+     * get By Expression
+     * Array of Expression
+     * @return ProjectResource
+     */
+    public List getByExpression(SimpleExpression[] simpleExpression);
+
+
 }

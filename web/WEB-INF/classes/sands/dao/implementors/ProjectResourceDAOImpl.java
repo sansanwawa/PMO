@@ -14,6 +14,7 @@ import org.hibernate.classic.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.SimpleExpression;
 import sands.dao.interfaces.ProjectResourceDAO;
 
 public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
@@ -35,13 +36,14 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
         super.delete(projectresource);
     }
 
-    //will use this method later on!
-    //under development
-    public ProjectResourceName getById(long id) {
+   
+    public List getByExpression(SimpleExpression[] ex) {
+
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(ProjectResourceName.class).add(Expression.eq("id", id));
-        ProjectResourceName p = (ProjectResourceName) criteria.list().get(0);
-        return p;
+        Criteria criteria = session.createCriteria(ProjectResource.class);
+        for (int i = 0; i < ex.length; i++)  criteria.add(ex[i]);
+        return criteria.list();
+
     }
 
     public List list(int offset) {
@@ -74,4 +76,6 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
         this.getHibernatetemplate().getSessionFactory().close();
         return array;
     }
+
+
 }

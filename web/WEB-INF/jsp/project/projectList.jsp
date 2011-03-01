@@ -18,17 +18,18 @@
         var selectionFinancialModel = new Ext.grid.CheckboxSelectionModel();
         var selectionInternalCostModel = new Ext.grid.CheckboxSelectionModel();
 
-     //custom calculation
-        Ext.ux.grid.GroupSummary.Calculations['customCount'] = function(v, record, field,data){
-            var value = data[field+'count'] ? ++data[field+'count'] : (data[field+'count'] = 1);
-            return  value  + (value > 1 ? ' Datas' : ' Data') ;
-        };
+        //summary
+        var summary = new Ext.ux.grid.GroupSummary();
+        var summaryInternalCost = new Ext.ux.grid.GroupSummary();
+
+
+
+       
 
 
 
 
-        // create the Data Store
-        
+        // create the Data Store        
         var store = new Ext.data.Store({
             proxy: new Ext.data.HttpProxy({
                 method:'POST',
@@ -126,12 +127,16 @@
             ]
         });
 
+        
+
  var storeResources = new Ext.data.GroupingStore({
             storeId  : 'storeResource',
+            pruneModifiedRecords:true,
+            autoSave:false ,
             groupField :'projectresourcename',
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectresource/json' }),
             baseParams : { start:0, limit:10 },
-            sortInfo: { field: 'id', direction: 'DESC' },
+            sortInfo: { field: 'projectresourcename', direction: 'ASC' },
             //remoteGroup:true,
             remoteSort: true,
             reader: new Ext.data.JsonReader({
@@ -159,16 +164,20 @@
                 { header: "Id", dataIndex: 'id', hidden:true},
                 { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
                 { header: "Project Id", dataIndex: 'projectid', hidden:true},
-                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
-                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'customCount' },
-                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
-                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) }
-             ]
+                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true,hidden:true},
+                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation',summaryType :'sum',hidden :true},
+                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'sum',summaryRenderer:function(v, params, data){
+                        return "Mandays Allocation : " +  parseInt(data.data.mandaysAllocation);
+                } },
+                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) },
+                { header: "Remaining", width: 100 ,summaryType:'sum',summaryRenderer:function(v, params, data){
+                        return data.data.mandaysAllocation - data.data.mandaysUsage;
+                }}
+
+                ]
         });
 
-
-
-        storeResources.on('update',function(store,record,operation){
+         storeResources.on('update',function(store,record,operation){
                 Ext.Ajax.request({
                     url: '../projectresource/addProcess',
                     success:function(response){
@@ -180,24 +189,13 @@
                         Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
                         },
                         params: {   id : record.data.id,
-                                    project_id : record.data.projectid,
-                                    mandaysAllocation : record.data.mandaysAllocation,
+                                    'project.id' : record.data.projectid,
                                     mandaysUsage : record.data.mandaysUsage,
                                     month :record.data.month,
-                                    projectresourcename : record.data.projectresourceid
+                                    'projectresourcename.id' : record.data.projectresourceid
                     } } );
         });
 
-          
-
-
-
-
-
-
-
-
- 
 
 
        var storeFinancial = new Ext.data.GroupingStore({
@@ -269,7 +267,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
             groupField :'projectresourcename',
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectinternalcost/json' }),
             baseParams : { start:0, limit:10 },
-            sortInfo: { field: 'id', direction: 'DESC' },
+            sortInfo: { field: 'projectresourcename', direction: 'ASC' },
             //remoteGroup:true,
             remoteSort: true,
             reader: new Ext.data.JsonReader({
@@ -297,10 +295,14 @@ var storeInternalCost = new Ext.data.GroupingStore({
                 { header: "Id", dataIndex: 'id', hidden:true},
                 { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
                 { header: "Project Id", dataIndex: 'projectid', hidden:true},
+                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation',summaryType :'sum',hidden :true},
                 { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
-                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'customCount' },
-                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation' },
-                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) }
+                { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'sum',summaryRenderer:function(v, params, data){
+                        return "Mandays Allocation : " +  parseInt(data.data.mandaysAllocation);
+                } },
+                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum',summaryRenderer:function(v, params, data){
+                        return data.data.mandaysAllocation - data.data.mandaysUsage;
+                }, editor :new Ext.form.TextField({vtype:'numeric'}) }
              ]
         });
 
@@ -318,11 +320,11 @@ var storeInternalCost = new Ext.data.GroupingStore({
                         Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
                         },
                         params: {   id : record.data.id,
-                                    project_id : record.data.projectid,
+                                    'project.id' : record.data.projectid,
                                     mandaysAllocation : record.data.mandaysAllocation,
                                     mandaysUsage : record.data.mandaysUsage,
                                     month :record.data.month,
-                                    projectresourcename : record.data.projectresourceid
+                                    'projectresourcename.id' : record.data.projectresourceid
                     } } );
         });
 
@@ -551,7 +553,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
                     text: 'Save',
                     handler : function(a){
                       fpRes.getForm().submit({
-                            params: { project_id : selectionModel.getSelected().data.id },
+                            params: { 'project.id' : selectionModel.getSelected().data.id },
                             success:function(){
                                 storeResources.reload();
                                 fpRes.getForm().reset();
@@ -568,8 +570,8 @@ var storeInternalCost = new Ext.data.GroupingStore({
                             items: [ 
                                      { xtype:'combo',
                                        allowBlank:false,
-                                       name : 'projectresourcename',
-                                       hiddenName:'projectresourcename',
+                                       name : 'projectresourcename.id',
+                                       hiddenName:'projectresourcename.id',
                                        displayField:'name',
                                        valueField:'id',
                                        lazyRender:true,
@@ -602,7 +604,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
                                                             })
                                           } ]
                         },
-                        { width:200, layout: 'form',
+                        { width:100, layout: 'form',
                             items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'month',anchor:'95%',allowBlank:false }]
                         },
                         { width:200, layout: 'form',
@@ -625,11 +627,11 @@ var storeInternalCost = new Ext.data.GroupingStore({
                          showGroupName: false,
                          enableNoGroups: true,
 			 enableGroupingMenu: true,
-                         hideGroupedColumn: true,
-                         ignoreAdd:true
+                         hideGroupedColumn: true
+                        // ignoreAdd:true
                          //groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Datas" : "Data"]})'
                      }),
-                     plugins: new Ext.ux.grid.GroupSummary(),
+                     plugins: [summary],
                      iconCls: 'icon-list',
                      colModel : columnModelResource,
                       tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
@@ -701,8 +703,8 @@ var storeInternalCost = new Ext.data.GroupingStore({
                             items: [
                                      { xtype:'combo',
                                        allowBlank:false,
-                                       name : 'projectresourcename',
-                                       hiddenName:'projectresourcename',
+                                       name : 'projectresourcename.id',
+                                       hiddenName:'projectresourcename.id',
                                        displayField:'name',
                                        valueField:'id',
                                        lazyRender:true,
@@ -735,7 +737,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
                                                             })
                                           } ]
                         },
-                        { width:200, layout: 'form',
+                        { width:100, layout: 'form',
                             items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'month',anchor:'95%',allowBlank:false }]
                         },
                         { width:200, layout: 'form',
@@ -762,7 +764,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
                          ignoreAdd:true
                          //groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Datas" : "Data"]})'
                      }),
-                     plugins: new Ext.ux.grid.GroupSummary(),
+                     plugins: summaryInternalCost,
                      iconCls: 'icon-list',
                      colModel : columnModelInternalCost,
                       tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
@@ -1356,10 +1358,14 @@ var storeInternalCost = new Ext.data.GroupingStore({
             width : 600,
             plain:true
         });
-  
+
+
+
+
         //autorefresh 60 seconds
-        Ext.TaskMgr.start({ run: function(){ store.reload(); }, interval: 60000 });
-       //
+       // Ext.TaskMgr.start({ run: function(){ store.reload(); }, interval: 60000 });
+        store.load();
+
 
       /*
          Ext.TaskMgr.start({ run:

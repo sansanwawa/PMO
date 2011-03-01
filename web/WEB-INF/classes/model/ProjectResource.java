@@ -33,12 +33,14 @@ public class ProjectResource implements Serializable {
 
 
     @ManyToOne
+    //@Cascade(org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
     @JoinColumn(name = "project_id")
     private Project project;
 
 
     @ManyToOne
     @JoinColumn(name = "project_name_id")
+    //@Cascade(org.hibernate.annotations.CascadeType.MERGE)
     private ProjectResourceName projectresourcename;
 
     @Column(name = "update_by")

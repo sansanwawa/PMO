@@ -8,6 +8,7 @@ package sands.dao.interfaces;
 
 import java.util.List;
 import model.ProjectInternalCost;
+import org.hibernate.criterion.SimpleExpression;
 
 
 public interface ProjectInternalCostDAO {
@@ -65,5 +66,14 @@ public interface ProjectInternalCostDAO {
      * @param String field
      */
     public void orderByAsc(String field);
+
+
+     /**
+     * get By Expression
+     * Array of Expression
+     * @return List
+     */
+    public List getByExpression(SimpleExpression[] simpleExpression);
+
 
 }

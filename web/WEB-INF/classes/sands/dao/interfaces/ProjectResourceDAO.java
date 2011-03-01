@@ -69,7 +69,7 @@ public interface ProjectResourceDAO {
     /**
      * get By Expression
      * Array of Expression
-     * @return ProjectResource
+     * @return List
      */
     public List getByExpression(SimpleExpression[] simpleExpression);
 

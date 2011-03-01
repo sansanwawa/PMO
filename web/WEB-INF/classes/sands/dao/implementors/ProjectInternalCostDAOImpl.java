@@ -33,6 +33,15 @@ public class ProjectInternalCostDAOImpl extends Crud implements ProjectInternalC
         super.delete(projectInternalCost);
     }
 
+     public List getByExpression(SimpleExpression[] ex) {
+
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Criteria criteria = session.createCriteria(ProjectInternalCost.class);
+        for (int i = 0; i < ex.length; i++)  criteria.add(ex[i]);
+        return criteria.list();
+
+    }
+
     public List list(int offset) {
 
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();

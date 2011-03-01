@@ -8,7 +8,6 @@ import helper.database.Crud;
 import java.util.ArrayList;
 import java.util.List;
 import model.ProjectResource;
-import model.ProjectResourceName;
 import org.hibernate.Criteria;
 import org.hibernate.classic.Session;
 import org.hibernate.criterion.Expression;

@@ -35,20 +35,13 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
         super.delete(projectresource);
     }
 
-   
     public List getByExpression(SimpleExpression[] ex) {
-
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(ProjectResource.class);
-        for (int i = 0; i < ex.length; i++)  criteria.add(ex[i]);
-        return criteria.list();
-
+        return super.getByExpression(ex, ProjectResource.class);
     }
 
     public List list(int offset) {
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectResource.class).add(Expression.eq("active", true)).add(Expression.eq("project.id", project_id));
-
 
         if (this.orderByType.equals("ASC")) {
             criteria.addOrder(Order.asc(this.orderByField));
@@ -75,6 +68,4 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
         this.getHibernatetemplate().getSessionFactory().close();
         return array;
     }
-
-
 }

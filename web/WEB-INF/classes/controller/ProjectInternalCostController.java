@@ -17,6 +17,8 @@ import model.Project;
 import model.ProjectFinancial;
 import model.ProjectInternalCost;
 import model.ProjectResourceName;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -84,29 +86,32 @@ public class ProjectInternalCostController {
 
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
     public void addProcess(@ModelAttribute("ProjectInternalCost") ProjectInternalCost projectinternalcost,
+            @RequestParam("project.id") Long project_id,
+            @RequestParam("projectresourcename.id") Long project_resource_name_id,
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         Writer out = response.getWriter();
-        String project_id = request.getParameter("project_id");
-        String mandaysUsage = request.getParameter("mandaysUsage");
-        String mandaysAllocation = request.getParameter("mandaysAllocation");
-        String month = request.getParameter("month");
-        String projectResourceName = request.getParameter("projectresourcename");
 
         //declare Project
         Project project = new Project();
-        project.setId(Long.parseLong(project_id));
+        project.setId(project_id);
 
         //declare ProjectResourceName
         ProjectResourceName projectresourcename = new ProjectResourceName();
-        projectresourcename.setId(Long.parseLong(projectResourceName));
+        projectresourcename.setId(project_resource_name_id);
 
         //setter
-        projectinternalcost.setMandaysUsage(Integer.parseInt(mandaysUsage));
-        projectinternalcost.setMandaysAllocation(Integer.parseInt(mandaysAllocation));
-        projectinternalcost.setMonth(month);
         projectinternalcost.setProject(project);
         projectinternalcost.setProjectResourceName(projectresourcename);
+
+        SimpleExpression[] ex = {Expression.eq("project.id", project_id),
+                                 Expression.eq("projectresourcename.id", project_resource_name_id),
+                                 Expression.eq("active", true)
+        };
+        List datas = projectInternalCostDAO.getByExpression(ex);
+        if (datas.size() > 0) {
+            projectinternalcost.setMandaysAllocation(0);
+        }
         projectInternalCostDAO.save(projectinternalcost);
         out.write("{success:true}");
         out.flush();

@@ -114,8 +114,8 @@ summaryRenderer: function(v, params, data){
             for(var i = 0, len = cs.length; i < len; i++){
                 c = cs[i];
                 cf = cfg[i];
-                if(cf.summaryType){
-                    data[c.name] = Ext.ux.grid.GroupSummary.Calculations[cf.summaryType](data[c.name] || 0, r, c.name, data);
+                if(cf.summaryType){                   
+                   data[c.name] = Ext.ux.grid.GroupSummary.Calculations[cf.summaryType](data[c.name] || 0, r, c.name, data);
                 }
             }
         }
@@ -124,6 +124,7 @@ summaryRenderer: function(v, params, data){
 
     doGroupEnd : function(buf, g, cs, ds, colCount){
         var data = this.calculate(g.rs, cs);
+         //console.log(data);
         buf.push('</div>', this.renderSummary({data: data}, cs), '</div>');
     },
 
@@ -137,6 +138,7 @@ summaryRenderer: function(v, params, data){
             s;
         for(; i < len; ++i){
             s = gs[i].childNodes[2];
+            if (!s) continue;
             s.style.width = tw;
             s.firstChild.style.width = tw;
             s.firstChild.rows[0].childNodes[col].style.width = w;
@@ -157,6 +159,7 @@ summaryRenderer: function(v, params, data){
 
         for(; i < len; i++){
             s = gs[i].childNodes[2];
+            if (!s) continue;
             s.style.width = tw;
             s.firstChild.style.width = tw;
             cells = s.firstChild.rows[0].childNodes;
@@ -179,6 +182,7 @@ summaryRenderer: function(v, params, data){
               
         for(; i < len; i++){
             s = gs[i].childNodes[2];
+            if (!s) continue;
             s.style.width = tw;
             s.firstChild.style.width = tw;
             s.firstChild.rows[0].childNodes[col].style.display = display;

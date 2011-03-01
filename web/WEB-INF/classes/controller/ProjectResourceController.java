@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import model.Project;
 import model.ProjectResource;
 import model.ProjectResourceName;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -84,35 +86,33 @@ public class ProjectResourceController {
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
     public void addProcess(@ModelAttribute("ProjectResource") ProjectResource projectresource,
             HttpServletRequest request,
+            @RequestParam("project.id") Long project_id,
+            @RequestParam("projectresourcename.id") Long project_resource_name_id,
             HttpServletResponse response) throws Exception {
         Writer out = response.getWriter();
-        String project_id = request.getParameter("project_id");
-        String mandaysUsage = request.getParameter("mandaysUsage");
-        String mandaysAllocation = request.getParameter("mandaysAllocation");
-        String month = request.getParameter("month");
-        String projectResourceName = request.getParameter("projectresourcename");
 
-        //declare Project
+
         Project project = new Project();
-        project.setId(Long.parseLong(project_id));
-
-        //declare ProjectResourceName
         ProjectResourceName projectresourcename = new ProjectResourceName();
-        projectresourcename.setId(Long.parseLong(projectResourceName));
-
-
-        projectresource.setMandaysUsage(Integer.parseInt(mandaysUsage));
-        projectresource.setMandaysAllocation(Integer.parseInt(mandaysAllocation));
-        projectresource.setMonth(month);
+        project.setId(project_id);
+        projectresourcename.setId(project_resource_name_id);
         projectresource.setProject(project);
         projectresource.setProjectResourceName(projectresourcename);
+
+       SimpleExpression[] ex = { Expression.eq("project.id", project_id),
+                                 Expression.eq("projectresourcename.id", project_resource_name_id),
+                                 Expression.eq("active", true)
+        };
+        List datas = projectResourceDAO.getByExpression(ex);
+        if (datas.size() > 0) {
+            projectresource.setMandaysAllocation(0);
+        }
         projectResourceDAO.save(projectresource);
         out.write("{success:true}");
         out.flush();
         out.close();
     }
 
-    
     @RequestMapping(value = "/delete")
     public void delete(@ModelAttribute("ProjectResource") ProjectResource projectresource,
             BindingResult result,

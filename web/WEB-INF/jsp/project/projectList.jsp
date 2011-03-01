@@ -686,7 +686,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
                     text: 'Save',
                     handler : function(a){
                       fpInt.getForm().submit({
-                            params: { project_id : selectionModel.getSelected().data.id },
+                            params: { 'project.id' : selectionModel.getSelected().data.id },
                             success:function(){
                                 storeInternalCost.reload();
                                 fpInt.getForm().reset();

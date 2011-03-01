@@ -66,56 +66,5 @@ public class ProjectLegalController {
         out.write("{success:true}");
     }
 
-    /*
-    public void add(HttpServletRequest request, HttpServletResponse response, ProjectLegal projectLegal) throws Exception {
-    HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
-
-    String project_legal_id = request.getParameter("id");
-
-    if (project_legal_id != null) {
-    logger.info("project_legal_id : " + project_legal_id);
-    Long id = Long.parseLong(project_legal_id);
-    projectLegal = projectLegalDAO.getById(id);
-    }
-
-    JSONObject json = new JSONObject();
-    json.put("total", 1);
-    json.put("success", true);
-    JSONObject map = new JSONObject();
-    map.put("id", projectLegal.getId());
-    map.put("project_id", projectLegal.getProject().getId());
-    map.put("addend_note", projectLegal.getAddendumNote());
-    map.put("addend_status", projectLegal.getAddendumStatus());
-    map.put("kontrak_note", projectLegal.getKontrakNote());
-    map.put("kontrak_status", projectLegal.getKontrakStatus());
-    map.put("spk_note", projectLegal.getSpkNote());
-    map.put("spk_status", projectLegal.getSpkStatus());
-    map.put("other_note", projectLegal.getOtherNote());
-    map.put("other_status", projectLegal.getOtherStatus());
-
-
-
-
-    json.append("data", map);
-    json.write(responseWrapper.getWriter());
-    }
-
-    public void addProcess(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-
-    ProjectLegal projectlegal = (ProjectLegal) this.newCommandObject(ProjectLegal.class);
-    this.bind(request, projectlegal);
-    // this.validate(projectlegal);
-    String project_legal_id = request.getParameter("id");
-    if (project_legal_id != null) {
-    logger.info("project_legal_id : " + project_legal_id);
-    Long id = Long.parseLong(project_legal_id);
-    projectlegal.setId(id);
-    }
-    projectLegalDAO.save(projectlegal);
-    Writer out = response.getWriter();
-    out.write("{success:true}");
-    }
-
-     */
+   
 }

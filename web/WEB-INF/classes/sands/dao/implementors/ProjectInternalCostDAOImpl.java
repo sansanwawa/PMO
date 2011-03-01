@@ -13,6 +13,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.SimpleExpression;
 import sands.dao.interfaces.ProjectInternalCostDAO;
 
 public class ProjectInternalCostDAOImpl extends Crud implements ProjectInternalCostDAO {
@@ -33,13 +34,8 @@ public class ProjectInternalCostDAOImpl extends Crud implements ProjectInternalC
         super.delete(projectInternalCost);
     }
 
-     public List getByExpression(SimpleExpression[] ex) {
-
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(ProjectInternalCost.class);
-        for (int i = 0; i < ex.length; i++)  criteria.add(ex[i]);
-        return criteria.list();
-
+    public List getByExpression(SimpleExpression[] ex) {
+        return super.getByExpression(ex, ProjectInternalCost.class);
     }
 
     public List list(int offset) {

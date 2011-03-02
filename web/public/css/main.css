@@ -50,6 +50,12 @@ a{
 .normal{
     background-color: #3FFF6B;
 }
+
+.warning-font {
+    color: red;
+}
+
+
 .icon-add-button{
     background-image: url("../images/icons/fam/add.gif") !important;
 }

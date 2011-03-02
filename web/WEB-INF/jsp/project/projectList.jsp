@@ -17,10 +17,16 @@
         var selectionResourceModel = new Ext.grid.CheckboxSelectionModel();
         var selectionFinancialModel = new Ext.grid.CheckboxSelectionModel();
         var selectionInternalCostModel = new Ext.grid.CheckboxSelectionModel();
+        var selectionSchedule = new Ext.grid.CheckboxSelectionModel();
+
+
 
         //summary
         var summary = new Ext.ux.grid.GroupSummary();
         var summaryInternalCost = new Ext.ux.grid.GroupSummary();
+        var summarySchedule= new Ext.ux.grid.GroupSummary();
+
+
 
 
 
@@ -240,7 +246,6 @@
         });
 
         storeFinancial.on('update',function(store,record,operation){
-        
                 Ext.Ajax.request({
                     url: '../projectfinancial/addProcess',
                     success:function(response){
@@ -339,6 +344,65 @@ var storeInternalCost = new Ext.data.GroupingStore({
 
 
 
+var storeSchedule = new Ext.data.GroupingStore({
+            storeId  : 'storeSchedule',
+            groupField :'projectScheduleName',
+            proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectschedule/json' }),
+            baseParams : { start:0, limit:10 },
+            sortInfo: { field: 'projectScheduleName', direction: 'ASC' },
+            //remoteGroup:true,
+            remoteSort: true,
+            reader: new Ext.data.JsonReader({
+                            root: 'data',
+                            totalRecords: 'total',
+                            fields : [
+                                {name: 'id', mapping: 'id',type:'int'},
+                                {name: 'projectId', mapping: 'projectId',type:'int'},
+                                {name: 'projectScheduleId', mapping: 'projectScheduleId'},
+                                {name: 'projectScheduleName', mapping: 'projectScheduleName', type:'string'},
+                                {name: 'projectPlannedDate', mapping: 'projectPlannedDate'},
+                                {name: 'projectRevisedDate', mapping: 'projectRevisedDate'},
+                                {name: 'projectRemark', mapping: 'projectRemark'}
+                            ]
+                })
+        });
+
+
+
+
+      var columnModelSchedule= new Ext.grid.ColumnModel({
+           columns : [ new Ext.grid.RowNumberer({width: 30}),
+                selectionInternalCostModel,
+                { header: "Id", dataIndex: 'id', hidden:true},
+                { header: "Project Schedule Id", dataIndex: 'projectScheduleId', hidden:true},
+                { header: "Project Id", dataIndex: 'projectId', hidden:true},
+                { header: "Project Schedule Id", dataIndex: 'projectScheduleId', hidden:true},
+                { header: "Project Schedule Name", dataIndex: 'projectScheduleName' },
+                { header: "Project Planned Date", dataIndex: 'projectPlannedDate' },
+                { header: "Project Revised Date", dataIndex: 'projectRevisedDate' },
+                { header: "Project Remark", dataIndex: 'projectRemark' }
+
+             ]
+        });
+
+
+
+        storeSchedule.on('update',function(store,record,operation){
+                Ext.Ajax.request({
+                    url: '../projectschedule/addProcess',
+                    success:function(response){
+                        var status = Ext.util.JSON.decode(response.responseText).success;
+                        if(status==false)
+                        Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                        },
+                        failure:function(){
+                        Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                        },
+                        params: {   id : record.data.id,
+                                    'project.id' : record.data.projectId,
+                                    'projectScheduleId.id' : record.data.projectScheduleId
+                    } } );
+        });
 
 
 
@@ -837,167 +901,117 @@ var storeInternalCost = new Ext.data.GroupingStore({
 
 
         var parameterFormSchedule = {
-            layout: 'form',
-            id : 'fpsch',
-            url :'../projectschedule/addProcess',
+             id : 'fpSch',
+            labelAlign: 'top',
+            url :'../projectinternalcost/addProcess',
             buttons: [{
                     text: 'Save',
                     handler : function(a){
-                        fpSch.getForm().submit({
-                            failure:function(){
-                                Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection <br>or <br>\n\
-                                                          Probably you have been inputed wrong values!',
-                                    buttons: Ext.MessageBox.OK, icon:'ext-mb-error' });
+                      fpSch.getForm().submit({
+                            params: { 'project.id' : selectionModel.getSelected().data.id },
+                            success:function(){
+                                storeSchedule.reload();
+                                fpSch.getForm().reset();
                             },
                             waitMsg:'Please wait...'
                         });
                     }
                 }],
-            items : [{ xtype:'hidden', fieldLabel: 'Project Schedule Id', name: 'id', inputValue :null },
-                { fieldLabel: 'Kick Off', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectScheduleKickOffStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectScheduleKickOffStatus', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectScheduleKickOffPlanned',format : 'Y-m-d' },
-                        { xtype : 'datefield', emptyText:'Actual Activity', name :'projectScheduleKickOffDate' ,format : 'Y-m-d'},
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectScheduleKickOffRevised',format : 'Y-m-d' },
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectScheduleKickOffRemarks' }
-                    ] },
-                { fieldLabel: 'Pengadaan Perangkat', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectSchedulePengadaanStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectSchedulePengadaanStatus', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectSchedulePengadaanPlanned',format : 'Y-m-d' },
-                        { xtype : 'datefield', emptyText:'Actual Activity', name :'projectSchedulePengadaanDate',format : 'Y-m-d' },
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectSchedulePengadaanRevised',format : 'Y-m-d' },
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectSchedulePengadaanRemarks' }
-                    ] },
-                { fieldLabel: 'Delivery Perangkat', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectScheduleDeliveryStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectScheduleDeliveryStatus', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectScheduleDeliveryPlanned' ,format : 'Y-m-d'},
-                        { xtype : 'datefield', emptyText:'Actual Activity', name :'projectScheduleDeliveryDate' ,format : 'Y-m-d'},
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectScheduleDeliveryRevised',format : 'Y-m-d' },
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectScheduleDeliveryRemarks' }
-                    ] },
-                { fieldLabel: 'Stagging / Pra Install', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectScheduleStagingStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectScheduleStagingStatus', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectScheduleStagingPlanned' ,format : 'Y-m-d'},
-                        { xtype : 'datefield', emptyText:'Actual Activity', name :'projectScheduleStagingDate' ,format : 'Y-m-d'},
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectScheduleStagingRevised' ,format : 'Y-m-d'},
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectScheduleStagingRemarks' }
-                    ] },
-                { fieldLabel: 'Implementasi Activity 1', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectScheduleImpl1Status', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectScheduleImpl1Status', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectScheduleImpl1Planned' ,format : 'Y-m-d'},
-                        { xtype : 'datefield', emptyText:'Date Activity', name :'projectScheduleImpl1Date' ,format : 'Y-m-d'},
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectScheduleImpl1Revised' ,format : 'Y-m-d'},
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectScheduleImpl1Remarks' }
-                    ] },
-                { fieldLabel: 'Implementasi Activity 2', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectScheduleImpl2Status', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectScheduleImpl2Status', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectScheduleImpl2Planned' ,format : 'Y-m-d'},
-                        { xtype : 'datefield', emptyText:'Date Activity', name :'projectScheduleImpl2Date' , format : 'Y-m-d'},
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectScheduleImpl2Revised' ,format : 'Y-m-d'},
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectScheduleImpl2Remarks' }
-                    ] },
-                { fieldLabel: 'SIT', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectScheduleSitStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectScheduleSitStatus', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectScheduleSitPlanned',format : 'Y-m-d'},
-                        { xtype : 'datefield', emptyText:'Date Activity', name :'projectScheduleSitDate' ,format : 'Y-m-d'},
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectScheduleSitRevised' ,format : 'Y-m-d'},
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectScheduleSitRemarks' }
-                    ] },
-                { fieldLabel: 'UAT', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectScheduleUatStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectScheduleUatStatus', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectScheduleUatPlanned' ,format : 'Y-m-d'},
-                        { xtype : 'datefield', emptyText:'Date Activity', name :'projectScheduleUatDate' ,format : 'Y-m-d'},
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectScheduleUatRevised',format : 'Y-m-d'},
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectScheduleUatRemarks' }
-                    ] },
-                { fieldLabel: 'Berita Acara', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectScheduleBaStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectScheduleBaStatus', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectScheduleBaPlanned' ,format : 'Y-m-d'},
-                        { xtype : 'datefield', emptyText:'Date Activity', name :'projectScheduleBaDate' , format : 'Y-m-d'},
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectScheduleBaRevised' ,format : 'Y-m-d'},
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectScheduleBaRemarks' }
-                    ] },
-                { fieldLabel: 'Documentation', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'projectScheduleDocStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'projectScheduleDocStatus', inputValue : 'Pending' },
-                        { xtype : 'datefield',emptyText:'Planned Schedule', name :'projectScheduleDocPlanned' , format : 'Y-m-d'},
-                        { xtype : 'datefield', emptyText:'Date Activity', name :'projectScheduleDocDate' , format : 'Y-m-d'},
-                        { xtype : 'datefield',emptyText:'Revised Schedule', name :'projectScheduleDocRevised' , format : 'Y-m-d'},
-                        { xtype : 'textfield',emptyText:'Remarks', name :'projectScheduleDocRemarks' }
-                    ] }
+            reader : {},
+            items: [{
+                    layout:'column',
+                    items:[
+                        { width:200, layout: 'form',
+                            items: [
+                                     { xtype:'combo',
+                                       allowBlank:false,
+                                       name : 'projectScheduleName.id',
+                                       hiddenName:'projectScheduleName.id',
+                                       displayField:'name',
+                                       valueField:'id',
+                                       lazyRender:true,
+                                       typeAhead: true,
+                                       queryParam : '',
+                                       triggerAction: 'all',
+                                       mode: 'remote',
+                                       fieldLabel: 'Resource',
+                                       anchor:'95%',
+                                       editable : false,
+                                       emptyText : '-----Select Resource Name-----',
+                                       store: new Ext.data.Store({
+                                                                proxy: new Ext.data.HttpProxy({
+                                                                    method:'POST',
+                                                                    url: '../projectschedulename/json'
+                                                                }),
+                                                                autoLoad :false,
+                                                                remoteSort :true,
+                                                                baseParams : { start:0, limit:10 },
+                                                                sortInfo: { field: 'id', direction: 'DESC' },
+                                                                reader: new Ext.data.JsonReader({
+                                                                    root: 'data',
+                                                                    totalRecords: 'total',
+                                                                    fields : [
+                                                                        {name: 'id', mapping: 'id'},
+                                                                        {name: 'name', mapping: 'name'}
+                                                                    ]
+                                                                } )
+                                                            })
+                                          } ]
+                        },
+                        { width:100, layout: 'form',
+                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'month',anchor:'95%',allowBlank:false }]
+                        },
+                        { width:200, layout: 'form',
+                            items: [{ xtype:'textfield', fieldLabel: 'Mandays Alocation', name: 'mandaysAllocation',anchor:'95%',vtype : 'numeric', allowBlank:false }]
+                        },
+                        { width:200, layout: 'form',
+                            items: [{ xtype:'textfield', fieldLabel: 'Mandays Usage', name: 'mandaysUsage',anchor:'95%',vtype : 'numeric', allowBlank:false }]
+                        }
+                        ]
+                },{
+                     xtype:'editorgrid',
 
-            ],
-            reader : {
-                id : 'myFormData',
-                root : 'data',
-                totalRecords : 'total',
-                fields : [{ name: 'id', mapping: 'id'},
-                    { name: 'projectScheduleKickOffDate', mapping: 'kickoff_date'},
-                    { name: 'projectScheduleKickOffStatus', mapping: 'kickoff_status'},
-                    { name: 'projectScheduleKickOffPlanned', mapping: 'kickoff_planned'},
-                    { name: 'projectScheduleKickOffRemarks', mapping: 'kickoff_remarks'},
-                    { name: 'projectScheduleKickOffRevised', mapping: 'kickoff_revised'},
-                    { name: 'projectSchedulePengadaanDate', mapping: 'pengadaan_date'},
-                    { name: 'projectSchedulePengadaanStatus', mapping: 'pengadaan_status'},
-                    { name: 'projectSchedulePengadaanPlanned', mapping: 'pengadaan_planned'},
-                    { name: 'projectSchedulePengadaanRemarks', mapping: 'pengadaan_remarks'},
-                    { name: 'projectSchedulePengadaanRevised', mapping: 'pengadaan_revised'},
-                    { name: 'projectScheduleDeliveryDate', mapping: 'delivery_date'},
-                    { name: 'projectScheduleDeliveryPlanned', mapping: 'delivery_planned'},
-                    { name: 'projectScheduleDeliveryRemarks', mapping: 'delivery_remarks'},
-                    { name: 'projectScheduleDeliveryRevised', mapping: 'delivery_revised'},
-                    { name: 'projectScheduleDeliveryStatus', mapping: 'delivery_status'},
-                    { name: 'projectScheduleStagingDate', mapping: 'stagging_date'},
-                    { name: 'projectScheduleStagingPlanned', mapping: 'stagging_planned'},
-                    { name: 'projectScheduleStagingRemarks', mapping: 'stagging_remarks'},
-                    { name: 'projectScheduleStagingRevised', mapping: 'stagging_revised'},
-                    { name: 'projectScheduleStagingStatus', mapping: 'stagging_status'},
-                    { name: 'projectScheduleImpl1Date', mapping: 'impl1_date'},
-                    { name: 'projectScheduleImpl1Planned', mapping: 'impl1_planned'},
-                    { name: 'projectScheduleImpl1Remarks', mapping: 'impl1_remarks'},
-                    { name: 'projectScheduleImpl1Revised', mapping: 'impl1_revised'},
-                    { name: 'projectScheduleImpl1Status', mapping: 'impl1_status'},
-                    { name: 'projectScheduleImpl2Date', mapping: 'impl2_date'},
-                    { name: 'projectScheduleImpl2Planned', mapping: 'impl2_planned'},
-                    { name: 'projectScheduleImpl2Remarks', mapping: 'impl2_remarks'},
-                    { name: 'projectScheduleImpl2Revised', mapping: 'impl2_revised'},
-                    { name: 'projectScheduleImpl2Status', mapping: 'impl2_status'},
-                    { name: 'projectScheduleSitDate', mapping: 'sit_date'},
-                    { name: 'projectScheduleSitPlanned', mapping: 'sit_planned'},
-                    { name: 'projectScheduleSitRemarks', mapping: 'sit_remarks'},
-                    { name: 'projectScheduleSitRevised', mapping: 'sit_revised'},
-                    { name: 'projectScheduleSitStatus', mapping: 'sit_status'},
-                    { name: 'projectScheduleUatDate', mapping: 'uat_date'},
-                    { name: 'projectScheduleUatPlanned', mapping: 'uat_planned'},
-                    { name: 'projectScheduleUatRemarks', mapping: 'uat_remarks'},
-                    { name: 'projectScheduleUatRevised', mapping: 'uat_revised'},
-                    { name: 'projectScheduleUatStatus', mapping: 'uat_status'},
-                    { name: 'projectScheduleUatDate', mapping: 'uat_date'},
-                    { name: 'projectScheduleUatPlanned', mapping: 'uat_planned'},
-                    { name: 'projectScheduleUatRemarks', mapping: 'uat_remarks'},
-                    { name: 'projectScheduleUatRevised', mapping: 'uat_revised'},
-                    { name: 'projectScheduleUatStatus', mapping: 'uat_status'},
-                    { name: 'projectScheduleBaDate', mapping: 'ba_date'},
-                    { name: 'projectScheduleBaPlanned', mapping: 'ba_planned'},
-                    { name: 'projectScheduleBaRemarks', mapping: 'ba_remarks'},
-                    { name: 'projectScheduleBaRevised', mapping: 'ba_revised'},
-                    { name: 'projectScheduleBaStatus', mapping: 'ba_status'},
-                    { name: 'projectScheduleDocDate', mapping: 'doc_date'},
-                    { name: 'projectScheduleDocPlanned', mapping: 'doc_planned'},
-                    { name: 'projectScheduleDocRemarks', mapping: 'doc_remarks'},
-                    { name: 'projectScheduleDocRevised', mapping: 'doc_revised'},
-                    { name: 'projectScheduleDocStatus', mapping: 'doc_status'}
-                ]
-            }
+                     store : storeSchedule,
+                     sm: selectionSchedule,
+                     clicksToEdit : 1,
+                     title : 'Resources',
+                     height : 580,
+                     view: new Ext.grid.GroupingView({
+                         forceFit:true,
+                         showGroupName: false,
+                         enableNoGroups: true,
+			 enableGroupingMenu: true,
+                         hideGroupedColumn: true,
+                         ignoreAdd:true
+                     }),
+                     plugins: summarySchedule,
+                     iconCls: 'icon-list',
+                     colModel : columnModelSchedule,
+                      tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
+                                    handler  : function(){
+                                        var selection = selectionResourceModel.getSelections();
+                                        var ids = [];
+                                        for(var i = 0;i<selection.length;i++)  ids.push(selection[i].data.id);
+
+                                         Ext.Ajax.request({
+                                            url: '../projectinternalcost/delete',
+                                            success:function(response){
+                                                var status = Ext.util.JSON.decode(response.responseText).success;
+                                                if(status==false){
+                                                    Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                                                }
+                                                storeInternalCost.reload();
+                                            },
+                                            failure:function(){
+                                                Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                                            },
+                                            params: { id : ids } });
+
+                    }
+                }]
+
+                }
+            ]
         };
 
  
@@ -1324,7 +1338,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
                             }},
                             items:[fpRes] },
                         {title : 'Schedule',listeners: {activate: function(){
-                                    fpSch.getForm().load({ method:'GET', url: '../projectschedule/add/' + id , waitMsg:'Please wait...'});
+                                    storeSchedule.load( { params : {  project_id : id } });
                                 }},
                             items:[fpSch]},
                         {title : 'Internal Cost',listeners: {activate: function(){

@@ -4,25 +4,28 @@
  */
 package controller;
 
+import helper.general.BinderHelper;
 import helper.json.JSONException;
 import helper.json.JSONObject;
 import java.io.IOException;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import model.Project;
 import model.ProjectSchedule;
+import model.ProjectScheduleName;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import sands.dao.interfaces.ProjectScheduleDAO;
 
 /**
@@ -31,13 +34,58 @@ import sands.dao.interfaces.ProjectScheduleDAO;
  */
 @Controller
 @RequestMapping(value = "/projectschedule")
-public class ProjectScheduleController {
+public class ProjectScheduleController extends BinderHelper {
 
     private ProjectScheduleDAO projectScheduleDAO;
 
     @Autowired
     public void setProjectScheduleDAO(ProjectScheduleDAO projectScheduleDAO) {
         this.projectScheduleDAO = projectScheduleDAO;
+    }
+
+    @RequestMapping(value = "/json", method = RequestMethod.POST)
+    public void json(@RequestParam("limit") int limit,
+            @RequestParam("start") int start,
+            @RequestParam("sort") String sort,
+            @RequestParam("dir") String dir,
+            @RequestParam("project_id") String project_id,
+            @ModelAttribute("ProjectResourceName") ProjectScheduleName projectSchedule,
+            BindingResult result, HttpServletResponse response) throws JSONException, IOException {
+
+        HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
+
+        projectScheduleDAO.setProjectId(Long.parseLong(project_id));
+        List countProject = (List) projectScheduleDAO.list(0).get(1);
+        Integer count = (Integer) countProject.get(0);
+
+        //set the limit
+        projectScheduleDAO.setMaxResults(limit);
+
+        //set order by
+        projectScheduleDAO.orderBy(sort, dir);
+        List projectResource = (List) projectScheduleDAO.list(start).get(0);
+
+        JSONObject json = new JSONObject();
+        json.put("total", count);
+        json.put("success", true);
+        Iterator iterator = projectResource.iterator();
+
+        while (iterator.hasNext()) {
+            ProjectSchedule p = (ProjectSchedule) iterator.next();
+            JSONObject map = new JSONObject();
+            map.put("id", p.getId());
+            map.put("projectScheduleName", p.getProjectScheduleName().getName());
+            map.put("projectId", p.getProject().getId());
+            map.put("projectScheduleId", p.getProjectScheduleName().getId());
+            map.put("projectPlannedDate", p.getProjectPlannedDate());
+            map.put("projectRevisedDate", p.getProjectRevisedDate());
+            map.put("projectRemark", p.getProjectRemarks());
+            json.append("data", map);
+        }
+        Writer w = json.write(responseWrapper.getWriter());
+        w.flush();
+        w.close();
+
     }
 
     @RequestMapping(value = "/add/{id}", method = RequestMethod.GET)
@@ -51,70 +99,51 @@ public class ProjectScheduleController {
         json.put("success", true);
         JSONObject map = new JSONObject();
         map.put("id", projectSchedule.getId());
-        map.put("ba_date", projectSchedule.getProjectScheduleBaDate());
-        map.put("ba_planned", projectSchedule.getProjectScheduleBaPlanned());
-        map.put("ba_remarks", projectSchedule.getProjectScheduleBaRemarks());
-        map.put("ba_revised", projectSchedule.getProjectScheduleBaRevised());
-        map.put("ba_status", projectSchedule.getProjectScheduleBaStatus());
-        map.put("delivery_date", projectSchedule.getProjectScheduleDeliveryDate());
-        map.put("delivery_planned", projectSchedule.getProjectScheduleDeliveryPlanned());
-        map.put("delivery_remarks", projectSchedule.getProjectScheduleDeliveryRemarks());
-        map.put("delivery_revised", projectSchedule.getProjectScheduleDeliveryRevised());
-        map.put("delivery_status", projectSchedule.getProjectScheduleDeliveryStatus());
-        map.put("doc_date", projectSchedule.getProjectScheduleDocDate());
-        map.put("doc_planned", projectSchedule.getProjectScheduleDocPlanned());
-        map.put("doc_remarks", projectSchedule.getProjectScheduleDocRemarks());
-        map.put("doc_revised", projectSchedule.getProjectScheduleDocRevised());
-        map.put("doc_status", projectSchedule.getProjectScheduleDocStatus());
-        map.put("impl1_date", projectSchedule.getProjectScheduleImpl1Date());
-        map.put("impl1_planned", projectSchedule.getProjectScheduleImpl1Planned());
-        map.put("impl1_remarks", projectSchedule.getProjectScheduleImpl1Remarks());
-        map.put("impl1_revised", projectSchedule.getProjectScheduleImpl1Revised());
-        map.put("impl1_status", projectSchedule.getProjectScheduleImpl1Status());
-        map.put("impl2_date", projectSchedule.getProjectScheduleImpl2Date());
-        map.put("impl2_planned", projectSchedule.getProjectScheduleImpl2Planned());
-        map.put("impl2_remarks", projectSchedule.getProjectScheduleImpl2Remarks());
-        map.put("impl2_revised", projectSchedule.getProjectScheduleImpl2Revised());
-        map.put("impl2_status", projectSchedule.getProjectScheduleImpl2Status());
-        map.put("kickoff_date", projectSchedule.getProjectScheduleKickOffDate());
-        map.put("kickoff_planned", projectSchedule.getProjectScheduleKickOffPlanned());
-        map.put("kickoff_remarks", projectSchedule.getProjectScheduleKickOffRemarks());
-        map.put("kickoff_revised", projectSchedule.getProjectScheduleKickOffRevised());
-        map.put("kickoff_status", projectSchedule.getProjectScheduleKickOffStatus());
-        map.put("pengadaan_date", projectSchedule.getProjectSchedulePengadaanDate());
-        map.put("pengadaan_planned", projectSchedule.getProjectSchedulePengadaanPlanned());
-        map.put("pengadaan_remarks", projectSchedule.getProjectSchedulePengadaanRemarks());
-        map.put("pengadaan_revised", projectSchedule.getProjectSchedulePengadaanRevised());
-        map.put("pengadaan_status", projectSchedule.getProjectSchedulePengadaanStatus());
-        map.put("sit_date", projectSchedule.getProjectScheduleSitDate());
-        map.put("sit_planned", projectSchedule.getProjectScheduleSitPlanned());
-        map.put("sit_remarks", projectSchedule.getProjectScheduleSitRemarks());
-        map.put("sit_revised", projectSchedule.getProjectScheduleSitRevised());
-        map.put("sit_status", projectSchedule.getProjectScheduleSitStatus());
-        map.put("stagging_date", projectSchedule.getProjectScheduleStagingDate());
-        map.put("stagging_planned", projectSchedule.getProjectScheduleStagingPlanned());
-        map.put("stagging_remarks", projectSchedule.getProjectScheduleStagingRemarks());
-        map.put("stagging_revised", projectSchedule.getProjectScheduleStagingRevised());
-        map.put("stagging_status", projectSchedule.getProjectScheduleStagingStatus());
-        map.put("uat_date", projectSchedule.getProjectScheduleUatDate());
-        map.put("uat_planned", projectSchedule.getProjectScheduleUatPlanned());
-        map.put("uat_remarks", projectSchedule.getProjectScheduleUatRemarks());
-        map.put("uat_revised", projectSchedule.getProjectScheduleUatRevised());
-        map.put("uat_status", projectSchedule.getProjectScheduleUatStatus());
+        map.put("projectScheduleName", projectSchedule.getProjectScheduleName().getName());
+        map.put("projectId", projectSchedule.getProject().getId());
+        map.put("projectScheduleId", projectSchedule.getProjectScheduleName().getId());
+        map.put("projectPlannedDate", projectSchedule.getProjectPlannedDate());
+        map.put("projectRevisedDate", projectSchedule.getProjectRevisedDate());
+        map.put("projectRemark", projectSchedule.getProjectRemarks());
         json.append("data", map);
         json.write(responseWrapper.getWriter());
     }
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+    @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
+    public void addProcess(@ModelAttribute("ProjectResource") ProjectSchedule projectSchedule,
+            HttpServletRequest request,
+            @RequestParam("project.id") Long project_id,
+            @RequestParam("projectschedulename.id") Long project_resource_name_id,
+            HttpServletResponse response) throws Exception {
+        Writer out = response.getWriter();
+
+
+        Project project = new Project();
+        ProjectScheduleName projectScheduleName = new ProjectScheduleName();
+        project.setId(project_id);
+        projectScheduleName.setId(project_resource_name_id);
+        projectSchedule.setProject(project);
+        projectSchedule.setProjectScheduleName(projectScheduleName);
+        projectScheduleDAO.save(projectSchedule);
+        out.write("{success:true}");
+        out.flush();
+        out.close();
     }
 
-    @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
-    public void addProcess(@ModelAttribute("ProjectSchedule") ProjectSchedule projectschedule, BindingResult result, HttpServletResponse response) throws Exception {
-        projectScheduleDAO.save(projectschedule);
+    @RequestMapping(value = "/delete")
+    public void delete(@ModelAttribute("ProjectSchedule") ProjectSchedule projectSchedule,
+            BindingResult result,
+            HttpServletResponse response, HttpServletRequest request) throws Exception {
+
+        String[] project_schedule_id = request.getParameterValues("id");
+
+        for (int i = 0; i < project_schedule_id.length; i++) {
+            projectSchedule.setId(Long.parseLong(project_schedule_id[i]));
+            projectScheduleDAO.delete(projectSchedule);
+        }
         Writer out = response.getWriter();
         out.write("{success:true}");
+        out.flush();
+        out.close();
     }
 }

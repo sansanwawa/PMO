@@ -1,50 +1,51 @@
+/**
+ *
+ * @author sandy
+ */
 package sands.dao.implementors;
 
 import helper.database.Crud;
 import java.util.ArrayList;
-import sands.dao.interfaces.ProjectFinancialDAO;
 import java.util.List;
-import model.ProjectFinancial;
+import model.ProjectScheduleName;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import sands.dao.interfaces.ProjectScheduleNameDAO;
 
-/**
- *
- * @author sandy
- */
-public class ProjectFinancialDAOImpl extends Crud implements ProjectFinancialDAO {
+public class ProjectScheduleNameDAOImpl extends Crud implements ProjectScheduleNameDAO {
 
-    private Long project_id;
-
-    public void save(ProjectFinancial projectFinancial) {
-        this.saveOrUpdate(projectFinancial);
+    public void save(ProjectScheduleName projectScheduleName) {
+        projectScheduleName.setCreatedBy(this.getPrincipal().getUsername());
+        projectScheduleName.setUpdateBy(this.getPrincipal().getUsername());
+        super.save(projectScheduleName);
     }
 
-    public void delete(ProjectFinancial projectFinancial) {
+    public void update(ProjectScheduleName projectScheduleName) {
+        projectScheduleName.setUpdateBy(this.getPrincipal().getUsername());
+        super.update(projectScheduleName);
+    }
+
+    public void delete(ProjectScheduleName projectScheduleName) {
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        session.createQuery("UPDATE ProjectFinancial SET active=:active WHERE id=:project_financial_id").
-                setLong("project_financial_id", projectFinancial.getId()).
+        session.createQuery("UPDATE ProjectScheduleName SET active=:active WHERE id=:project_schedule_name_id").
+                setLong("project_schedule_name_id", projectScheduleName.getId()).
                 setBoolean("active", false).
                 executeUpdate();
     }
 
-    public List getById(long id) {
+    public ProjectScheduleName getById(long id) {
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(ProjectFinancial.class).add(Expression.eq("project.id", id));
-        return criteria.list();
-    }
-
-    public void setProjectId(Long project_id) {
-        this.project_id = project_id;
+        Criteria criteria = session.createCriteria(ProjectScheduleName.class).add(Expression.eq("id", id));
+        ProjectScheduleName p = (ProjectScheduleName) criteria.list().get(0);
+        return p;
     }
 
     public List list(int offset) {
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(ProjectFinancial.class).add(Expression.eq("active", true)).add(Expression.eq("project.id", project_id));
-
+        Criteria criteria = session.createCriteria(ProjectScheduleName.class).add(Expression.eq("active", true));
 
         if (this.orderByType.equals("ASC")) {
             criteria.addOrder(Order.asc(this.orderByField));
@@ -58,7 +59,7 @@ public class ProjectFinancialDAOImpl extends Crud implements ProjectFinancialDAO
         List results = criteria.list();
 
         //count rows
-        Criteria c = session.createCriteria(ProjectFinancial.class).setFirstResult(0).add(Expression.eq("active", true)).setProjection(Projections.rowCount());
+        Criteria c = session.createCriteria(ProjectScheduleName.class).setFirstResult(0).add(Expression.eq("active", true)).setProjection(Projections.rowCount());
         List countRow = c.list();
 
         float maxPage = countRow.get(0).hashCode() / Integer.valueOf(this.maxResult).floatValue();

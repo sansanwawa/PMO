@@ -24,6 +24,7 @@
                 <value>model.ProjectFinancial</value>
                 <value>model.ProjectLegal</value>
                 <value>model.ProjectSchedule</value>
+                <value>model.ProjectScheduleName</value>
                 <value>model.ProjectResource</value>
                 <value>model.ProjectResourceName</value>
                 <value>model.ProjectInternalCost</value>
@@ -99,8 +100,13 @@
     </bean>
 
 
-  <!-- Project Internal Cost-->
+    <!-- Project Internal Cost-->
     <bean id="myProjectInternalCostDAO" class="sands.dao.implementors.ProjectInternalCostDAOImpl">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
+
+     <!-- Project Internal Cost-->
+    <bean id="myProjectScheduleNameDAO" class="sands.dao.implementors.ProjectScheduleNameDAOImpl">
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 

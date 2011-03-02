@@ -171,7 +171,10 @@
                 } },
                 { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) },
                 { header: "Remaining", width: 100 ,summaryType:'sum',summaryRenderer:function(v, params, data){
-                        return data.data.mandaysAllocation - data.data.mandaysUsage;
+                         var total = data.data.mandaysAllocation - data.data.mandaysUsage
+                         if (total.toString().match(/^-\d+$/)) total = "<span class='warning-font'>"+ total +"</span>";
+                         return total;
+
                 }}
 
                 ]
@@ -295,14 +298,18 @@ var storeInternalCost = new Ext.data.GroupingStore({
                 { header: "Id", dataIndex: 'id', hidden:true},
                 { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
                 { header: "Project Id", dataIndex: 'projectid', hidden:true},
-                { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation',summaryType :'sum',hidden :true},
+                { header: "Cost Allocation", width: 100,dataIndex: 'mandaysAllocation',summaryType :'sum',hidden :true},
                 { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
                 { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'sum',summaryRenderer:function(v, params, data){
-                        return "Mandays Allocation : " +  parseInt(data.data.mandaysAllocation);
+                        return "Cost Allocation : " +  parseInt(data.data.mandaysAllocation);
                 } },
-                { header: "Mandays Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum',summaryRenderer:function(v, params, data){
-                        return data.data.mandaysAllocation - data.data.mandaysUsage;
-                }, editor :new Ext.form.TextField({vtype:'numeric'}) }
+                { header: "Cost Usage", width: 100,dataIndex: 'mandaysUsage',summaryType :'sum', editor :new Ext.form.TextField({vtype:'numeric'}) },
+                { header: "Remaining", width: 100 ,summaryType:'sum',summaryRenderer:function(v, params, data){
+                         var total = data.data.mandaysAllocation - data.data.mandaysUsage
+                         if (total.toString().match(/^-\d+$/)) total = "<span class='warning-font'>"+ total +"</span>";
+                         return total;
+                }}
+
              ]
         });
 

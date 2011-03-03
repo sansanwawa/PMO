@@ -17,7 +17,7 @@
         var selectionResourceModel = new Ext.grid.CheckboxSelectionModel();
         var selectionFinancialModel = new Ext.grid.CheckboxSelectionModel();
         var selectionInternalCostModel = new Ext.grid.CheckboxSelectionModel();
-        var selectionSchedule = new Ext.grid.CheckboxSelectionModel();
+        var selectionScheduleModel = new Ext.grid.CheckboxSelectionModel();
 
 
 
@@ -360,7 +360,9 @@ var storeSchedule = new Ext.data.GroupingStore({
                                 {name: 'projectId', mapping: 'projectId',type:'int'},
                                 {name: 'projectScheduleId', mapping: 'projectScheduleId'},
                                 {name: 'projectScheduleName', mapping: 'projectScheduleName', type:'string'},
+                                {name: 'projectScheduleStatus', mapping: 'projectScheduleStatus', type:'string'},
                                 {name: 'projectPlannedDate', mapping: 'projectPlannedDate'},
+                                {name: 'projectActualDate', mapping: 'projectActualDate'},
                                 {name: 'projectRevisedDate', mapping: 'projectRevisedDate'},
                                 {name: 'projectRemark', mapping: 'projectRemark'}
                             ]
@@ -368,6 +370,10 @@ var storeSchedule = new Ext.data.GroupingStore({
         });
 
 
+
+        Ext.ux.grid.GroupSummary.Calculations['dateSummary'] = function(v, record, field,data){
+            return record;
+        };
 
 
       var columnModelSchedule= new Ext.grid.ColumnModel({
@@ -378,7 +384,13 @@ var storeSchedule = new Ext.data.GroupingStore({
                 { header: "Project Id", dataIndex: 'projectId', hidden:true},
                 { header: "Project Schedule Id", dataIndex: 'projectScheduleId', hidden:true},
                 { header: "Project Schedule Name", dataIndex: 'projectScheduleName' },
-                { header: "Project Planned Date", dataIndex: 'projectPlannedDate' },
+                { header: "Status", dataIndex: 'projectScheduleStatus', summaryType :'dateSummary',
+                    summaryRenderer:function(v, params, data){
+                        //console.log(v);
+                        return "Planned Date : " +  v.data.projectPlannedDate;
+                } },
+                { header: "Project Planned Date", dataIndex: 'projectPlannedDate',hidden:true },
+                { header: "Project Actual Date", dataIndex: 'projectActualDate' },
                 { header: "Project Revised Date", dataIndex: 'projectRevisedDate' },
                 { header: "Project Remark", dataIndex: 'projectRemark' }
 
@@ -403,18 +415,6 @@ var storeSchedule = new Ext.data.GroupingStore({
                                     'projectScheduleId.id' : record.data.projectScheduleId
                     } } );
         });
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -869,41 +869,10 @@ var storeSchedule = new Ext.data.GroupingStore({
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         var parameterFormSchedule = {
              id : 'fpSch',
             labelAlign: 'top',
-            url :'../projectinternalcost/addProcess',
+            url :'../projectschedule/addProcess',
             buttons: [{
                     text: 'Save',
                     handler : function(a){
@@ -935,9 +904,10 @@ var storeSchedule = new Ext.data.GroupingStore({
                                        triggerAction: 'all',
                                        mode: 'remote',
                                        fieldLabel: 'Resource',
+                                       labelSeparator:'',
                                        anchor:'95%',
                                        editable : false,
-                                       emptyText : '-----Select Resource Name-----',
+                                       emptyText : '-----Select Schedule-----',
                                        store: new Ext.data.Store({
                                                                 proxy: new Ext.data.HttpProxy({
                                                                     method:'POST',
@@ -946,7 +916,7 @@ var storeSchedule = new Ext.data.GroupingStore({
                                                                 autoLoad :false,
                                                                 remoteSort :true,
                                                                 baseParams : { start:0, limit:10 },
-                                                                sortInfo: { field: 'id', direction: 'DESC' },
+                                                                sortInfo: { field: 'name', direction: 'ASC' },
                                                                 reader: new Ext.data.JsonReader({
                                                                     root: 'data',
                                                                     totalRecords: 'total',
@@ -958,21 +928,29 @@ var storeSchedule = new Ext.data.GroupingStore({
                                                             })
                                           } ]
                         },
-                        { width:100, layout: 'form',
-                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'month',anchor:'95%',allowBlank:false }]
+                        { width:150, layout: 'form',
+                            items: [{ xtype:'radiogroup', labelSeparator:'',fieldLabel:'Status', anchor:'95%',
+                                    items : [{ boxLabel : 'Done', name: 'projectScheduleStatus', checked : true, inputValue : 'Done' },
+                                             { boxLabel : 'Pending', name: 'projectScheduleStatus', inputValue : 'Pending'  }]
+                                    }]
+                        },
+                        { width:110, layout: 'form',
+                            items: [{ xtype:'datefield',labelSeparator:'', fieldLabel:'Planned Schedule', name: 'projectPlannedDate',anchor:'95%',format : 'Y-m-d',allowBlank:false }]
+                        },
+                        { width:110, layout: 'form',
+                            items: [{ xtype:'datefield',labelSeparator:'', fieldLabel:'Actual Activity', name: 'projectActualDate',format : 'Y-m-d',anchor:'95%'}]
+                        },
+                        { width:110, layout: 'form',
+                            items: [{ xtype:'datefield', labelSeparator:'',fieldLabel: 'Revised Schedule', name: 'projectRevisedDate',format : 'Y-m-d',anchor:'95%'}]
                         },
                         { width:200, layout: 'form',
-                            items: [{ xtype:'textfield', fieldLabel: 'Mandays Alocation', name: 'mandaysAllocation',anchor:'95%',vtype : 'numeric', allowBlank:false }]
-                        },
-                        { width:200, layout: 'form',
-                            items: [{ xtype:'textfield', fieldLabel: 'Mandays Usage', name: 'mandaysUsage',anchor:'95%',vtype : 'numeric', allowBlank:false }]
+                            items: [{ xtype:'textfield', labelSeparator:'',fieldLabel: 'Remark', name: 'projectRemark',anchor:'95%', allowBlank:true }]
                         }
                         ]
                 },{
                      xtype:'editorgrid',
-
                      store : storeSchedule,
-                     sm: selectionSchedule,
+                     sm: selectionScheduleModel,
                      clicksToEdit : 1,
                      title : 'Resources',
                      height : 580,
@@ -989,18 +967,18 @@ var storeSchedule = new Ext.data.GroupingStore({
                      colModel : columnModelSchedule,
                       tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
                                     handler  : function(){
-                                        var selection = selectionResourceModel.getSelections();
+                                        var selection = selectionScheduleModel.getSelections();
                                         var ids = [];
                                         for(var i = 0;i<selection.length;i++)  ids.push(selection[i].data.id);
 
                                          Ext.Ajax.request({
-                                            url: '../projectinternalcost/delete',
+                                            url: '../projectschedule/delete',
                                             success:function(response){
                                                 var status = Ext.util.JSON.decode(response.responseText).success;
                                                 if(status==false){
                                                     Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
                                                 }
-                                                storeInternalCost.reload();
+                                                storeSchedule.reload();
                                             },
                                             failure:function(){
                                                 Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
@@ -1352,7 +1330,7 @@ var storeSchedule = new Ext.data.GroupingStore({
                 closeAction:'hide',
                 closable:true,
                 modal: true,
-                width : 850,
+                width : 950,
                 plain:true,
                 maximizable:true,
                 items :tabpannel

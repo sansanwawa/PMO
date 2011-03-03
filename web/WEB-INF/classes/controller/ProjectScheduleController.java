@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import model.Project;
 import model.ProjectSchedule;
 import model.ProjectScheduleName;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -49,8 +51,7 @@ public class ProjectScheduleController extends BinderHelper {
             @RequestParam("sort") String sort,
             @RequestParam("dir") String dir,
             @RequestParam("project_id") String project_id,
-            @ModelAttribute("ProjectResourceName") ProjectScheduleName projectSchedule,
-            BindingResult result, HttpServletResponse response) throws JSONException, IOException {
+            HttpServletResponse response) throws JSONException, IOException {
 
         HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
 
@@ -77,7 +78,9 @@ public class ProjectScheduleController extends BinderHelper {
             map.put("projectScheduleName", p.getProjectScheduleName().getName());
             map.put("projectId", p.getProject().getId());
             map.put("projectScheduleId", p.getProjectScheduleName().getId());
+            map.put("projectScheduleStatus", p.getProjectScheduleStatus());
             map.put("projectPlannedDate", p.getProjectPlannedDate());
+            map.put("projectActualDate", p.getProjectActualDate());
             map.put("projectRevisedDate", p.getProjectRevisedDate());
             map.put("projectRemark", p.getProjectRemarks());
             json.append("data", map);
@@ -113,7 +116,7 @@ public class ProjectScheduleController extends BinderHelper {
     public void addProcess(@ModelAttribute("ProjectResource") ProjectSchedule projectSchedule,
             HttpServletRequest request,
             @RequestParam("project.id") Long project_id,
-            @RequestParam("projectschedulename.id") Long project_resource_name_id,
+            @RequestParam("projectScheduleName.id") Long project_resource_name_id,
             HttpServletResponse response) throws Exception {
         Writer out = response.getWriter();
 
@@ -124,6 +127,18 @@ public class ProjectScheduleController extends BinderHelper {
         projectScheduleName.setId(project_resource_name_id);
         projectSchedule.setProject(project);
         projectSchedule.setProjectScheduleName(projectScheduleName);
+
+        SimpleExpression[] ex = {Expression.eq("project.id", project_id),
+            Expression.eq("projectScheduleName.id", project_resource_name_id),
+            Expression.eq("active", true)
+        };
+        List datas = projectScheduleDAO.getByExpression(ex);
+        if (datas.size() > 0) {
+            projectSchedule.setProjectPlannedDate(null);
+        }
+
+
+
         projectScheduleDAO.save(projectSchedule);
         out.write("{success:true}");
         out.flush();

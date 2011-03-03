@@ -6,6 +6,7 @@ package sands.dao.interfaces;
 
 import java.util.List;
 import model.ProjectSchedule;
+import org.hibernate.criterion.SimpleExpression;
 
 /**
  *
@@ -38,7 +39,7 @@ public interface ProjectScheduleDAO {
      */
     public void delete(ProjectSchedule projectSchedule);
 
-   /**
+    /**
      *
      * @param int offset
      * @param long project_id
@@ -46,15 +47,11 @@ public interface ProjectScheduleDAO {
      */
     public List list(int offset);
 
-
-
-
-   /**
+    /**
      *
      * @param int max result
      */
     public void setMaxResults(int maxresult);
-
 
     /**
      * Order by
@@ -75,4 +72,10 @@ public interface ProjectScheduleDAO {
      */
     public void orderByAsc(String field);
 
+    /**
+     * get By Expression
+     * Array of Expression
+     * @return List
+     */
+    public List getByExpression(SimpleExpression[] simpleExpression);
 }

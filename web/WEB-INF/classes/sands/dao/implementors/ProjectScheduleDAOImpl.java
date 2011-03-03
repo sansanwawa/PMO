@@ -11,6 +11,7 @@ import model.ProjectSchedule;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import sands.dao.interfaces.ProjectScheduleDAO;
@@ -38,8 +39,12 @@ public class ProjectScheduleDAOImpl extends Crud implements ProjectScheduleDAO {
         this.project_id = project_id;
     }
 
+    public List getByExpression(SimpleExpression[] ex) {
+        return super.getByExpression(ex, ProjectSchedule.class);
+    }
+
     public List list(int offset) {
-        
+
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectSchedule.class).add(Expression.eq("active", true)).add(Expression.eq("project.id", project_id));
 

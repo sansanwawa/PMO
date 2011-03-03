@@ -32,7 +32,6 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
         ProjectSchedule projectschedule = new ProjectSchedule();
         project.setProjectdocument(projectdocument);     
         project.setProjectlegal(projectfinancial);
-        project.setProjectscheduleObj(projectschedule);
         project.setCreatedBy(this.getPrincipal().getUsername());
         projectfinancial.setProject(project);
         projectdocument.setProject(project);

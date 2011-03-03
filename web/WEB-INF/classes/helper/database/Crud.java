@@ -5,17 +5,21 @@
  */
 package helper.database;
 
+import java.util.ArrayList;
 import java.util.List;
+import model.ProjectSchedule;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-
 
 public class Crud {
 
@@ -23,16 +27,12 @@ public class Crud {
      * Order By Type
      * ASC/DESC
      */
- 
     protected String orderByType = "ASC";
-
     /**
      * Order By Field
      * 
      */
     protected String orderByField = "id";
-
-    
     /**
      * Max Result / Limit
      */
@@ -41,7 +41,6 @@ public class Crud {
      * Logger
      */
     protected final Log logger = LogFactory.getLog(getClass());
-
     /**
      * Hibernate Template
      */
@@ -54,7 +53,6 @@ public class Crud {
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.hibernateTemplate = new HibernateTemplate(sessionFactory);
     }
-
 
     /**
      * Order By Field DESC
@@ -87,12 +85,11 @@ public class Crud {
         this.orderByType = type;
         this.orderByField = field;
     }
-    
+
     /**
      * set max result / db limit
      * @param int maxResults
      */
-
     public void setMaxResults(int maxResults) {
         this.maxResult = maxResults;
     }
@@ -110,9 +107,9 @@ public class Crud {
      * override this methods for another purposes
      * @param Object objectname
      */
-    protected void save(final Object objectname){
+    protected void save(final Object objectname) {
         this.hibernateTemplate.save(objectname);
-      
+
     }
 
     /**
@@ -120,7 +117,7 @@ public class Crud {
      * override this methods for another purposes
      * @param Object objectname
      */
-    protected void update(Object objectname){
+    protected void update(Object objectname) {
         this.hibernateTemplate.update(objectname);
     }
 
@@ -129,7 +126,7 @@ public class Crud {
      * override this methods for another purposes
      * @param Object objectname
      */
-    protected void saveOrUpdate(Object objectname){
+    protected void saveOrUpdate(Object objectname) {
         this.hibernateTemplate.saveOrUpdate(objectname);
     }
 
@@ -137,20 +134,17 @@ public class Crud {
      * Delete Database Objects
      * @param Object objectname
      */
-    protected void delete(Object objectname){
+    protected void delete(Object objectname) {
         this.hibernateTemplate.delete(objectname);
     }
-
-
 
     /**
      * 
      * @return HibernateTemplate
      */
-    protected HibernateTemplate getHibernatetemplate(){
+    protected HibernateTemplate getHibernatetemplate() {
         return this.hibernateTemplate;
     }
-
 
     /**
      *
@@ -158,16 +152,54 @@ public class Crud {
      * @param Class classname
      * @return List
      */
-
-
-    protected List getByExpression(SimpleExpression[] ex ,Class classname) {
+    protected List getByExpression(SimpleExpression[] ex, Class classname) {
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(classname);
-        for (int i = 0; i < ex.length; i++)  criteria.add(ex[i]);
+        for (int i = 0; i < ex.length; i++) {
+            criteria.add(ex[i]);
+        }
         this.getHibernatetemplate().getSessionFactory().close();
         return criteria.list();
     }
-   
 
 
+
+    /**
+     * List all Datas
+     * @param Class className
+     * @param Long id
+     * @param int offset
+     * @return List
+     */
+
+    protected List list(Class className,  Long id , int offset) {
+        
+        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Criteria criteria = session.createCriteria(className).add(Expression.eq("active", true)).add(Expression.eq("project.id", id));
+
+        if (this.orderByType.equals("ASC")) {
+            criteria.addOrder(Order.asc(this.orderByField));
+        } else {
+            criteria.addOrder(Order.desc(this.orderByField));
+        }
+
+        criteria.setMaxResults(this.maxResult);
+        criteria.setFirstResult(offset);
+
+        List results = criteria.list();
+
+        //count rows
+        Criteria c = session.createCriteria(className).setFirstResult(0).add(Expression.eq("active", true)).setProjection(Projections.rowCount());
+        List countRow = c.list();
+
+        float maxPage = countRow.get(0).hashCode() / Integer.valueOf(this.maxResult).floatValue();
+        Double maxPageResults = Math.ceil(maxPage);
+
+        ArrayList array = new ArrayList();
+        array.add(0, results);
+        array.add(1, countRow);
+        array.add(2, maxPageResults.intValue());
+        this.getHibernatetemplate().getSessionFactory().close();
+        return array;
+    }
 }

@@ -65,20 +65,14 @@ public class Project implements Serializable {
     private String projectContract;
     @Column(name = "update_by")
     private String updateBy;
-    @Column(name = "created_by",updatable = false)
+    @Column(name = "created_by", updatable = false)
     private String createdBy;
-
     @Column(name = "project_account_manager")
     private String accountManager;
-
     @Column(name = "project_project_manager")
     private String projectManager;
-
     @Column(name = "project_value")
     private double projectValue;
-
-
-
     /*FK*/
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
     private ProjectDocument projectdocument;
@@ -86,20 +80,13 @@ public class Project implements Serializable {
     /*FK*/
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
     private ProjectLegal projectlegal;
-
-
     /*FK*/
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
-    private ProjectSchedule projectscheduleObj;
-
-
+    // @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
+    // private ProjectSchedule projectscheduleObj;
     /*One to many*/
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
     private Set<ProjectFinancial> projectFinancialObj = new HashSet<ProjectFinancial>(0);
-
-
-
 
     public String getAccountManager() {
         return accountManager;
@@ -116,16 +103,6 @@ public class Project implements Serializable {
     public void setProjectManager(String projectManager) {
         this.projectManager = projectManager;
     }
- 
-    public ProjectSchedule getProjectscheduleObj() {
-        return projectscheduleObj;
-    }
-
-    public void setProjectscheduleObj(ProjectSchedule projectscheduleObj) {
-        this.projectscheduleObj = projectscheduleObj;
-    }
-  
-    
 
     public ProjectDocument getProjectdocument() {
         return projectdocument;
@@ -273,7 +250,7 @@ public class Project implements Serializable {
         return updateBy;
     }
 
-    public void setUpdateBy(String updateBy) {     
+    public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
     }
 
@@ -284,6 +261,4 @@ public class Project implements Serializable {
     public void setProjectValue(double projectValue) {
         this.projectValue = projectValue;
     }
-
-    
 }

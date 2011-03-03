@@ -48,33 +48,6 @@ public class ProjectScheduleDAOImpl extends Crud implements ProjectScheduleDAO {
     }
 
     public List list(int offset) {
-
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(ProjectSchedule.class).add(Expression.eq("active", true)).add(Expression.eq("project.id", project_id));
-
-        if (this.orderByType.equals("ASC")) {
-            criteria.addOrder(Order.asc(this.orderByField));
-        } else {
-            criteria.addOrder(Order.desc(this.orderByField));
-        }
-
-        criteria.setMaxResults(this.maxResult);
-        criteria.setFirstResult(offset);
-
-        List results = criteria.list();
-
-        //count rows
-        Criteria c = session.createCriteria(ProjectSchedule.class).setFirstResult(0).add(Expression.eq("active", true)).setProjection(Projections.rowCount());
-        List countRow = c.list();
-
-        float maxPage = countRow.get(0).hashCode() / Integer.valueOf(this.maxResult).floatValue();
-        Double maxPageResults = Math.ceil(maxPage);
-
-        ArrayList array = new ArrayList();
-        array.add(0, results);
-        array.add(1, countRow);
-        array.add(2, maxPageResults.intValue());
-        this.getHibernatetemplate().getSessionFactory().close();
-        return array;
+      return super.list(ProjectSchedule.class, project_id,offset);
     }
 }

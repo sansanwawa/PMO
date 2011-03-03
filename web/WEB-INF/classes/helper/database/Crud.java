@@ -175,7 +175,10 @@ public class Crud {
     protected List list(Class className,  Long id , int offset) {
         
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
-        Criteria criteria = session.createCriteria(className).add(Expression.eq("active", true)).add(Expression.eq("project.id", id));
+        Criteria criteria = session.createCriteria(className).add(Expression.eq("active", true));
+     
+        //will consider with this conditional
+        if(id != null ) criteria.add(Expression.eq("project.id", id));
 
         if (this.orderByType.equals("ASC")) {
             criteria.addOrder(Order.asc(this.orderByField));

@@ -58,7 +58,7 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
                 executeUpdate();
     }
 
-    public ArrayList<Project> list(int offset) {
+   public ArrayList<Project> list(int offset) {
 
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(Project.class).add(Expression.eq("active", true));

@@ -79,11 +79,14 @@ public class ProjectController extends BinderHelper {
         while (iterator.hasNext()) {
             Project p = (Project) iterator.next();
             JSONObject map = new JSONObject();
+
+            
+            
             map.put("id", p.getId());
             map.put("name", p.getName());
             map.put("project_end_date", p.getProjectEndDate());
             map.put("project_start_date", p.getProjectStartDate());
-            map.put("financial", p.getProjectFinancial());
+            //map.put("financial", p.getProjectF   );
             map.put("project_contract", p.getProjectContract());
             map.put("project_technical", p.getProjectTechnical());
             map.put("project_resource", p.getProjectResource());

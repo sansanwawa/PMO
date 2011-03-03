@@ -80,9 +80,7 @@ public class Project implements Serializable {
     /*FK*/
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
     private ProjectLegal projectlegal;
-    /*FK*/
-    // @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
-    // private ProjectSchedule projectscheduleObj;
+    
     /*One to many*/
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")

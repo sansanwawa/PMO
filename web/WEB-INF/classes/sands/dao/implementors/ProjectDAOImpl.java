@@ -2,15 +2,19 @@
  *
  * @author sandy
  */
-
 package sands.dao.implementors;
 
+import helper.database.Calculation;
 import helper.database.Crud;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sands.dao.interfaces.ProjectDAO;
 import model.Project;
 import java.util.ArrayList;
 import java.util.List;
 import model.ProjectDocument;
+import model.ProjectFinancial;
 import model.ProjectLegal;
 import model.ProjectResource;
 import model.ProjectSchedule;
@@ -20,17 +24,15 @@ import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 
-
 public class ProjectDAOImpl extends Crud implements ProjectDAO {
 
-    
     public void save(Project project) {
 
         ProjectDocument projectdocument = new ProjectDocument();
         ProjectLegal projectfinancial = new ProjectLegal();
         ProjectResource projectresource = new ProjectResource();
         ProjectSchedule projectschedule = new ProjectSchedule();
-        project.setProjectdocument(projectdocument);     
+        project.setProjectdocument(projectdocument);
         project.setProjectlegal(projectfinancial);
         project.setCreatedBy(this.getPrincipal().getUsername());
         projectfinancial.setProject(project);
@@ -58,12 +60,12 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
                 executeUpdate();
     }
 
-   public ArrayList<Project> list(int offset) {
+    public ArrayList<Project> list(int offset) {
 
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(Project.class).add(Expression.eq("active", true));
 
-        
+
         if (this.orderByType.equals("ASC")) {
             criteria.addOrder(Order.asc(this.orderByField));
         } else {
@@ -83,17 +85,24 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
         float maxPage = countRow.get(0).hashCode() / Integer.valueOf(this.maxResult).floatValue();
         Double maxPageResults = Math.ceil(maxPage);
 
+
+
+
+
+
+
+
         ArrayList array = new ArrayList();
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
 
+        
+
         this.getHibernatetemplate().getSessionFactory().close();
         return array;
 
     }
-
-
 
     public Project getById(long id) {
         Session session = this.getHibernatetemplate().getSessionFactory().openSession();

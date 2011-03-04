@@ -7,7 +7,6 @@ package helper.database;
 
 import java.util.ArrayList;
 import java.util.List;
-import model.ProjectSchedule;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -47,12 +46,19 @@ public class Crud {
     private HibernateTemplate hibernateTemplate;
 
     /**
+     * Array of Expression
+     */
+    private SimpleExpression[] expression;
+
+
+    /**
      * Inject Session
      * @param sessionFactory
      */
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.hibernateTemplate = new HibernateTemplate(sessionFactory);
     }
+
 
     /**
      * Order By Field DESC
@@ -165,6 +171,27 @@ public class Crud {
 
 
     /**
+     * BETA!
+     * @param Expression ex
+     */
+    protected void setExpression(SimpleExpression[] ex){
+            this.expression = ex;
+    }
+
+    /**
+     * BETA!
+     * @return Expression[]
+     */
+    protected SimpleExpression[] getExpression(){
+            return this.expression;
+    }
+
+
+
+
+
+
+    /**
      * List all Datas
      * @param Class className
      * @param Long id
@@ -194,7 +221,6 @@ public class Crud {
         //count rows
         Criteria c = session.createCriteria(className).setFirstResult(0).add(Expression.eq("active", true)).setProjection(Projections.rowCount());
         List countRow = c.list();
-
         float maxPage = countRow.get(0).hashCode() / Integer.valueOf(this.maxResult).floatValue();
         Double maxPageResults = Math.ceil(maxPage);
 

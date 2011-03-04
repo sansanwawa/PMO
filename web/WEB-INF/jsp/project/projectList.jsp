@@ -18,6 +18,11 @@
         var selectionFinancialModel = new Ext.grid.CheckboxSelectionModel();
         var selectionInternalCostModel = new Ext.grid.CheckboxSelectionModel();
         var selectionScheduleModel = new Ext.grid.CheckboxSelectionModel();
+        var selectionLegalModel = new Ext.grid.CheckboxSelectionModel();
+
+
+
+
 
 
 
@@ -27,30 +32,13 @@
         var summarySchedule= new Ext.ux.grid.GroupSummary();
 
 
-
-
-
-       
-
-
-
-
-        // create the Data Store        
+// create the Data Store        
         var store = new Ext.data.Store({
-            proxy: new Ext.data.HttpProxy({
-                method:'POST',
-                url: '../project/json'
-            }),
+            proxy: new Ext.data.HttpProxy({ method:'POST', url: '../project/json' }),
             autoLoad :false,
             remoteSort :true,
-            baseParams : { 
-                start:0,
-                limit:10
-            },
-            sortInfo: {
-                field: 'projectLastUpdate',
-                direction: 'DESC' 
-            },
+            baseParams : {  start:0, limit:10 },
+            sortInfo: { field: 'projectLastUpdate', direction: 'DESC'},
             // the return will be JSON, so lets set up a reader
             reader: new Ext.data.JsonReader({
                 root: 'data',
@@ -86,11 +74,7 @@
                 {header: "Customer", width: 120, dataIndex: 'projectCustomer', sortable: true},
                 {header: "Financial", width: 100, dataIndex: 'projectFinancial', sortable: true,
                     renderer:function(value){
-                        if(value=='On Budget')
-                            return '<span class="normal">' + value + '</span>';
-                        else if(value=='Potentially Over Budget')
-                            return '<span class="pre-warning">' + value + '</span>';
-                        return '<span class="warning">' + value + '</span>';
+                       return value;
                     }
                 },
                 {header: "Schedule", width: 100, dataIndex: 'projectSchedule', sortable: true,
@@ -231,9 +215,6 @@
                 })
         });
 
-
-
-
          var columnModelFinancial = new Ext.grid.ColumnModel({
            columns : [ new Ext.grid.RowNumberer({width: 30}),
                        selectionFinancialModel,
@@ -276,7 +257,6 @@ var storeInternalCost = new Ext.data.GroupingStore({
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectinternalcost/json' }),
             baseParams : { start:0, limit:10 },
             sortInfo: { field: 'projectresourcename', direction: 'ASC' },
-            //remoteGroup:true,
             remoteSort: true,
             reader: new Ext.data.JsonReader({
                             root: 'data',
@@ -293,9 +273,6 @@ var storeInternalCost = new Ext.data.GroupingStore({
                             ]
                 })
         });
-
-
-
      
       var columnModelInternalCost = new Ext.grid.ColumnModel({
            columns : [ new Ext.grid.RowNumberer({width: 30}),
@@ -350,7 +327,6 @@ var storeSchedule = new Ext.data.GroupingStore({
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectschedule/json' }),
             baseParams : { start:0, limit:10 },
             sortInfo: { field: 'projectScheduleName', direction: 'ASC' },
-            //remoteGroup:true,
             remoteSort: true,
             reader: new Ext.data.JsonReader({
                             root: 'data',
@@ -415,6 +391,69 @@ var storeSchedule = new Ext.data.GroupingStore({
                                     'projectScheduleId.id' : record.data.projectScheduleId
                     } } );
         });
+
+
+
+var storeLegal = new Ext.data.Store({
+            storeId  : 'storeLegal',
+            proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectlegal/json' }),
+            baseParams : { start:0, limit:10 },
+            sortInfo: { field: 'projectresourcename', direction: 'ASC' },
+            remoteSort: true,
+            reader: new Ext.data.JsonReader({
+                            root: 'data',
+                            id: 'internalcostdatajson',
+                            totalRecords: 'total',
+                            fields : [
+                                {name: 'id', mapping: 'id',type:'int'},
+                                {name: 'projectresourcename', mapping: 'projectresourcename', type:'string'}
+                               
+                            ]
+                })
+        });
+
+      var columnModelLegal = new Ext.grid.ColumnModel({
+           columns : [ new Ext.grid.RowNumberer({width: 30}),
+                selectionLegalModel,
+                { header: "Id", dataIndex: 'id', hidden:true},
+                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true}
+
+             ]
+        });
+
+
+
+        storeLegal.on('update',function(store,record,operation){
+                Ext.Ajax.request({
+                    url: '../projectinternalcost/addProcess',
+                    success:function(response){
+                        var status = Ext.util.JSON.decode(response.responseText).success;
+                        if(status==false)
+                        Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                        },
+                        failure:function(){
+                        Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                        },
+                        params: {   id : record.data.id,
+                                    'project.id' : record.data.projectid,
+                                    mandaysAllocation : record.data.mandaysAllocation,
+                                    mandaysUsage : record.data.mandaysUsage,
+                                    month :record.data.month,
+                                    'projectresourcename.id' : record.data.projectresourceid
+                    } } );
+        });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -564,57 +603,113 @@ var storeSchedule = new Ext.data.GroupingStore({
 
 
         var parameterFormLegal = {
-            id : 'fpLegal',
-            url :'../projectlegal/addProcess',
+            id : 'fpLeg',
+            labelAlign: 'top',
+            url :'../projectlogal/addProcess',
             buttons: [{
                     text: 'Save',
                     handler : function(a){
-                        fpleg.getForm().submit({ waitMsg:'Please wait...' });
+                      fpLeg.getForm().submit({
+                            params: { 'project.id' : selectionModel.getSelected().data.id },
+                            success:function(){
+                                storeLegal.reload();
+                                fpLeg.getForm().reset();
+                            },
+                            waitMsg:'Please wait...'
+                        });
                     }
                 }],
-            items : [ {   xtype:'hidden',fieldLabel: 'Project Legal Id', name: 'id', inputValue :null },
-                {   fieldLabel: 'SPK', xtype : 'radiogroup' ,
-                    items : [{ boxLabel : 'Done', name: 'spkStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'spkStatus', inputValue : 'Pending' },
-                        { xtype : 'textfield', name:'spkNote' }]
-                },
-                {
-                    fieldLabel: 'Kontrak', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'kontrakStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'kontrakStatus', inputValue : 'Pending' },
-                        { xtype    : 'textfield', name:'kontrakNote' }]
-                },
-                {
-                    fieldLabel: 'Addendum', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'addendumStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'addendumStatus', inputValue : 'Pending' },
-                        { xtype    : 'textfield', name:'addendumNote' }]
-                },
-                {
-                    fieldLabel: 'Other (s)', xtype : 'radiogroup',
-                    items : [{ boxLabel : 'Done', name: 'otherStatus', checked : true, inputValue : 'Done' },
-                        { boxLabel : 'Pending', name: 'otherStatus', inputValue : 'Pending' },
-                        { xtype    : 'textfield', name:'otherNote' }]
+            reader : {},
+            items: [{
+                    layout:'column',
+                    items:[
+                        { width:200, layout: 'form',
+                            items: [
+                                     {  xtype:'combo',
+                                        name : 'projectLegalName',
+                                        hiddenName:'projectLegalName',
+                                        typeAhead: true,
+                                        triggerAction: 'all',
+                                        lazyRender:true,
+                                        mode: 'local',
+                                        fieldLabel: 'Legal',
+                                        store: new Ext.data.ArrayStore({
+                                            fields: [ 'value', 'text'],
+                                            data: [['SPK', 'SPK'], ['Contract', 'Contract'] , ['Addendum', 'Addendum'] , ['Other(s)', 'Other(s)'] ]
+                                        }),
+                                        valueField: 'value',
+                                        displayField: 'text'
+                                          }]
+                        },
+                        { width:100, layout: 'form',
+                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'projectLegalDate',anchor:'95%',allowBlank:false }]
+                        },
+                        { width:200, layout: 'form',
+                            items: [{  xtype:'combo',
+                                        name : 'projectLegalRequired',
+                                        hiddenName:'projectLegalRequired',
+                                        typeAhead: true,
+                                        triggerAction: 'all',
+                                        lazyRender:true,
+                                        mode: 'local',
+                                        fieldLabel: 'Legal',
+                                        store: new Ext.data.ArrayStore({
+                                            fields: [ 'value', 'text'],
+                                            data: [['Required', 'Required'], ['Not Required', 'Not Required']]
+                                        }),
+                                        valueField: 'value',
+                                        displayField: 'text' }]
+                        },
+                         { width:150, layout: 'form',
+                            items: [{ xtype:'radiogroup', labelSeparator:'',fieldLabel:'Status', anchor:'95%',
+                                    items : [{ boxLabel : 'Done', name: 'projectLegalStatus', checked : true, inputValue : 'Done' },
+                                             { boxLabel : 'Pending', name: 'projectLegalStatus', inputValue : 'Pending'  }]
+                                    }]
+                        }
+                        ]
+                },{
+                     xtype:'editorgrid',
+                     id :'legalGrid',
+                     store : storeLegal,
+                     sm: selectionLegalModel,
+                     clicksToEdit : 1,
+                     title : 'Legal',
+                     height : 580 ,
+                     iconCls: 'icon-list',
+                     colModel : columnModelLegal,
+                      tbar : [ {    iconCls: 'icon-delete-button', text : "Delete",
+                                    handler  : function(){
+                                        var selection = selectionLegalModel.getSelections();
+                                        var ids = [];
+                                        for(var i = 0;i<selection.length;i++)  ids.push(selection[i].data.id);
+ 
+                                        storeResources.reload();
+
+
+                                        /*
+                                        Ext.Ajax.request({
+                                            url: '../projectresource/delete',
+                                            success:function(response){
+                                                var status = Ext.util.JSON.decode(response.responseText).success;
+                                                if(status==false){
+                                                    Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
+                                                }
+                                                storeResources.reload();
+                                            },
+                                            failure:function(){
+                                                Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
+                                            },
+                                            params: { id : ids } });
+                                            */
+
+                    }
+                }]
+
                 }
-
-
-            ],
-            reader : {
-                id : 'myFormData',
-                root : 'data',
-                totalRecords : 'total',
-                fields : [{ name: 'id', mapping: 'id'},
-                    { name: 'spkStatus', mapping: 'spk_status'},
-                    { name: 'spkNote', mapping: 'spk_note'},
-                    { name: 'kontrakStatus', mapping: 'kontrak_status'},
-                    { name: 'kontrakNote', mapping: 'kontrak_note'},
-                    { name: 'addendumStatus', mapping: 'addend_status'},
-                    { name: 'addendumNote', mapping: 'addend_note'},
-                    { name: 'otherStatus', mapping: 'other_status'},
-                    { name: 'otherNote', mapping: 'other_note'}
-                ]
-            }
+            ]
         };
+
+
 
         var parameterFormResource ={
             id : 'fpRes',
@@ -1263,7 +1358,7 @@ var storeSchedule = new Ext.data.GroupingStore({
         var fp = formPanel(parameterFormPanel);
         var fpdoc = formPanel(parameterFormPanelDocument);
         var fpfin = formPanel(parameterFormFinancial);
-        var fpleg = formPanel(parameterFormLegal);
+        var fpLeg = formPanel(parameterFormLegal);
         var fpRes = formPanel(parameterFormResource);
         var fpSch = formPanel(parameterFormSchedule);
         var fpInt = formPanel(parameterFormInternalCost);
@@ -1307,9 +1402,9 @@ var storeSchedule = new Ext.data.GroupingStore({
                                   storeFinancial.load( { params : {  project_id : id } });
                                 }}, items:[fpfin]},
                         {title : 'Legal/Contract',listeners: { activate: function(){
-                                    fpleg.getForm().load({ method:'GET', url: '../projectlegal/add/' + id , waitMsg:'Please wait...'});
+                                    //fpLeg.getForm().load({ method:'GET', url: '../projectlegal/add/' + id , waitMsg:'Please wait...'});
                                 }},
-                            items:[fpleg]
+                            items:[fpLeg]
                         },
                         {title : 'Resource',listeners: {activate: function(){
                                     storeResources.load( { params : {  project_id : id } });

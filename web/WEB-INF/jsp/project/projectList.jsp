@@ -123,10 +123,10 @@
             storeId  : 'storeResource',
             pruneModifiedRecords:true,
             autoSave:false ,
-            groupField :'projectresourcename',
+            groupField :'projectResourceName',
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectresource/json' }),
             baseParams : { start:0, limit:10 },
-            sortInfo: { field: 'projectresourcename', direction: 'ASC' },
+            sortInfo: { field: 'projectResourceName', direction: 'ASC' },
             //remoteGroup:true,
             remoteSort: true,
             reader: new Ext.data.JsonReader({
@@ -135,7 +135,7 @@
                             totalRecords: 'total',
                             fields : [
                                 {name: 'id', mapping: 'id',type:'int'},
-                                {name: 'projectresourcename', mapping: 'projectresourcename', type:'string'},
+                                {name: 'projectResourceName', mapping: 'projectResourceName', type:'string'},
                                 {name: 'mandaysAllocation', mapping: 'mandaysAllocation',type:'int'},
                                 {name: 'mandaysUsage', mapping: 'mandaysUsage',type:'int'},
                                 {name: 'projectresourceid', mapping: 'projectresourceid',type:'int'},
@@ -154,7 +154,7 @@
                 { header: "Id", dataIndex: 'id', hidden:true},
                 { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
                 { header: "Project Id", dataIndex: 'projectid', hidden:true},
-                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true,hidden:true},
+                { header: "Project Resource Name", width: 220, dataIndex: 'projectResourceName', sortable: true,hidden:true},
                 { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation',summaryType :'sum',hidden :true},
                 { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'sum',summaryRenderer:function(v, params, data){
                         return "Mandays Allocation : " +  parseInt(data.data.mandaysAllocation);
@@ -185,7 +185,7 @@
                                     'project.id' : record.data.projectid,
                                     mandaysUsage : record.data.mandaysUsage,
                                     month :record.data.month,
-                                    'projectresourcename.id' : record.data.projectresourceid
+                                    'projectResourceName.id' : record.data.projectresourceid
                     } } );
         });
 
@@ -253,10 +253,10 @@
 
 var storeInternalCost = new Ext.data.GroupingStore({
             storeId  : 'storeInternalCost',
-            groupField :'projectresourcename',
+            groupField :'projectResourceName',
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectinternalcost/json' }),
             baseParams : { start:0, limit:10 },
-            sortInfo: { field: 'projectresourcename', direction: 'ASC' },
+            sortInfo: { field: 'projectResourceName', direction: 'ASC' },
             remoteSort: true,
             reader: new Ext.data.JsonReader({
                             root: 'data',
@@ -264,7 +264,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
                             totalRecords: 'total',
                             fields : [
                                 {name: 'id', mapping: 'id',type:'int'},
-                                {name: 'projectresourcename', mapping: 'projectresourcename', type:'string'},
+                                {name: 'projectResourceName', mapping: 'projectResourceName', type:'string'},
                                 {name: 'mandaysAllocation', mapping: 'mandaysAllocation',type:'int'},
                                 {name: 'mandaysUsage', mapping: 'mandaysUsage',type:'int'},
                                 {name: 'projectresourceid', mapping: 'projectresourceid',type:'int'},
@@ -281,7 +281,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
                 { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
                 { header: "Project Id", dataIndex: 'projectid', hidden:true},
                 { header: "Cost Allocation", width: 100,dataIndex: 'mandaysAllocation',summaryType :'sum',hidden :true},
-                { header: "Project Resource Name", width: 220, dataIndex: 'projectresourcename', sortable: true},
+                { header: "Project Resource Name", width: 220, dataIndex: 'projectResourceName', sortable: true},
                 { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'sum',summaryRenderer:function(v, params, data){
                         return "Cost Allocation : " +  parseInt(data.data.mandaysAllocation);
                 } },
@@ -313,7 +313,7 @@ var storeInternalCost = new Ext.data.GroupingStore({
                                     mandaysAllocation : record.data.mandaysAllocation,
                                     mandaysUsage : record.data.mandaysUsage,
                                     month :record.data.month,
-                                    'projectresourcename.id' : record.data.projectresourceid
+                                    'projectResourceName.id' : record.data.projectresourceid
                     } } );
         });
 
@@ -398,15 +398,14 @@ var storeLegal = new Ext.data.Store({
             storeId  : 'storeLegal',
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectlegal/json' }),
             baseParams : { start:0, limit:10 },
-            sortInfo: { field: 'projectresourcename', direction: 'ASC' },
+            sortInfo: { field: 'id', direction: 'DESC' },
             remoteSort: true,
             reader: new Ext.data.JsonReader({
                             root: 'data',
-                            id: 'internalcostdatajson',
                             totalRecords: 'total',
                             fields : [
                                 {name: 'id', mapping: 'id',type:'int'},
-                                {name: 'projectresourcename', mapping: 'projectresourcename', type:'string'}
+                                {name: 'name', mapping: 'name', type:'string'}
                                
                             ]
                 })
@@ -416,7 +415,7 @@ var storeLegal = new Ext.data.Store({
            columns : [ new Ext.grid.RowNumberer({width: 30}),
                 selectionLegalModel,
                 { header: "Id", dataIndex: 'id', hidden:true},
-                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true}
+                { header: "Legal Name", dataIndex: 'name'}
 
              ]
         });
@@ -439,7 +438,7 @@ var storeLegal = new Ext.data.Store({
                                     mandaysAllocation : record.data.mandaysAllocation,
                                     mandaysUsage : record.data.mandaysUsage,
                                     month :record.data.month,
-                                    'projectresourcename.id' : record.data.projectresourceid
+                                    'projectResourceName.id' : record.data.projectresourceid
                     } } );
         });
 
@@ -605,7 +604,7 @@ var storeLegal = new Ext.data.Store({
         var parameterFormLegal = {
             id : 'fpLeg',
             labelAlign: 'top',
-            url :'../projectlogal/addProcess',
+            url :'../projectlegal/addProcess',
             buttons: [{
                     text: 'Save',
                     handler : function(a){
@@ -632,10 +631,11 @@ var storeLegal = new Ext.data.Store({
                                         triggerAction: 'all',
                                         lazyRender:true,
                                         mode: 'local',
+                                        value : 'SPK',
                                         fieldLabel: 'Legal',
                                         store: new Ext.data.ArrayStore({
                                             fields: [ 'value', 'text'],
-                                            data: [['SPK', 'SPK'], ['Contract', 'Contract'] , ['Addendum', 'Addendum'] , ['Other(s)', 'Other(s)'] ]
+                                            data:   [['SPK', 'SPK'], ['Contract', 'Contract'] , ['Addendum', 'Addendum'] , ['Other(s)', 'Other(s)'] ]
                                         }),
                                         valueField: 'value',
                                         displayField: 'text'
@@ -649,6 +649,7 @@ var storeLegal = new Ext.data.Store({
                                         name : 'projectLegalRequired',
                                         hiddenName:'projectLegalRequired',
                                         typeAhead: true,
+                                        value : 'Required',
                                         triggerAction: 'all',
                                         lazyRender:true,
                                         mode: 'local',
@@ -736,8 +737,8 @@ var storeLegal = new Ext.data.Store({
                             items: [ 
                                      { xtype:'combo',
                                        allowBlank:false,
-                                       name : 'projectresourcename.id',
-                                       hiddenName:'projectresourcename.id',
+                                       name : 'projectResourceName.id',
+                                       hiddenName:'projectResourceName.id',
                                        displayField:'name',
                                        valueField:'id',
                                        lazyRender:true,
@@ -869,8 +870,8 @@ var storeLegal = new Ext.data.Store({
                             items: [
                                      { xtype:'combo',
                                        allowBlank:false,
-                                       name : 'projectresourcename.id',
-                                       hiddenName:'projectresourcename.id',
+                                       name : 'projectResourceName.id',
+                                       hiddenName:'projectResourceName.id',
                                        displayField:'name',
                                        valueField:'id',
                                        lazyRender:true,
@@ -1402,7 +1403,7 @@ var storeLegal = new Ext.data.Store({
                                   storeFinancial.load( { params : {  project_id : id } });
                                 }}, items:[fpfin]},
                         {title : 'Legal/Contract',listeners: { activate: function(){
-                                    //fpLeg.getForm().load({ method:'GET', url: '../projectlegal/add/' + id , waitMsg:'Please wait...'});
+                                     storeLegal.load( { params : {  project_id : id } });
                                 }},
                             items:[fpLeg]
                         },

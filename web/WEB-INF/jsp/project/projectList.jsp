@@ -138,8 +138,8 @@
                                 {name: 'projectResourceName', mapping: 'projectResourceName', type:'string'},
                                 {name: 'mandaysAllocation', mapping: 'mandaysAllocation',type:'int'},
                                 {name: 'mandaysUsage', mapping: 'mandaysUsage',type:'int'},
-                                {name: 'projectresourceid', mapping: 'projectresourceid',type:'int'},
-                                {name: 'projectid', mapping: 'projectid',type:'int'},
+                                {name: 'projectResourceId', mapping: 'projectResourceId',type:'int'},
+                                {name: 'projectId', mapping: 'projectId',type:'int'},
                                 {name: 'month', mapping: 'month',type:'string'}
                             ]
                 })
@@ -152,8 +152,8 @@
            columns : [ new Ext.grid.RowNumberer({width: 30}),
                 selectionResourceModel,
                 { header: "Id", dataIndex: 'id', hidden:true},
-                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
-                { header: "Project Id", dataIndex: 'projectid', hidden:true},
+                { header: "Project Resource Id", dataIndex: 'projectResourceId', hidden:true},
+                { header: "Project Id", dataIndex: 'projectId', hidden:true},
                 { header: "Project Resource Name", width: 220, dataIndex: 'projectResourceName', sortable: true,hidden:true},
                 { header: "Mandays Allocation", width: 100,dataIndex: 'mandaysAllocation',summaryType :'sum',hidden :true},
                 { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'sum',summaryRenderer:function(v, params, data){
@@ -182,10 +182,10 @@
                         Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
                         },
                         params: {   id : record.data.id,
-                                    'project.id' : record.data.projectid,
+                                    //'project.id' : record.data.projectId,
                                     mandaysUsage : record.data.mandaysUsage,
-                                    month :record.data.month,
-                                    'projectResourceName.id' : record.data.projectresourceid
+                                    //month :record.data.month,
+                                    'projectResourceName.id' : record.data.projectResourceId
                     } } );
         });
 
@@ -267,8 +267,8 @@ var storeInternalCost = new Ext.data.GroupingStore({
                                 {name: 'projectResourceName', mapping: 'projectResourceName', type:'string'},
                                 {name: 'mandaysAllocation', mapping: 'mandaysAllocation',type:'int'},
                                 {name: 'mandaysUsage', mapping: 'mandaysUsage',type:'int'},
-                                {name: 'projectresourceid', mapping: 'projectresourceid',type:'int'},
-                                {name: 'projectid', mapping: 'projectid',type:'int'},
+                                {name: 'projectResourceId', mapping: 'projectResourceId',type:'int'},
+                                {name: 'projectId', mapping: 'projectId',type:'int'},
                                 {name: 'month', mapping: 'month',type:'string'}
                             ]
                 })
@@ -278,8 +278,8 @@ var storeInternalCost = new Ext.data.GroupingStore({
            columns : [ new Ext.grid.RowNumberer({width: 30}),
                 selectionInternalCostModel,
                 { header: "Id", dataIndex: 'id', hidden:true},
-                { header: "Project Resource Id", dataIndex: 'projectresourceid', hidden:true},
-                { header: "Project Id", dataIndex: 'projectid', hidden:true},
+                { header: "Project Resource Id", dataIndex: 'projectResourceId', hidden:true},
+                { header: "Project Id", dataIndex: 'projectId', hidden:true},
                 { header: "Cost Allocation", width: 100,dataIndex: 'mandaysAllocation',summaryType :'sum',hidden :true},
                 { header: "Project Resource Name", width: 220, dataIndex: 'projectResourceName', sortable: true},
                 { header: "Month", width: 100, dataIndex: 'month', sortable: true, summaryType :'sum',summaryRenderer:function(v, params, data){
@@ -309,11 +309,10 @@ var storeInternalCost = new Ext.data.GroupingStore({
                         Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
                         },
                         params: {   id : record.data.id,
-                                    'project.id' : record.data.projectid,
-                                    mandaysAllocation : record.data.mandaysAllocation,
-                                    mandaysUsage : record.data.mandaysUsage,
-                                    month :record.data.month,
-                                    'projectResourceName.id' : record.data.projectresourceid
+                                    'project.id' : record.data.projectId,
+                                     mandaysUsage : record.data.mandaysUsage,
+                                     month :record.data.month,
+                                    'projectResourceName.id' : record.data.projectResourceId
                     } } );
         });
 
@@ -362,8 +361,7 @@ var storeSchedule = new Ext.data.GroupingStore({
                 { header: "Project Schedule Name", dataIndex: 'projectScheduleName' },
                 { header: "Status", dataIndex: 'projectScheduleStatus', summaryType :'dateSummary',
                     summaryRenderer:function(v, params, data){
-                        //console.log(v);
-                        return "Planned Date : " +  v.data.projectPlannedDate;
+                           return "Planned Date : " +  v.data.projectPlannedDate;
                 } },
                 { header: "Project Planned Date", dataIndex: 'projectPlannedDate',hidden:true },
                 { header: "Project Actual Date", dataIndex: 'projectActualDate' },
@@ -438,7 +436,7 @@ var storeLegal = new Ext.data.Store({
                                     mandaysAllocation : record.data.mandaysAllocation,
                                     mandaysUsage : record.data.mandaysUsage,
                                     month :record.data.month,
-                                    'projectResourceName.id' : record.data.projectresourceid
+                                    'projectResourceName.id' : record.data.projectResourceId
                     } } );
         });
 
@@ -446,14 +444,7 @@ var storeLegal = new Ext.data.Store({
 
 
 
-
-
-
-
-
-
-
-
+ 
 
 
 

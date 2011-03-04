@@ -137,8 +137,6 @@ public class ProjectScheduleController extends BinderHelper {
             projectSchedule.setProjectPlannedDate(null);
         }
 
-
-
         projectScheduleDAO.save(projectSchedule);
         out.write("{success:true}");
         out.flush();

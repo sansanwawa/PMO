@@ -21,7 +21,7 @@ public class ProjectDocumentDAOImpl extends Crud implements ProjectDocumentDAO {
 
 
     public void save(ProjectDocument projectdocument) {
-        this.saveOrUpdate(projectdocument);
+        super.saveOrUpdate(projectdocument);
     }
 
     public void delete(ProjectDocument projectdocument) {

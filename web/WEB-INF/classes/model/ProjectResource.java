@@ -13,7 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity
+@Entity()
+//@org.hibernate.annotations.Entity( dynamicUpdate = true)
 @Table(name = "project_resource")
 public class ProjectResource implements Serializable {
 
@@ -39,7 +40,7 @@ public class ProjectResource implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "project_name_id")
-    private ProjectResourceName projectresourcename;
+    private ProjectResourceName projectResourceName;
 
     @Column(name = "update_by")
     private String updateBy;
@@ -104,11 +105,11 @@ public class ProjectResource implements Serializable {
     }
 
     public ProjectResourceName getProjectResourceName() {
-        return projectresourcename;
+        return projectResourceName;
     }
 
-    public void setProjectResourceName(ProjectResourceName projectresourcename) {
-        this.projectresourcename = projectresourcename;
+    public void setProjectResourceName(ProjectResourceName pr) {
+        this.projectResourceName = pr;
     }
 
     public int getMandaysAllocation() {

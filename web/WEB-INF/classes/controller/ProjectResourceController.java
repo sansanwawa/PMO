@@ -69,9 +69,9 @@ public class ProjectResourceController {
             ProjectResource p = (ProjectResource) iterator.next();
             JSONObject map = new JSONObject();
             map.put("id", p.getId());
-            map.put("projectresourcename", p.getProjectResourceName().getName());
-            map.put("projectresourceid", p.getProjectResourceName().getId());
-            map.put("projectid", p.getProject().getId());
+            map.put("projectResourceName", p.getProjectResourceName().getName());
+            map.put("projectResourceId", p.getProjectResourceName().getId());
+            map.put("projectId", p.getProject().getId());
             map.put("month", p.getMonth());
             map.put("mandaysUsage", p.getMandaysUsage());
             map.put("mandaysAllocation", p.getMandaysAllocation());
@@ -84,45 +84,45 @@ public class ProjectResourceController {
     }
 
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
-    public void addProcess(@ModelAttribute("ProjectResource") ProjectResource projectresource,
+    public void addProcess(@ModelAttribute("ProjectResource") ProjectResource projectResource,
             HttpServletRequest request,
             @RequestParam("project.id") Long project_id,
-            @RequestParam("projectresourcename.id") Long project_resource_name_id,
+            @RequestParam("projectResourceName.id") Long project_resource_name_id,
             HttpServletResponse response) throws Exception {
         Writer out = response.getWriter();
 
 
         Project project = new Project();
-        ProjectResourceName projectresourcename = new ProjectResourceName();
+        ProjectResourceName projectResourceName = new ProjectResourceName();
         project.setId(project_id);
-        projectresourcename.setId(project_resource_name_id);
-        projectresource.setProject(project);
-        projectresource.setProjectResourceName(projectresourcename);
+        projectResourceName.setId(project_resource_name_id);
+        projectResource.setProject(project);
+        projectResource.setProjectResourceName(projectResourceName);
 
        SimpleExpression[] ex = { Expression.eq("project.id", project_id),
-                                 Expression.eq("projectresourcename.id", project_resource_name_id),
+                                 Expression.eq("projectResourceName.id", project_resource_name_id),
                                  Expression.eq("active", true)
         };
         List datas = projectResourceDAO.getByExpression(ex);
         if (datas.size() > 0) {
-            projectresource.setMandaysAllocation(0);
+            projectResource.setMandaysAllocation(0);
         }
-        projectResourceDAO.save(projectresource);
+        projectResourceDAO.save(projectResource);
         out.write("{success:true}");
         out.flush();
         out.close();
     }
 
     @RequestMapping(value = "/delete")
-    public void delete(@ModelAttribute("ProjectResource") ProjectResource projectresource,
+    public void delete(@ModelAttribute("ProjectResource") ProjectResource projectResource,
             BindingResult result,
             HttpServletResponse response, HttpServletRequest request) throws Exception {
 
         String[] project_resource_id = request.getParameterValues("id");
 
         for (int i = 0; i < project_resource_id.length; i++) {
-            projectresource.setId(Long.parseLong(project_resource_id[i]));
-            projectResourceDAO.delete(projectresource);
+            projectResource.setId(Long.parseLong(project_resource_id[i]));
+            projectResourceDAO.delete(projectResource);
         }
         Writer out = response.getWriter();
         out.write("{success:true}");

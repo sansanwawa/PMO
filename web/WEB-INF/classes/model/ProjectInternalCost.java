@@ -37,7 +37,7 @@ public class ProjectInternalCost implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "project_name_id")
-    private ProjectResourceName projectresourcename;
+    private ProjectResourceName projectResourceName;
 
     @Column(name = "update_by")
     private String updateBy;
@@ -105,11 +105,11 @@ public class ProjectInternalCost implements Serializable {
     }
 
     public ProjectResourceName getProjectResourceName() {
-        return projectresourcename;
+        return projectResourceName;
     }
 
     public void setProjectResourceName(ProjectResourceName projectresourcename) {
-        this.projectresourcename = projectresourcename;
+        this.projectResourceName = projectresourcename;
     }
 
     public String getUpdateBy() {

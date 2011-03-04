@@ -5,15 +5,12 @@
 package sands.dao.implementors;
 
 import helper.database.Crud;
-import java.util.ArrayList;
 import java.util.List;
 import model.ProjectSchedule;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.SimpleExpression;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import sands.dao.interfaces.ProjectScheduleDAO;
 
 public class ProjectScheduleDAOImpl extends Crud implements ProjectScheduleDAO {

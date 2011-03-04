@@ -20,7 +20,8 @@ import javax.persistence.Temporal;
 @Entity
 @Table(name = "project_resource_name")
 public class ProjectResourceName implements Serializable {
-    @OneToMany(mappedBy = "projectresourcename")
+
+    @OneToMany(mappedBy = "projectResourceName")
     private List<ProjectResource> projectResources;
 
     @Id

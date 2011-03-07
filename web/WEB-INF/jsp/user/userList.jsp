@@ -75,7 +75,7 @@
                             var id = selection.data.id;
                             showWindow();
                             fp.getForm().load({
-                                url: '../project/add/' + id,
+                                url: '../user/add/' + id,
                                 waitMsg:'Please wait...'
                             });
                         }
@@ -191,10 +191,10 @@
 
 
          var gp = gridPanel(parameterGridPanel);
+         var fp = formPanel(parameterFormPanel);
 
 
 
-        ////// sample
          
 
 

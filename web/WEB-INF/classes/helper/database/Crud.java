@@ -43,7 +43,7 @@ public class Crud {
     /**
      * Hibernate Template
      */
-    private HibernateTemplate hibernateTemplate;
+    private static HibernateTemplate hibernateTemplate;
 
     /**
      * Array of Expression
@@ -56,7 +56,7 @@ public class Crud {
      * @param sessionFactory
      */
     public void setSessionFactory(SessionFactory sessionFactory) {
-        this.hibernateTemplate = new HibernateTemplate(sessionFactory);
+        Crud.hibernateTemplate = new HibernateTemplate(sessionFactory);
     }
 
 
@@ -114,7 +114,7 @@ public class Crud {
      * @param Object objectname
      */
     protected void save(final Object objectname) {
-        this.hibernateTemplate.save(objectname);
+        Crud.hibernateTemplate.save(objectname);
 
     }
 
@@ -124,7 +124,7 @@ public class Crud {
      * @param Object objectname
      */
     protected void update(Object objectname) {
-        this.hibernateTemplate.update(objectname);
+        Crud.hibernateTemplate.update(objectname);
     }
 
     /**
@@ -133,7 +133,7 @@ public class Crud {
      * @param Object objectname
      */
     protected void saveOrUpdate(Object objectname) {
-        this.hibernateTemplate.saveOrUpdate(objectname);
+        Crud.hibernateTemplate.saveOrUpdate(objectname);
     }
 
     /**
@@ -141,16 +141,18 @@ public class Crud {
      * @param Object objectname
      */
     protected void delete(Object objectname) {
-        this.hibernateTemplate.delete(objectname);
+        Crud.hibernateTemplate.delete(objectname);
     }
 
     /**
      * 
      * @return HibernateTemplate
      */
-    protected HibernateTemplate getHibernatetemplate() {
-        return this.hibernateTemplate;
+    protected static HibernateTemplate getHibernatetemplate() {
+        return hibernateTemplate;
     }
+
+    
 
     /**
      *

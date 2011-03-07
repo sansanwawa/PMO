@@ -40,7 +40,7 @@ public class ProjectInternalCostDAOImpl extends Crud implements ProjectInternalC
 
     public List list(int offset) {
 
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectInternalCost.class).add(Expression.eq("active", true)).add(Expression.eq("project.id", project_id));
 
         if (this.orderByType.equals("ASC")) {
@@ -65,7 +65,7 @@ public class ProjectInternalCostDAOImpl extends Crud implements ProjectInternalC
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
-        this.getHibernatetemplate().getSessionFactory().close();
+        Crud.getHibernatetemplate().getSessionFactory().close();
         return array;
     }
 }

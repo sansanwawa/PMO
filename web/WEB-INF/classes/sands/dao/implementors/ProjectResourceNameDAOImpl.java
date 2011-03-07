@@ -24,7 +24,7 @@ public class ProjectResourceNameDAOImpl extends Crud implements ProjectResourceN
     }
 
     public void delete(ProjectResourceName projectresourcename) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         session.createQuery("UPDATE ProjectResourceName SET active=:active WHERE id=:id").
                 setLong("id", projectresourcename.getId()).
                 setBoolean("active", false).
@@ -32,7 +32,7 @@ public class ProjectResourceNameDAOImpl extends Crud implements ProjectResourceN
     }
 
     public ProjectResourceName getById(long id) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectResourceName.class).add(Expression.eq("id", id));
         ProjectResourceName p = (ProjectResourceName) criteria.list().get(0);
         return p;
@@ -44,7 +44,7 @@ public class ProjectResourceNameDAOImpl extends Crud implements ProjectResourceN
     }
 
     public List list(int offset) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectResourceName.class).add(Expression.eq("active", true));
 
         if (this.orderByType.equals("ASC")) {

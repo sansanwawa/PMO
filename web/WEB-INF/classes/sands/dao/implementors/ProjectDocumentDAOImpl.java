@@ -25,7 +25,7 @@ public class ProjectDocumentDAOImpl extends Crud implements ProjectDocumentDAO {
     }
 
     public void delete(ProjectDocument projectdocument) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         session.createQuery("UPDATE ProjectDocument SET active=:active WHERE id=:project_management_id").
                 setLong("project_management_id", projectdocument.getPROJECT_MANAGEMENT_ID()).
                 setBoolean("active", false).
@@ -34,7 +34,7 @@ public class ProjectDocumentDAOImpl extends Crud implements ProjectDocumentDAO {
 
     public ArrayList<ProjectDocument> list(int offset) {
         
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectDocument.class).add(Expression.eq("active", true));
 
         if (this.orderByType.equals("ASC")) {
@@ -71,7 +71,7 @@ public class ProjectDocumentDAOImpl extends Crud implements ProjectDocumentDAO {
 
 
     public ProjectDocument getById(long id) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         ProjectDocument project = new ProjectDocument();
         project.setPROJECT_MANAGEMENT_ID(id);
         ProjectDocument p = (ProjectDocument) session.load(ProjectDocument.class, project.getPROJECT_MANAGEMENT_ID());

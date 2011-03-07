@@ -24,10 +24,10 @@ public class UserDAOImpl extends Crud implements UserDAO {
     }
 
     public void delete(User user) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         User userObj = (User) session.get(User.class, user.getId());
         userObj.setActive(Boolean.FALSE);
-        this.getHibernatetemplate().saveOrUpdate(userObj);
+        super.saveOrUpdate(userObj);
     }
 
 
@@ -37,7 +37,7 @@ public class UserDAOImpl extends Crud implements UserDAO {
     @SuppressWarnings("unchecked")
     public ArrayList<User> list(int offset) {
 
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(User.class).add(Expression.eq("active", true));
 
         if (this.orderByType.equals("ASC")) {
@@ -75,12 +75,12 @@ public class UserDAOImpl extends Crud implements UserDAO {
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
-        this.getHibernatetemplate().getSessionFactory().close();
+        Crud.getHibernatetemplate().getSessionFactory().close();
         return array;
     }
 
     public User getById(long id) {
-        Session sf = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session sf = Crud.getHibernatetemplate().getSessionFactory().openSession();
         User user = new User();
         user.setId(id);
         User resultUserObj = (User) sf.load(User.class, user.getId());

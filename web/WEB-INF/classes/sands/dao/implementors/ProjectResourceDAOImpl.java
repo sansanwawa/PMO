@@ -41,7 +41,7 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
     }
 
     public List list(int offset) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectResource.class).add(Expression.eq("active", true)).add(Expression.eq("project.id", project_id));
 
         if (this.orderByType.equals("ASC")) {
@@ -66,7 +66,7 @@ public class ProjectResourceDAOImpl extends Crud implements ProjectResourceDAO {
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
-        this.getHibernatetemplate().getSessionFactory().close();
+        Crud.getHibernatetemplate().getSessionFactory().close();
         return array;
     }
 }

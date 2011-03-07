@@ -24,7 +24,7 @@ public class ProjectFinancialDAOImpl extends Crud implements ProjectFinancialDAO
     }
 
     public void delete(ProjectFinancial projectFinancial) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         session.createQuery("UPDATE ProjectFinancial SET active=:active WHERE id=:project_financial_id").
                 setLong("project_financial_id", projectFinancial.getId()).
                 setBoolean("active", false).
@@ -32,17 +32,28 @@ public class ProjectFinancialDAOImpl extends Crud implements ProjectFinancialDAO
     }
 
     public List getById(long id) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectFinancial.class).add(Expression.eq("project.id", id));
         return criteria.list();
     }
+
+    public static List getSumByProjectId(Long id){
+
+        Session session =  Crud.getHibernatetemplate().getSessionFactory().openSession();
+        Criteria c = session.createCriteria(ProjectFinancial.class).setFirstResult(0).
+                            add(Expression.eq("active", true)).
+                            add(Expression.eq("project.id", id)).
+                            setProjection(Projections.sum("projectFinValue"));
+        return c.list();
+    }
+
 
     public void setProjectId(Long project_id) {
         this.project_id = project_id;
     }
 
     public List list(int offset) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectFinancial.class).add(Expression.eq("active", true)).add(Expression.eq("project.id", project_id));
 
 
@@ -68,7 +79,7 @@ public class ProjectFinancialDAOImpl extends Crud implements ProjectFinancialDAO
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
-        this.getHibernatetemplate().getSessionFactory().close();
+        Crud.getHibernatetemplate().getSessionFactory().close();
         return array;
     }
 }

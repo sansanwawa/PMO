@@ -22,7 +22,7 @@ public class ProjectScheduleDAOImpl extends Crud implements ProjectScheduleDAO {
     }
 
     public void delete(ProjectSchedule projectSchedule) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         session.createQuery("UPDATE ProjectSchedule SET active=:active WHERE id=:project_schedule_id").
                 setLong("project_schedule_id", projectSchedule.getId()).
                 setBoolean("active", false).

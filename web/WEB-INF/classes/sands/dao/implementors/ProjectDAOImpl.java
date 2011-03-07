@@ -4,17 +4,12 @@
  */
 package sands.dao.implementors;
 
-import helper.database.Calculation;
 import helper.database.Crud;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import sands.dao.interfaces.ProjectDAO;
 import model.Project;
 import java.util.ArrayList;
 import java.util.List;
 import model.ProjectDocument;
-import model.ProjectFinancial;
 import model.ProjectLegal;
 import model.ProjectResource;
 import model.ProjectSchedule;
@@ -33,7 +28,7 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
         ProjectResource projectresource = new ProjectResource();
         ProjectSchedule projectschedule = new ProjectSchedule();
         project.setProjectdocument(projectdocument);
-        project.setProjectlegal(projectfinancial);
+       
         project.setCreatedBy(this.getPrincipal().getUsername());
         projectfinancial.setProject(project);
         projectdocument.setProject(project);
@@ -48,7 +43,7 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
     }
 
     public void delete(Project project) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Project p = (Project) session.load(Project.class, project.getId());
         session.createQuery("UPDATE Project SET active=:active WHERE id=:project_id").
                 setLong("project_id", project.getId()).
@@ -62,7 +57,7 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
 
     public ArrayList<Project> list(int offset) {
 
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(Project.class).add(Expression.eq("active", true));
 
 

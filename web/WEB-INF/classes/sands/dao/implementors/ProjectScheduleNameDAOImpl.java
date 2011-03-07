@@ -29,7 +29,7 @@ public class ProjectScheduleNameDAOImpl extends Crud implements ProjectScheduleN
     }
 
     public void delete(ProjectScheduleName projectScheduleName) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         session.createQuery("UPDATE ProjectScheduleName SET active=:active WHERE id=:project_schedule_name_id").
                 setLong("project_schedule_name_id", projectScheduleName.getId()).
                 setBoolean("active", false).
@@ -37,14 +37,14 @@ public class ProjectScheduleNameDAOImpl extends Crud implements ProjectScheduleN
     }
 
     public ProjectScheduleName getById(long id) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectScheduleName.class).add(Expression.eq("id", id));
         ProjectScheduleName p = (ProjectScheduleName) criteria.list().get(0);
         return p;
     }
 
     public List list(int offset) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectScheduleName.class).add(Expression.eq("active", true));
 
         if (this.orderByType.equals("ASC")) {
@@ -69,7 +69,7 @@ public class ProjectScheduleNameDAOImpl extends Crud implements ProjectScheduleN
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
-        this.getHibernatetemplate().getSessionFactory().close();
+        Crud.getHibernatetemplate().getSessionFactory().close();
         return array;
     }
 }

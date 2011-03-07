@@ -24,7 +24,7 @@ public class ProjectLegalDAOImpl extends Crud implements ProjectLegalDAO {
     }
 
     public ProjectLegal getById(long id) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(ProjectLegal.class).add(Expression.eq("project.id", id));
         ProjectLegal p = (ProjectLegal) criteria.list().get(0);
         return p;
@@ -35,7 +35,7 @@ public class ProjectLegalDAOImpl extends Crud implements ProjectLegalDAO {
     }
 
     public void delete(ProjectLegal projectLegal) {
-        Session session = this.getHibernatetemplate().getSessionFactory().openSession();
+        Session session = Crud.getHibernatetemplate().getSessionFactory().openSession();
         session.createQuery("UPDATE ProjectLegal SET active=:active WHERE id=:project_legal_id").
                 setLong("project_legal_id", projectLegal.getId()).
                 setBoolean("active", false).

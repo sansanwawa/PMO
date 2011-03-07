@@ -74,16 +74,7 @@
                 {header: "Customer", width: 120, dataIndex: 'projectCustomer', sortable: true},
                 {header: "Financial", width: 100, dataIndex: 'projectFinancial', sortable: true,
                     renderer:function(value){
-                       return value;
-                    }
-                },
-                {header: "Schedule", width: 100, dataIndex: 'projectSchedule', sortable: true,
-                    renderer:function(value){
-                        if(value=='On Schedule')
-                            return '<span class="normal">' + value + '</span>';
-                        else if(value=='Potentially Over Schedule')
-                            return '<span class="pre-warning">' + value + '</span>';
-                        return '<span class="warning">' + value + '</span>';
+                       return value + "%";
                     }
                 },
                 {header: "Contract/Legal", width: 100, dataIndex: 'projectContract', sortable: true,
@@ -103,16 +94,7 @@
                             return '<span class="pre-warning">' + value + '</span>';
                         return '<span class="warning">' + value + '</span>';
                     }
-                },
-                {header: "Resource", width: 100, dataIndex: 'projectResource', sortable: true,
-                    renderer:function(value){
-                        if(value=='Available')
-                            return '<span class="normal">' + value + '</span>';
-                        else if(value=='Potentially Problem')
-                            return '<span class="pre-warning">' + value + '</span>';
-                        return '<span class="warning">' + value + '</span>';
-                    }
-                }
+                } 
              
             ]
         });
@@ -403,7 +385,11 @@ var storeLegal = new Ext.data.Store({
                             totalRecords: 'total',
                             fields : [
                                 {name: 'id', mapping: 'id',type:'int'},
-                                {name: 'name', mapping: 'name', type:'string'}
+                                {name: 'projectLegalName', mapping: 'projectLegalName', type:'string'},
+                                {name: 'projectLegalDate', mapping: 'projectLegalDate', xtype: 'datecolumn', format: 'd-M-Y'},
+                                {name: 'projectLegalRequired', mapping: 'projectLegalRequired', type:'string'},
+                                {name: 'projectLegalStatus', mapping: 'projectLegalStatus', type:'string'}
+
                                
                             ]
                 })
@@ -413,7 +399,11 @@ var storeLegal = new Ext.data.Store({
            columns : [ new Ext.grid.RowNumberer({width: 30}),
                 selectionLegalModel,
                 { header: "Id", dataIndex: 'id', hidden:true},
-                { header: "Legal Name", dataIndex: 'name'}
+                { header: "Legal Name", dataIndex: 'projectLegalName'},
+                { header: "Date", dataIndex: 'projectLegalDate'  },
+                { header: "Required", dataIndex: 'projectLegalRequired'},
+                { header: "Status", dataIndex: 'projectLegalStatus'}
+
 
              ]
         });
@@ -633,7 +623,7 @@ var storeLegal = new Ext.data.Store({
                                           }]
                         },
                         { width:100, layout: 'form',
-                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'projectLegalDate',anchor:'95%',allowBlank:false }]
+                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'projectLegalDate',anchor:'95%',allowBlank:false,format : 'Y-m-d' }]
                         },
                         { width:200, layout: 'form',
                             items: [{  xtype:'combo',
@@ -675,24 +665,22 @@ var storeLegal = new Ext.data.Store({
                                         var ids = [];
                                         for(var i = 0;i<selection.length;i++)  ids.push(selection[i].data.id);
  
-                                        storeResources.reload();
+                                        storeLegal.reload();
 
-
-                                        /*
                                         Ext.Ajax.request({
-                                            url: '../projectresource/delete',
+                                            url: '../projectlegal/delete',
                                             success:function(response){
                                                 var status = Ext.util.JSON.decode(response.responseText).success;
                                                 if(status==false){
                                                     Ext.Msg.show({ title: 'Warning', msg :'You have not chosen any data yet!', buttons: Ext.MessageBox.OK, icon:'ext-mb-info' });
                                                 }
-                                                storeResources.reload();
+                                                storeLegal.reload();
                                             },
                                             failure:function(){
                                                 Ext.Msg.show({ title: 'Error', msg :'There must be a problem with your connection', buttons: Ext.MessageBox.OK, icon:'ext-mb-error'});
                                             },
                                             params: { id : ids } });
-                                            */
+
 
                     }
                 }]

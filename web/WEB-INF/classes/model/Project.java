@@ -77,9 +77,7 @@ public class Project implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
     private ProjectDocument projectdocument;
 
-    /*FK*/
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
-    private ProjectLegal projectlegal;
+  
     
     /*One to many*/
     @OneToMany(cascade = CascadeType.ALL)
@@ -109,15 +107,7 @@ public class Project implements Serializable {
     public void setProjectdocument(ProjectDocument projectdocument) {
         this.projectdocument = projectdocument;
     }
-
-    public ProjectLegal getProjectlegal() {
-        return projectlegal;
-    }
-
-    public void setProjectlegal(ProjectLegal projectlegal) {
-        this.projectlegal = projectlegal;
-    }
-
+ 
     public Set<ProjectFinancial> getProjectFinancialObj() {
         return projectFinancialObj;
     }

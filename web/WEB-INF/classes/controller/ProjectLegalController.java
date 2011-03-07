@@ -91,7 +91,6 @@ public class ProjectLegalController extends BinderHelper {
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
     public void addProcess(@ModelAttribute("ProjectLegal") ProjectLegal projectLegal, 
                 @RequestParam("project.id") Long project_id,
-                BindingResult result,
                 HttpServletResponse response) throws Exception {
 
         Project project = new Project();

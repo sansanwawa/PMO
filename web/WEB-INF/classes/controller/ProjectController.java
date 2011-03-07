@@ -1,4 +1,3 @@
-
 /**
  *
  * @author sandy
@@ -38,6 +37,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import sands.dao.implementors.ProjectFinancialDAOImpl;
 
 @Controller
 @RequestMapping(value = "/project")
@@ -80,13 +80,14 @@ public class ProjectController extends BinderHelper {
             Project p = (Project) iterator.next();
             JSONObject map = new JSONObject();
 
-            
-            
+            String financialSum = (String) ProjectFinancialDAOImpl.getSumByProjectId(p.getId()).get(0);
+            Double financialValue = Math.ceil(( Double.parseDouble(financialSum) / p.getProjectValue() ) * 100);
+
             map.put("id", p.getId());
             map.put("name", p.getName());
             map.put("project_end_date", p.getProjectEndDate());
             map.put("project_start_date", p.getProjectStartDate());
-            //map.put("financial", p.getProjectF   );
+            map.put("financial",  financialValue );
             map.put("project_contract", p.getProjectContract());
             map.put("project_technical", p.getProjectTechnical());
             map.put("project_resource", p.getProjectResource());

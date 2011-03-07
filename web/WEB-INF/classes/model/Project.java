@@ -6,15 +6,11 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -77,12 +73,12 @@ public class Project implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
     private ProjectDocument projectdocument;
 
-  
+
     
     /*One to many*/
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "project_id")
-    private Set<ProjectFinancial> projectFinancialObj = new HashSet<ProjectFinancial>(0);
+   // @OneToMany(cascade = CascadeType.ALL)
+   // @JoinColumn(name = "project_id")
+   // private Set<ProjectFinancial> projectFinancialObj = new HashSet<ProjectFinancial>(0);
 
     public String getAccountManager() {
         return accountManager;
@@ -107,7 +103,8 @@ public class Project implements Serializable {
     public void setProjectdocument(ProjectDocument projectdocument) {
         this.projectdocument = projectdocument;
     }
- 
+
+    /*
     public Set<ProjectFinancial> getProjectFinancialObj() {
         return projectFinancialObj;
     }
@@ -115,6 +112,8 @@ public class Project implements Serializable {
     public void setProjectFinancialObj(Set<ProjectFinancial> projectFinancialObj) {
         this.projectFinancialObj = projectFinancialObj;
     }
+    
+     */
 
     public long getId() {
         return id;

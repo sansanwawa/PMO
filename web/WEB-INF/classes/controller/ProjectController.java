@@ -7,6 +7,8 @@ package controller;
 import helper.general.BinderHelper;
 import helper.json.JSONException;
 import java.io.Writer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sands.dao.interfaces.ProjectDAO;
 import model.Project;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +19,7 @@ import helper.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,7 +62,7 @@ public class ProjectController extends BinderHelper {
             @ModelAttribute("Project") Project project, BindingResult result, HttpServletResponse response) throws JSONException, IOException {
         HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
 
-        List countProject = (List) projectDAO.list(0).get(1);
+        ArrayList countProject = (ArrayList) (List) projectDAO.list(0).get(1);
         Integer count = (Integer) countProject.get(0);
 
         //limit
@@ -69,7 +72,7 @@ public class ProjectController extends BinderHelper {
         projectDAO.orderBy(sort, dir);
 
         //list
-        List listProject = (List) projectDAO.list(start).get(0);
+        ArrayList listProject = (ArrayList) (List) projectDAO.list(start).get(0);
 
         JSONObject json = new JSONObject();
         json.put("total", count);
@@ -79,15 +82,20 @@ public class ProjectController extends BinderHelper {
         while (iterator.hasNext()) {
             Project p = (Project) iterator.next();
             JSONObject map = new JSONObject();
-
+        
+            Double financialValue;
             String financialSum = (String) ProjectFinancialDAOImpl.getSumByProjectId(p.getId()).get(0);
-            Double financialValue = Math.ceil(( Double.parseDouble(financialSum) / p.getProjectValue() ) * 100);
+            if (financialSum != null) {
+                financialValue = Math.ceil((Double.parseDouble(financialSum) / p.getProjectValue()) * 100);
+            } else {
+                financialValue = Math.ceil(0.0);
+            }
 
             map.put("id", p.getId());
             map.put("name", p.getName());
             map.put("project_end_date", p.getProjectEndDate());
             map.put("project_start_date", p.getProjectStartDate());
-            map.put("financial",  financialValue );
+            map.put("financial", financialValue);
             map.put("project_contract", p.getProjectContract());
             map.put("project_technical", p.getProjectTechnical());
             map.put("project_resource", p.getProjectResource());
@@ -97,11 +105,21 @@ public class ProjectController extends BinderHelper {
             map.put("project_manager", p.getProjectManager());
             map.put("project_value", p.getProjectValue());
             json.append("data", map);
+            System.gc();
+            //map = null;
+            //financialValue = null;
         }
-        json.write(responseWrapper.getWriter());
 
+        Writer w = json.write(responseWrapper.getWriter());
+        json = null;
+        w.flush();
+        w.close();
     }
-
+/*
+    protected void finalize() {
+        Logger.getLogger(ProjectController.class.getName()).log(Level.SEVERE, null, "Final!");
+    }
+*/
     @RequestMapping(value = "/list")
     public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return new ModelAndView("project/projectList");
@@ -130,7 +148,9 @@ public class ProjectController extends BinderHelper {
         map.put("project_manager", project.getProjectManager());
         map.put("project_value", project.getProjectValue());
         json.append("data", map);
-        json.write(responseWrapper.getWriter());
+        Writer w = json.write(responseWrapper.getWriter());
+        w.flush();
+        w.close();
 
     }
 

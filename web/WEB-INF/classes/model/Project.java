@@ -1,6 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author sandy
  */
 package model;
 
@@ -17,10 +17,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
-/**
- *
- * @author sandy
- */
 @Entity
 @Table(name = "project")
 public class Project implements Serializable {
@@ -69,6 +65,11 @@ public class Project implements Serializable {
     private String projectManager;
     @Column(name = "project_value")
     private double projectValue;
+    @Column(name = "project_note")
+    private String projectNote;
+
+
+
     /*FK*/
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
     private ProjectDocument projectdocument;
@@ -248,4 +249,15 @@ public class Project implements Serializable {
     public void setProjectValue(double projectValue) {
         this.projectValue = projectValue;
     }
+
+    public String getProjectNote() {
+        return projectNote;
+    }
+
+    public void setProjectNote(String projectNote) {
+        this.projectNote = projectNote;
+    }
+
+    
+
 }

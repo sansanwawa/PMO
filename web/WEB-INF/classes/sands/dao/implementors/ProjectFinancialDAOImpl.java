@@ -43,7 +43,9 @@ public class ProjectFinancialDAOImpl extends Crud implements ProjectFinancialDAO
         Criteria c = session.createCriteria(ProjectFinancial.class).setFirstResult(0).
                             add(Expression.eq("active", true)).
                             add(Expression.eq("project.id", id)).
+                            add(Expression.eq("projectFinStatus", "Paid")).
                             setProjection(Projections.sum("projectFinValue"));
+        Crud.getHibernatetemplate().getSessionFactory().close();
         return c.list();
     }
 

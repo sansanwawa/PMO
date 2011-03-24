@@ -1,6 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author sandy
  */
 package model;
 
@@ -15,10 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
-/**
- *
- * @author sandy
- */
 @Entity
 @Table(name = "project_legal")
 public class ProjectLegal implements Serializable {
@@ -27,21 +23,29 @@ public class ProjectLegal implements Serializable {
     @GeneratedValue
     @Column(name = "project_legal_id")
     private long id;
+
     @Column(name = "project_legal_name")
     private String projectLegalName;
+
     @Column(name = "project_legal_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date projectLegalDate;
+
     @Column(name = "project_legal_required")
     private String projectLegalRequired;
+
     @Column(name = "project_legal_status")
     private String projectLegalStatus;
+
     @Column(name = "update_by")
     private String updateBy;
+
     @Column(name = "created_by", updatable = false)
     private String createdBy;
+
     @Column(name = "active")
     private boolean active = true;
+    
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;

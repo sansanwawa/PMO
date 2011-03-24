@@ -1,7 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author sandy
  */
+
 package controller;
 
 import helper.general.BinderHelper;
@@ -22,13 +23,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import sands.dao.interfaces.ProjectLegalDAO;
 import helper.json.JSONObject;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import model.Project;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- *
- * @author sandy
- */
 @Controller
 @RequestMapping(value = "/projectlegal")
 public class ProjectLegalController extends BinderHelper {
@@ -91,15 +92,29 @@ public class ProjectLegalController extends BinderHelper {
     @RequestMapping(value = "/addProcess", method = RequestMethod.POST)
     public void addProcess(@ModelAttribute("ProjectLegal") ProjectLegal projectLegal, 
                 @RequestParam("project.id") Long project_id,
+                @RequestParam("projectLegalDate") String projectLegalDate,
                 HttpServletResponse response) throws Exception {
-
+        Writer out = response.getWriter();
+      
         Project project = new Project();
         project.setId(project_id);
+
+        //projectLegal.setProjectLegalDate(null);
+  
+
         projectLegal.setProject(project);
         projectLegalDAO.save(projectLegal);
-        Writer out = response.getWriter();
         out.write("{success:true}");
     }
+
+
+    //override
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
+
 
     @RequestMapping(value = "/delete")
     public void delete(@ModelAttribute("ProjectResource") ProjectLegal projectLegal,

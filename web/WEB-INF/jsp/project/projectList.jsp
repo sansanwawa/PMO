@@ -14,14 +14,15 @@
                 
         //selection Model
         var selectionModel = new Ext.grid.CheckboxSelectionModel();
-        var selectionResourceModel = new Ext.grid.CheckboxSelectionModel();
+       // var selectionModel = new Ext.ux.grid.CheckboxSelectionModel();
+
+       var selectionResourceModel = new Ext.grid.CheckboxSelectionModel();
         var selectionFinancialModel = new Ext.grid.CheckboxSelectionModel();
         var selectionInternalCostModel = new Ext.grid.CheckboxSelectionModel();
         var selectionScheduleModel = new Ext.grid.CheckboxSelectionModel();
         var selectionLegalModel = new Ext.grid.CheckboxSelectionModel();
 
-
-
+       
 
 
 
@@ -33,8 +34,9 @@
 
 
 // create the Data Store        
-        var store = new Ext.data.Store({
-            proxy: new Ext.data.HttpProxy({ method:'POST', url: '../project/json' }),
+  //var store = new Ext.ux.StoreLoad({
+var store = new Ext.data.Store({
+         proxy: new Ext.data.HttpProxy({ method:'POST', url: '../project/json' }),
             autoLoad :false,
             remoteSort :true,
             baseParams : {  start:0, limit:10 },
@@ -69,9 +71,13 @@
                 {header: "Project Name", width: 120, dataIndex: 'name', sortable: true},
                 {header: "Account Manager", width: 100, dataIndex: 'accountManager'},
                 {header: "Project Manager", width: 100,dataIndex: 'projectManager' },
-                {header: "Start Date", width: 80, dataIndex: 'projectStartDate', sortable: true, xtype: 'datecolumn', format: 'd-M-Y'},
-                {header: "Finish Date", width: 80, dataIndex: 'projectEndDate', sortable: true, xtype: 'datecolumn', format: 'd-M-Y'},
+                //{header: "Start Date", width: 80, dataIndex: 'projectStartDate', sortable: true, xtype: 'datecolumn', format: 'd-M-Y'},
                 {header: "Customer", width: 120, dataIndex: 'projectCustomer', sortable: true},
+                {header: "Due Date", width: 80, dataIndex: 'projectEndDate', sortable: true, xtype: 'datecolumn', format: 'd-M-Y'},
+                {header: "Mandays Usage", width: 120, dataIndex: 'projectCustomer', sortable: false,renderer:function(value){
+                        //Total Mandays Allocation - Total Mandays Usage per project
+                        return "";
+                }},
                 {header: "Financial", width: 100, dataIndex: 'projectFinancial', sortable: true,
                     renderer:function(value){
                        return value + "%";
@@ -99,7 +105,8 @@
             ]
         });
 
-        
+
+
 
  var storeResources = new Ext.data.GroupingStore({
             storeId  : 'storeResource',
@@ -109,7 +116,6 @@
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectresource/json' }),
             baseParams : { start:0, limit:10 },
             sortInfo: { field: 'projectResourceName', direction: 'ASC' },
-            //remoteGroup:true,
             remoteSort: true,
             reader: new Ext.data.JsonReader({
                             root: 'data',
@@ -175,11 +181,9 @@
 
        var storeFinancial = new Ext.data.GroupingStore({
             storeId  : 'storeFinancial',
-            //groupField :'projectfinancial',
             proxy: new Ext.data.HttpProxy({ method:'POST', url: '../projectfinancial/json' }),
             baseParams : { start:0, limit:10 },
             sortInfo: { field: 'id', direction: 'DESC' },
-            //remoteGroup:true,
             remoteSort: true,
             reader: new Ext.data.JsonReader({
                             root: 'data',
@@ -201,8 +205,22 @@
            columns : [ new Ext.grid.RowNumberer({width: 30}),
                        selectionFinancialModel,
                 { header: "Id", dataIndex: 'id', hidden:true},
-                { header: "Name", dataIndex: 'name'},
-                { header: "Status", dataIndex: 'status'},
+                { header: "Name", dataIndex: 'name',editor :new Ext.form.TextField()},
+                { header: "Status", dataIndex: 'status',editor :new Ext.form.ComboBox({
+                                        name : 'status',
+                                        hiddenName:'status',
+                                        typeAhead: false,
+                                        triggerAction: 'all',
+                                        lazyRender:false,
+                                        mode: 'local',
+                                        valueField: 'value',
+                                        displayField: 'text',
+                                        editable:false,
+                                        store: new Ext.data.ArrayStore({
+                                            fields: [ 'value', 'text'],
+                                            data:   [['Paid', 'Paid'], ['Pending', 'Pending'] ]
+                                        })
+                }) },
                 { header: "Date", dataIndex: 'date',width: 100},
                 { header: "Value", width: 100,dataIndex: 'value', renderer:function(value){return 'Rp.' + value },editor :new Ext.form.TextField({vtype:'numeric'}) }
              ]
@@ -466,7 +484,7 @@ var storeLegal = new Ext.data.Store({
                 { xtype:'textfield',fieldLabel: 'Project Manager', name: 'projectManager'  },
                 { xtype:'datefield',fieldLabel: 'Project Start Date', name: 'projectStartDate', allowBlank:false,editable :false, format : 'Y-m-d' },
                 { xtype:'datefield',fieldLabel: 'Project End Date', name: 'projectEndDate', allowBlank:false,editable :false, format : 'Y-m-d' },
-                { xtype:'textfield',fieldLabel: 'Project Value', name: 'projectValue' ,vtype:'numeric'},
+                { xtype:'textfield',fieldLabel: 'Project Value (IDR)', name: 'projectValue' ,vtype:'numeric'},
                 
                 { fieldLabel: 'Technical', xtype : 'radiogroup',
                     items : [{ boxLabel : 'No Problem', name: 'projectTechnical', checked : true, inputValue : 'No Problem' },
@@ -476,7 +494,9 @@ var storeLegal = new Ext.data.Store({
                 { fieldLabel: 'Contract/Legal', xtype : 'radiogroup',
                     items : [{ boxLabel : 'Done', name: 'projectContract', checked : true, inputValue : 'Done' },
                         { boxLabel : 'Warning', name: 'projectContract', inputValue : 'Warning' },
-                        { boxLabel : 'Issue', name: 'projectContract', inputValue : 'Issue' }] }
+                        { boxLabel : 'Issue', name: 'projectContract', inputValue : 'Issue' }] },
+                { xtype:'textarea',fieldLabel: 'Note', name: 'note',width : 438  }
+
             ],
             reader : {
                 id : 'myFormData',
@@ -575,7 +595,7 @@ var storeLegal = new Ext.data.Store({
 
                     }
                 }]
-               // , bbar:  { pageSize: 10, store: store, displayInfo: true, displayMsg: 'Displaying Records {0} - {1} of {2}', emptyMsg: "No Records to display" }
+              
                 }
             ]
         }
@@ -623,7 +643,7 @@ var storeLegal = new Ext.data.Store({
                                           }]
                         },
                         { width:100, layout: 'form',
-                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'projectLegalDate',anchor:'95%',allowBlank:false,format : 'Y-m-d' }]
+                            items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'projectLegalDate',anchor:'95%',allowBlank:true,format : 'Y-m-d' }]
                         },
                         { width:200, layout: 'form',
                             items: [{  xtype:'combo',
@@ -634,7 +654,7 @@ var storeLegal = new Ext.data.Store({
                                         triggerAction: 'all',
                                         lazyRender:true,
                                         mode: 'local',
-                                        fieldLabel: 'Legal',
+                                        fieldLabel: 'Required',
                                         store: new Ext.data.ArrayStore({
                                             fields: [ 'value', 'text'],
                                             data: [['Required', 'Required'], ['Not Required', 'Not Required']]
@@ -749,6 +769,28 @@ var storeLegal = new Ext.data.Store({
                                                                 } )
                                                             })
                                           } ]
+                        },
+                        { width:200, layout: 'form',
+                            items: [{ xtype:'combo',
+                                      fieldLabel: 'Role',
+                                      anchor:'95%',
+                                      allowBlank:false,
+                                      name : 'role',
+                                      hiddenName:'role',
+                                      typeAhead: false,
+                                        triggerAction: 'all',
+                                        lazyRender:false,
+                                        mode: 'local',
+                                        valueField: 'value',
+                                        displayField: 'text',
+                                        editable:false,
+                                        store: new Ext.data.ArrayStore({
+                                            fields: [ 'value', 'text'],
+                                            data:   [[ 'Project Manager', 'Project Manager'] ,
+                                                     ['Technical Leader', 'Technical Leader'] ]
+                                        })
+
+                          }]
                         },
                         { width:100, layout: 'form',
                             items: [{ xtype:'datefield', fieldLabel: 'Date', name: 'month',anchor:'95%',allowBlank:false }]
@@ -945,7 +987,7 @@ var storeLegal = new Ext.data.Store({
 
 
         var parameterFormSchedule = {
-             id : 'fpSch',
+            id : 'fpSch',
             labelAlign: 'top',
             url :'../projectschedule/addProcess',
             buttons: [{
@@ -1322,7 +1364,13 @@ var storeLegal = new Ext.data.Store({
                     }
                 },{ iconCls: 'icon-report-button', text : "Report",
                     handler  : function(){
-                        document.location.href='../project/report';
+                             // gp.getSelectionModel().selectRows([0,1]);
+                             var recordOne = store.getAt(0);
+                             var l = gp.getSelectionModel().getSelections();
+                             console.log(l);
+                              
+                             gp.getSelectionModel().selectRecords(l);
+                         //document.location.href='../project/report';
                     }
                 },{ iconCls: 'icon-detail', text : "Detail",
                     handler  : function(){
@@ -1435,20 +1483,32 @@ var storeLegal = new Ext.data.Store({
 
 
 
+       
+               
 
         //autorefresh 60 seconds
-       // Ext.TaskMgr.start({ run: function(){ store.reload(); }, interval: 60000 });
-        store.load();
+      
 
+store.on("load",function(){
+      var coo = readCookie("checked");
+      var c = coo.split(",");
+      var k =[];
+      for(var i = 0;i<=c.length;i++){
+            k.push(c[i]);
+      }
 
-      /*
+      gp.getSelectionModel().selectRecords(k);
+});
+
          Ext.TaskMgr.start({ run:
                 function(){
-                //alert(selectionModel.getSelected());
-                store.reload();
-            }, interval: 10000 });
-        *
-        */
+                    var l = gp.getSelectionModel().getSelections();
+                    createCookie("checked",l);
+                    store.load();
+                        //var recordOne = store.getAt(0);
+            }, interval: 300000 });
+
+
      });
 
     

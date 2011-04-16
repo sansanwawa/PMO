@@ -28,6 +28,7 @@
                 <value>model.ProjectResource</value>
                 <value>model.ProjectResourceName</value>
                 <value>model.ProjectInternalCost</value>
+                <value>model.ProjectRole</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -110,6 +111,10 @@
         <property name="sessionFactory" ref="mySessionFactory"/>
     </bean>
 
+    <!-- Project Role-->
+    <bean id="myProjectRoleDAO" class="sands.dao.implementors.ProjectRoleDAOImpl">
+        <property name="sessionFactory" ref="mySessionFactory"/>
+    </bean>
 
 
 </beans>

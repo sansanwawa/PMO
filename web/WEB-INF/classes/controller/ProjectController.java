@@ -7,8 +7,6 @@ package controller;
 import helper.general.BinderHelper;
 import helper.json.JSONException;
 import java.io.Writer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import sands.dao.interfaces.ProjectDAO;
 import model.Project;
 import javax.servlet.http.HttpServletRequest;
@@ -105,9 +103,8 @@ public class ProjectController extends BinderHelper {
             map.put("project_manager", p.getProjectManager());
             map.put("project_value", p.getProjectValue());
             json.append("data", map);
-            System.gc();
-            //map = null;
-            //financialValue = null;
+            //System.gc();
+       
         }
 
         Writer w = json.write(responseWrapper.getWriter());

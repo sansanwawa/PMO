@@ -25,15 +25,15 @@
                     leaf: false,
                     expanded: true,
                     allowChildren :true,
-                    children: [{ text: 'Project', url: '../project/list' , leaf: true },
-                               { text: 'Project Resource', url: '../projectresourcename/list' , leaf: true },
-                               { text: 'Project Schedule', url: '../projectschedulename/list' , leaf: true }
-
+                    children: [{ text: 'Detail', url: '../project/list' , leaf: true },
+                               { text: 'Resource', url: '../projectresourcename/list' , leaf: true },
+                               { text: 'Role', url: '../projectrole/list' , leaf: true },
+                               { text: 'Schedule', url: '../projectschedulename/list' , leaf: true }
                            ]
                     },{
                         text: 'User',
-                        url: '../user/list' ,
-                        leaf: true
+                        allowChildren :true,
+                        children: [{ text: 'Detail', url: '../user/list' , leaf: true } ] 
                     }
                     ,{
                         text: 'Logout',

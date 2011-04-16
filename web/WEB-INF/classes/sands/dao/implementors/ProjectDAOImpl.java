@@ -80,19 +80,10 @@ public class ProjectDAOImpl extends Crud implements ProjectDAO {
         float maxPage = countRow.get(0).hashCode() / Integer.valueOf(this.maxResult).floatValue();
         Double maxPageResults = Math.ceil(maxPage);
 
-
-
-
-
-
-
-
         ArrayList array = new ArrayList();
         array.add(0, results);
         array.add(1, countRow);
         array.add(2, maxPageResults.intValue());
-
-        
 
         this.getHibernatetemplate().getSessionFactory().close();
         return array;

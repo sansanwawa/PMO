@@ -40,10 +40,7 @@ public class ProjectFinancialDAOImplTest extends SuperTest {
         while (iterator.hasNext()) {
             ProjectFinancial pf = (ProjectFinancial) iterator.next();
             JSONObject map = new JSONObject();
-            map.put("id", pf.getPROJECT_FINANCIAL_ID());
-            map.put("name", pf.getPROJECT_FIN_NAME());
-            map.put("note", pf.getPROJECT_FIN_NOTE());
-            map.put("value", pf.getPROJECT_FIN_VALUE());
+            
             json.append("data", map);
 
         }

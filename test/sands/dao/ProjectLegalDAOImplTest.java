@@ -33,7 +33,7 @@ public class ProjectLegalDAOImplTest extends SuperTest {
         ProjectLegal p = new ProjectLegal();
         p.setId(new Long(1));
        
-        p.setAddendumNote("zzzz");
+      //  p.setAddendumNote("zzzz");
      
 
         projectLegalDAOImpl.save(p);

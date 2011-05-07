@@ -4,6 +4,8 @@
  */
 package sands.dao;
 
+import helper.database.Calculation;
+import java.sql.SQLException;
 import sands.dao.implementors.ProjectDAOImpl;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,6 +30,7 @@ public class ProjectDAOImplTest extends SuperTest {
         projectDAO.setSessionFactory(sessionFactory);
     }
 
+    /*
     public void testHibrenateExpressionIn() {
         String s = "12,21";
         String c[] = s.split(",");
@@ -36,8 +39,7 @@ public class ProjectDAOImplTest extends SuperTest {
             System.out.println(c[i]);
         }
 
-        /*
-        Session session = sessionFactory.openSession();
+         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(Project.class).add(Expression.in("id", c));
         List list = criteria.list();
         Iterator iter = list.iterator();
@@ -45,26 +47,36 @@ public class ProjectDAOImplTest extends SuperTest {
         Project p = (Project) iter.next();
         System.out.println(p.getName());
         }
-         */
-    }
+     }
 
     public void testCountData() {
         List countProject = (List) projectDAO.list(0).get(1);
         Integer count = (Integer) countProject.get(0);
         //System.out.println(count);
     }
+ */
 
+    /*
     public void testList() {
         projectDAO.setMaxResults(10);
         List List = (List) projectDAO.list(10).get(0);
         Iterator iterator = List.iterator();
         while (iterator.hasNext()) {
             Project p = (Project) iterator.next();
-            System.out.println(p.getId());
+            System.out.println("ID : " + p.getId());
         }
+    }
+     */
+
+    public void testCount() throws SQLException{
+        Calculation calculation = new Calculation(ProjectFinancial.class);
+        calculation.sum("projectFinValue");
+         System.out.println("SUM : " +  calculation);
     }
 
 
+
+/*
     public void testSaveData(){
         Project project = new Project();
         ProjectDocument projectDocument = new ProjectDocument();
@@ -76,9 +88,9 @@ public class ProjectDAOImplTest extends SuperTest {
         project.setName("test");
         project.setProjectdocument(projectDocument);
         project.setProjectFinancialObj(projectFinancial);
-        projectDAO.save(project);
+       // projectDAO.save(project);
 
     }
-
+*/
 
 }
